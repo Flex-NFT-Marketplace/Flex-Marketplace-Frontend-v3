@@ -1,0 +1,29 @@
+@keyframes moveFromX90To100 {
+  from {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes moveFromX100To90 {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(10%);
+    opacity: 0;
+  }
+}
+
+.anni-item-show {
+  animation: moveFromX90To100 0.3s ease-in-out;
+}
+
+.anni-item-hide {
+  animation: moveFromX90To100 0.3s ease-in-out;
+}

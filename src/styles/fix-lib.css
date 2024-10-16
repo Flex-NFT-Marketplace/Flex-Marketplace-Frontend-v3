@@ -1,0 +1,10 @@
+.ant-picker-outlined:focus,
+.ant-picker-outlined:focus-within {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.ant-picker-panel-layout{
+  background-color: black;
+  border-radius: 0;
+}

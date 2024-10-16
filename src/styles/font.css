@@ -1,0 +1,29 @@
+@font-face {
+  font-family: atyp;
+  src: url(../assets/Atyp/AtypDisplay-Medium.woff);
+  weight: 400;
+}
+
+@font-face {
+  font-family: monument;
+  src: url(../assets/MonumentExtended-FreeForPersonalUse/MonumentExtended-Ultrabold.otf);
+  weight: 800;
+}
+
+/* @font-face {
+  font-family: monument;
+  src: url(../assets/MonumentExtended-FreeForPersonalUse/MonumentExtended-Regular.otf);
+  weight: 400;
+} */
+
+@font-face {
+  font-family: "Pixel Operator Mono";
+  src: url(../assets/pixel-operator/PixelOperatorMono.ttf);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Pixel Operator Mono";
+  src: url(../assets/pixel-operator/PixelOperatorMono-Bold.ttf);
+  font-weight: 700;
+}

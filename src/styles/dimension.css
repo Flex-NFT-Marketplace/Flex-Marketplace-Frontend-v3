@@ -1,0 +1,19 @@
+.fixed-height-under-header {
+  height: calc(100vh - 64px);
+  margin-top: 64px;
+  scroll-behavior: smooth;
+}
+
+.fixed-height-with-header {
+  height: calc(100vh - 64px);
+}
+
+.top-margin-header {
+  margin-top: 64px;
+}
+
+@media screen and (min-width: 640px) {
+  .fixed-height-avtivity {
+    height: calc(100vh - 116px);
+  }
+}
