@@ -11,6 +11,7 @@ export interface ButtonProps {
   loading?: boolean;
   icon?: React.ReactNode;
   title?: string;
+  id?: HTMLProps<HTMLButtonElement>["id"];
   onClick?: () => void;
 }
 
@@ -24,6 +25,7 @@ const Button: React.FC<ButtonProps> = (props) => {
     loading,
     icon,
     title,
+    id,
   } = props;
 
   const defaultCSS =
@@ -89,6 +91,7 @@ const Button: React.FC<ButtonProps> = (props) => {
 
   return (
     <button
+      id={id}
       className={classes}
       onClick={onClick}
       disabled={disabled || loading}
