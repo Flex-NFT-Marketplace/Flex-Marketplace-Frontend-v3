@@ -55,14 +55,6 @@ const About = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button title="Support" className="w-[100px] bg-white text-black" />
-          <Button
-            title="Subscribe"
-            className="w-[100px] border-white text-white"
-            mode="outline"
-          />
-        </div>
       </div>
       <div className="mt-8">
         <p className="text-grays">
@@ -71,14 +63,13 @@ const About = () => {
           in a game with strategic depth fully unlocked by the blockchain.
         </p>
       </div>
-      <div className="mt-6 flex flex-wrap gap-8 gap-y-4 text-grays">
-        <div className="flex items-center gap-2">
-          <ImageKit src={edit_calender.src} alt="" className="h-5 w-5" />
-          <p>12/07/2024</p>
+      <div className="w-full flex flex-col gap-2 mt-8">
+        <div className="flex items-center justify-between">
+          <p className="text-grays">80% minted</p>
+          <p className="">8,006/10,000</p>
         </div>
-        <div className="flex items-center gap-2">
-          <ImageKit src={checked_calendar.src} alt="" className="h-5 w-5" />
-          <p>14/07/2024 13:30 - 14/07/2024 13:30</p>
+        <div className="w-full bg-border relative h-1">
+          <div className="absolute h-full w-1/2 bg-primary"></div>
         </div>
       </div>
     </div>
