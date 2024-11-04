@@ -4,25 +4,61 @@ import useCountdown from "@/hooks/useCountdown";
 import Button from "@/lib/@core/Button";
 import { useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { PhasesType } from "./page";
 
-const Mint = () => {
+interface MintProps {
+  phases: PhasesType[];
+}
+
+const Mint: React.FC<MintProps> = ({ phases }) => {
   const [isClientRendered, setIsClientRendered] = useState(false);
-  const [secs, mins, hrs, days] = useCountdown("2025-12-31T00:00:00");
+  const [phaseActive, setPhaseActive] = useState(-1);
+  const [secs, mins, hrs, days] = useCountdown(
+    phases[phaseActive]?.dateTime?.toString()
+  );
 
   useEffect(() => {
     setIsClientRendered(true);
   }, []);
+
+  useEffect(() => {
+    const updatePhase = () => {
+      const now = new Date();
+      let active = -1;
+
+      for (let i = 0; i < phases.length; i++) {
+        const phaseDate = phases[i].dateTime;
+        if (now >= phaseDate) {
+          active = i + 1;
+        }
+      }
+
+      setPhaseActive(active);
+    };
+    updatePhase();
+
+    const interval = setInterval(updatePhase, 1000);
+
+    return () => clearInterval(interval);
+  }, [phases]);
   return (
     <div className="border border-line p-4">
       <div className="pb-4 border-b border-line">
-        <div className="flex justify-between items-center">
-          <p className="uppercase">Whitelist mint</p>
-          <p className="uppercase">Time left: 1d 23h 32m</p>
+        <div className="flex justify-between items-center gap-2">
+          <p className="uppercase">
+            {phases[phaseActive == -1 ? 0 : phaseActive - 1]?.title}
+          </p>
+          {isClientRendered && phaseActive != -1 ? (
+            <p className="uppercase">
+              Time left: {days}d {hrs}h {mins}m
+            </p>
+          ) : (
+            <p className="uppercase">Time left: --:--:--</p>
+          )}
         </div>
         <div className="mt-4">
           <div className="flex gap-2 items-center">
-            <p className="text-3xl">{`<0,0004`}</p>
-            <img className="h-5 w-5" src={eth.src} alt="" />
+            <p className="text-3xl">Free Mint</p>
           </div>
           <p className="text-grays mt-2">Limit: 1 per wallet</p>
         </div>
@@ -62,7 +98,7 @@ const Mint = () => {
           <p className="text-grays">Total:</p>
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
-              <p className="text-2xl">{`<0,0004`}</p>
+              <p className="text-2xl">{`0`}</p>
               <img className="h-5 w-5" src={eth.src} alt="" />
             </div>
             <div className="flex justify-between items-center border border-line rounded px-5 py-2">

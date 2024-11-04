@@ -1,3 +1,4 @@
+"use client";
 import Button from "@/lib/@core/Button";
 import { strShortAddress } from "@/utils/string";
 import { IoMdShare } from "react-icons/io";
@@ -10,16 +11,20 @@ import edit_calender from "@/assets/edit_calendar.svg";
 import checked_calendar from "@/assets/checked_calender.svg";
 import badge_check from "@/assets/badge-check.svg";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { useState } from "react";
 
 const About = () => {
+  const [maxSupply, setMaxSupply] = useState(999);
+  const [currentSupply, setCurrentSupply] = useState(200);
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between">
         <p
-          title={"Community is KING"}
+          title={"Atemu: og collection"}
           className="line-clamp-1 text-[44px] uppercase max-md:text-2xl"
         >
-          Community is KING
+          Atemu: og collection
         </p>
         <div className="flex gap-5">
           <IoMdShare className={`aspect-square h-5`} />
@@ -58,18 +63,26 @@ const About = () => {
       </div>
       <div className="mt-8">
         <p className="text-grays">
-          Zoolana.io is a groundbreaking mobile strategy game being built on
-          Solana. Players will trade assets, raise armies, and play with friends
-          in a game with strategic depth fully unlocked by the blockchain.
+          🔥 The Atemu OG Collection is here—the first-ever TCG drop on
+          Starknet. Just 999 packs, each a gateway to rare gods, heroes, and
+          relics that hold legendary power. Own a piece of history, rule the
+          realms, and stake your claim in the future of on-chain TCG.
         </p>
       </div>
       <div className="w-full flex flex-col gap-2 mt-8">
         <div className="flex items-center justify-between">
-          <p className="text-grays">80% minted</p>
-          <p className="">8,006/10,000</p>
+          <p className="text-grays">
+            {((currentSupply / maxSupply) * 100).toFixed(2)}% minted
+          </p>
+          <p className="">
+            {currentSupply}/{maxSupply}
+          </p>
         </div>
         <div className="w-full bg-border relative h-1">
-          <div className="absolute h-full w-1/2 bg-primary"></div>
+          <div
+            style={{ width: (currentSupply / maxSupply) * 100 + "%" }}
+            className="absolute h-full bg-primary"
+          ></div>
         </div>
       </div>
     </div>
