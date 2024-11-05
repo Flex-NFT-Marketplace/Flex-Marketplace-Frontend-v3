@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/lib/@core/Button";
-import { strShortAddress } from "@/utils/string";
+import { copyToClipboard, strShortAddress } from "@/utils/string";
 import { IoMdShare } from "react-icons/io";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { RiGlobalLine } from "react-icons/ri";
@@ -12,10 +12,13 @@ import checked_calendar from "@/assets/checked_calender.svg";
 import badge_check from "@/assets/badge-check.svg";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useState } from "react";
+import Link from "next/link";
+import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 
 const About = () => {
   const [maxSupply, setMaxSupply] = useState(999);
   const [currentSupply, setCurrentSupply] = useState(200);
+  const { onShowToast } = useToast();
 
   return (
     <div>
@@ -27,11 +30,21 @@ const About = () => {
           Atemu: og collection
         </p>
         <div className="flex gap-5">
-          <IoMdShare className={`aspect-square h-5`} />
-          <RiGlobalLine className={`aspect-square h-5`} />
-          <FaSquareXTwitter className={`aspect-square h-5`} />
-          <SiFarcaster className={`aspect-square h-5`} />
-          <IoLogoDiscord className={`aspect-square h-5`} />
+          <IoMdShare
+            onClick={() => {
+              copyToClipboard(window.location.href);
+              onShowToast("Link copied to clipboard");
+            }}
+            className={`aspect-square h-5 cursor-pointer`}
+          />
+          <Link href={`https://atemu.xyz/`}>
+            <RiGlobalLine className={`aspect-square h-5 cursor-pointer`} />
+          </Link>
+          <Link href={"https://x.com/atemu_world"}>
+            <FaSquareXTwitter className={`aspect-square h-5 cursor-pointer`} />
+          </Link>
+          <SiFarcaster className={`aspect-square h-5 text-grays`} />
+          <IoLogoDiscord className={`aspect-square h-5 text-grays`} />
         </div>
       </div>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-3">

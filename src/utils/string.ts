@@ -189,3 +189,7 @@ export function calculateDaysElapsed(timestamp: number): string {
   const daysElapsed: number = Math.floor(timeElapsed / (1000 * 60 * 60 * 24)); // Chuyển đổi mili giây thành ngày
   return daysElapsed + " day ago";
 }
+
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text);
+};

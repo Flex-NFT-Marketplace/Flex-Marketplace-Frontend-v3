@@ -44,13 +44,20 @@ const LaunchPad = () => {
       />
       <div className="fixed-height-under-header !mt-0 mx-auto flex max-w-[1440px] gap-8 p-5 max-md:flex-col max-md:items-center">
         <div className="aspect-square h-[465px] max-w-full -mt-28 border border-white rounded-lg overflow-hidden">
-          <ImageKit
-            // src="/images/PackCardAtemu.gif"
-            src=""
+          <video
+            className="object-cover h-full w-full"
+            src="/videos/PackCardAtemu.mp4"
+            autoPlay
+            loop
+            muted
+          />
+          {/* <ImageKit
+            src="/images/PackCardAtemu.gif"
+            // src=""
             alt=""
             className="h-full
          w-full "
-          />
+          /> */}
         </div>
         <div className="flex flex-1 flex-col gap-3">
           <About />
