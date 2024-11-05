@@ -16,7 +16,7 @@ const ImageKit: React.FC<ImageProps> = (props) => {
   const {
     width = 1000,
     height = 1000,
-    src,
+    src = "",
     alt = "",
     className,
     unLoading = false,

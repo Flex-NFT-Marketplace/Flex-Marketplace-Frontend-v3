@@ -37,10 +37,10 @@ const About = () => {
             }}
             className={`aspect-square h-5 cursor-pointer`}
           />
-          <Link href={`https://atemu.xyz/`}>
+          <Link href={`https://atemu.xyz/`} target="_blank">
             <RiGlobalLine className={`aspect-square h-5 cursor-pointer`} />
           </Link>
-          <Link href={"https://x.com/atemu_world"}>
+          <Link href={"https://x.com/atemu_world"} target="_blank">
             <FaSquareXTwitter className={`aspect-square h-5 cursor-pointer`} />
           </Link>
           <SiFarcaster className={`aspect-square h-5 text-grays`} />
@@ -54,7 +54,7 @@ const About = () => {
           </div>
           <div>
             <div className="flex items-center gap-1">
-              <p>UserName</p>
+              <p>Atemu.stark</p>
               <ImageKit src={badge_check.src} alt="" className="h-5 w-5" />
             </div>
             <div className="flex items-center gap-4">

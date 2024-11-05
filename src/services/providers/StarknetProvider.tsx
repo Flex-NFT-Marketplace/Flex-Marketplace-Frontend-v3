@@ -34,8 +34,6 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
     apiKey: "PDWMhHtyi3_RVgU1VbNwTfZ9MscJffDZ",
   });
 
-  // const provider = jsonRpcProvider({ rpc });
-
   return (
     <StarknetConfig
       chains={[mainnet, sepolia]}

@@ -84,7 +84,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   }, [bestAsk, address]);
 
   const baseClasses =
-    "border border-stroke hover:border-white hover:shadow-solid select-none overflow-hidden rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem]";
+    "border border-stroke hover:border-white select-none overflow-hidden rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem]";
 
   // Define width classes with improved granularity and consistency
   const widthClasses =
@@ -102,7 +102,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
       ? filterAndActivityWidthClasses
       : isShowFilter || isShowActivity
         ? filterOrActivityWidthClasses
-        : widthClasses,
+        : widthClasses
   );
 
   return (

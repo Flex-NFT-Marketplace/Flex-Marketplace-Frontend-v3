@@ -6,7 +6,7 @@ module.exports = {
       args: "start",
       cwd: "./",
       watch: true,
-      ignore_watch: ["node_modules", ".next/cache"],
+      ignore_watch: ["node_modules", ".next/cache", ".next/cache/**"],
     },
   ],
 };

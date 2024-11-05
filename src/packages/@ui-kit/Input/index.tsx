@@ -32,7 +32,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     onBlur,
   } = props;
 
-  const defaultCSSContainer = "flex max-w-md flex-col gap-1.5";
+  const defaultCSSContainer = "flex max-w-lg flex-col gap-1.5";
   const classesContainer = clsx(defaultCSSContainer, classContainer);
 
   const defaultCSS =

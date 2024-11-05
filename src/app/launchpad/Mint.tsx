@@ -1,16 +1,20 @@
 "use client";
 import eth from "@/assets/EthereumBadge.svg";
 import useCountdown from "@/hooks/useCountdown";
-import Button from "@/lib/@core/Button";
+import Button from "@/packages/@ui-kit/Button";
 import { useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { PhasesType } from "./page";
+import { useAtemuContext } from "./AtemuMintProvider";
+import { useAccount } from "@starknet-react/core";
 
 interface MintProps {
   phases: PhasesType[];
 }
 
 const Mint: React.FC<MintProps> = ({ phases }) => {
+  const { address } = useAccount();
+  const { onCheckWallet, onMintGTD, isMint } = useAtemuContext();
   const [isClientRendered, setIsClientRendered] = useState(false);
   const [phaseActive, setPhaseActive] = useState(-1);
   const [secs, mins, hrs, days] = useCountdown(
@@ -41,8 +45,9 @@ const Mint: React.FC<MintProps> = ({ phases }) => {
 
     return () => clearInterval(interval);
   }, [phases]);
+
   return (
-    <div className="border border-line p-4">
+    <div className="border border-line p-4 rounded-md">
       <div className="pb-4 border-b border-line">
         <div className="flex justify-between items-center gap-2">
           <p className="uppercase">
@@ -94,21 +99,21 @@ const Mint: React.FC<MintProps> = ({ phases }) => {
         </div> */}
       </div>
       <div className="mt-5 flex flex-col gap-4">
-        <div>
-          <p className="text-grays">Total:</p>
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2 items-center">
-              <p className="text-2xl">{`0`}</p>
-              <img className="h-5 w-5" src={eth.src} alt="" />
-            </div>
-            <div className="flex justify-between items-center border border-line rounded px-5 py-2">
-              <FaMinus className="h-2 cursor-pointer" />
-              <div className="w-20 text-center">1</div>
-              <FaPlus className="h-2 cursor-pointer" />
-            </div>
-          </div>
-        </div>
-        <Button title="Mint" className="border-[#FF8AD0] text-[#FF8AD0]" />
+        <Button
+          title="Mint"
+          className=" w-full"
+          onClick={onMintGTD}
+          disabled={!isMint}
+        />
+
+        <Button
+          title="Check Eligibility"
+          variant="outline"
+          className=" w-full"
+          onClick={() => {
+            onCheckWallet(address || "");
+          }}
+        />
       </div>
     </div>
   );
