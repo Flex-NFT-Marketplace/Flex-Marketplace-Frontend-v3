@@ -29,6 +29,11 @@ const config: Config = {
         secondary: "#FF9F0A",
         buy: "#92F7CB",
         cancel: "#FF648A",
+        border: "#3A3A3C",
+        green: "#30D158",
+        pink: "#FF8AD0",
+        blue: "#64D2FF",
+        gray: "#8E8E93",
       },
       fontFamily: {
         atyp: ["atyp", "sans-serif"],

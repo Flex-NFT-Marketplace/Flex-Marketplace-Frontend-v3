@@ -1,5 +1,4 @@
 import Button from "@/lib/@core/Button";
-import IImage from "@/lib/@core/Image";
 import { strShortAddress } from "@/utils/string";
 import { IoMdShare } from "react-icons/io";
 import { MdOutlineContentCopy } from "react-icons/md";
@@ -10,6 +9,7 @@ import { IoLogoDiscord } from "react-icons/io5";
 import edit_calender from "@/assets/edit_calendar.svg";
 import checked_calendar from "@/assets/checked_calender.svg";
 import badge_check from "@/assets/badge-check.svg";
+import ImageKit from "@/packages/@ui-kit/Image";
 
 const About = () => {
   return (
@@ -32,12 +32,12 @@ const About = () => {
       <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="aspect-square h-[52px]">
-            <IImage src="" alt="" className="h-full w-full" />
+            <ImageKit src="" alt="" className="h-full w-full" />
           </div>
           <div>
             <div className="flex items-center gap-1">
               <p>UserName</p>
-              <IImage src={badge_check.src} alt="" className="h-5 w-5" />
+              <ImageKit src={badge_check.src} alt="" className="h-5 w-5" />
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm">
@@ -73,11 +73,11 @@ const About = () => {
       </div>
       <div className="mt-6 flex flex-wrap gap-8 gap-y-4 text-grays">
         <div className="flex items-center gap-2">
-          <IImage src={edit_calender.src} alt="" className="h-5 w-5" />
+          <ImageKit src={edit_calender.src} alt="" className="h-5 w-5" />
           <p>12/07/2024</p>
         </div>
         <div className="flex items-center gap-2">
-          <IImage src={checked_calendar.src} alt="" className="h-5 w-5" />
+          <ImageKit src={checked_calendar.src} alt="" className="h-5 w-5" />
           <p>14/07/2024 13:30 - 14/07/2024 13:30</p>
         </div>
       </div>

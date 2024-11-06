@@ -10,11 +10,13 @@ import Activity from "./(home)/Activity";
 import NewMint from "./(home)/(trending)/NewMint";
 import Social from "./(home)/Social";
 import ImageKit from "@/packages/@ui-kit/Image";
+import LaunchpadBanner from "./(home)/LaunchpadBanner";
 
 export default function Home() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-between gap-10 scroll-smooth">
       <Banner />
+      <LaunchpadBanner />
       <Trending />
       {/* <TrendingCollection /> */}
       {/* <TrendingCollection /> */}

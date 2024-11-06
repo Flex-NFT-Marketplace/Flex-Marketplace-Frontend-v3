@@ -12,6 +12,7 @@ export interface InputProps {
   icon?: React.ReactNode;
   onChange?: any;
   value?: HTMLProps<HTMLInputElement>["value"];
+  name?: HTMLProps<HTMLInputElement>["name"];
   onFocus?: HTMLProps<HTMLInputElement>["onFocus"];
   onBlur?: HTMLProps<HTMLInputElement>["onBlur"];
 }
@@ -26,6 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     placeholder,
     classContainer,
     value,
+    name,
     onFocus,
     onBlur,
   } = props;
@@ -42,7 +44,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       "peer-disabled:cursor-not-allowed peer-disabled:opacity-70 hover:border-line focus:border-line":
         disabled,
     },
-    className,
+    className
   );
 
   return (
@@ -59,12 +61,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         )}
         <input
           ref={ref}
-          className="h-full w-full border border-transparent bg-transparent py-2 font-bold outline-none placeholder:font-normal placeholder:text-line"
+          className="h-full w-full border border-transparent bg-transparent py-2 font-bold outline-none placeholder:font-normal placeholder:text-white/50"
           disabled={disabled}
           type="text"
           placeholder={placeholder || "placeholder"}
           onChange={(e) => onChange(e)}
           value={value}
+          name={name}
           onBlur={onBlur}
           onFocus={onFocus}
         />
