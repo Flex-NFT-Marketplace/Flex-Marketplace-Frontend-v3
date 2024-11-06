@@ -2,26 +2,20 @@
 import React from "react";
 import Image from "next/image";
 import LogoSVG from "../../../../public/logo-flex.svg";
-import Input from "@/packages/@ui-kit/Input";
 import Button from "@/packages/@ui-kit/Button";
 import Link from "next/link";
-import { IoMdCart } from "react-icons/io";
-import { IoMdNotifications } from "react-icons/io";
-import { IoSearch } from "react-icons/io5";
 import Modal from "@/packages/@ui-kit/Modal";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
-import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import ConnectWallet from "./ConnectWallet";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import Search from "./Search";
-import { useAccountContext } from "@/services/providers/AccountProvider";
 import { IoMenu } from "react-icons/io5";
-import Dropdown from "@/packages/@ui-kit/Dropdown";
 import { useRouter } from "next/navigation";
 
 const pages = {
+  "/launchpad": "Launchpad",
   "/activity": "Activity",
   "/staking": "Staking",
   "/mint": "Mint",

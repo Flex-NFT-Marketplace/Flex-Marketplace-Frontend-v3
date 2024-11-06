@@ -1,6 +1,5 @@
 import LogoSVG from "@/assets/logo-medium.svg";
 import Button from "@/lib/@core/Button";
-import IImage from "@/lib/@core/Image";
 
 const Footer = () => {
   return (

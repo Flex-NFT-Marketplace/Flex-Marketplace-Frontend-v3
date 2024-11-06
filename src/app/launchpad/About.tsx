@@ -14,10 +14,11 @@ import ImageKit from "@/packages/@ui-kit/Image";
 import { useState } from "react";
 import Link from "next/link";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { useAtemuContext } from "./AtemuMintProvider";
 
 const About = () => {
+  const { supply } = useAtemuContext();
   const [maxSupply, setMaxSupply] = useState(999);
-  const [currentSupply, setCurrentSupply] = useState(200);
   const { onShowToast } = useToast();
 
   return (
@@ -37,10 +38,10 @@ const About = () => {
             }}
             className={`aspect-square h-5 cursor-pointer`}
           />
-          <Link href={`https://atemu.xyz/`}>
+          <Link href={`https://atemu.xyz/`} target="_blank">
             <RiGlobalLine className={`aspect-square h-5 cursor-pointer`} />
           </Link>
-          <Link href={"https://x.com/atemu_world"}>
+          <Link href={"https://x.com/atemu_world"} target="_blank">
             <FaSquareXTwitter className={`aspect-square h-5 cursor-pointer`} />
           </Link>
           <SiFarcaster className={`aspect-square h-5 text-grays`} />
@@ -54,7 +55,7 @@ const About = () => {
           </div>
           <div>
             <div className="flex items-center gap-1">
-              <p>UserName</p>
+              <p>Atemu.stark</p>
               <ImageKit src={badge_check.src} alt="" className="h-5 w-5" />
             </div>
             <div className="flex items-center gap-4">
@@ -67,7 +68,7 @@ const About = () => {
               <div className="h-4 w-[1px] bg-grays"></div>
               <div>
                 <p className="text-grays">
-                  Items <span className="text-white">20k</span>
+                  Items <span className="text-white">999</span>
                 </p>
               </div>
             </div>
@@ -82,18 +83,18 @@ const About = () => {
           realms, and stake your claim in the future of on-chain TCG.
         </p>
       </div>
-      <div className="w-full flex flex-col gap-2 mt-8">
+      <div className="mt-8 flex w-full flex-col gap-2">
         <div className="flex items-center justify-between">
           <p className="text-grays">
-            {((currentSupply / maxSupply) * 100).toFixed(2)}% minted
+            {((supply / maxSupply) * 100).toFixed(2)}% minted
           </p>
           <p className="">
-            {currentSupply}/{maxSupply}
+            {supply}/{maxSupply}
           </p>
         </div>
-        <div className="w-full bg-border relative h-1">
+        <div className="bg-border relative h-1 w-full">
           <div
-            style={{ width: (currentSupply / maxSupply) * 100 + "%" }}
+            style={{ width: (supply / maxSupply) * 100 + "%" }}
             className="absolute h-full bg-primary"
           ></div>
         </div>

@@ -2,6 +2,7 @@ import ImageKit from "@/packages/@ui-kit/Image";
 import About from "./About";
 import Mint from "./Mint";
 import Phases from "./Phases";
+import { AtemuMintProvider } from "./AtemuMintProvider";
 
 export interface PhasesType {
   title: string;
@@ -38,33 +39,35 @@ const LaunchPad = () => {
 
   return (
     <>
-      <ImageKit
-        className="w-screen h-[600px] max-h-[600px]"
-        src="/images/launchpad-bg.png"
-      />
-      <div className="fixed-height-under-header !mt-0 mx-auto flex max-w-[1440px] gap-8 p-5 max-md:flex-col max-md:items-center">
-        <div className="aspect-square h-[465px] max-w-full -mt-28 border border-white rounded-lg overflow-hidden">
-          <video
-            className="object-cover h-full w-full"
-            src="/videos/PackCardAtemu.mp4"
-            autoPlay
-            loop
-            muted
-          />
-          {/* <ImageKit
+      <AtemuMintProvider>
+        <ImageKit
+          className="h-[600px] max-h-[600px] w-screen"
+          src="/images/launchpad-bg.png"
+        />
+        <div className="fixed-height-under-header mx-auto !mt-0 flex max-w-[1440px] gap-8 p-5 max-md:flex-col max-md:items-center">
+          <div className="-mt-28 aspect-square h-[465px] max-w-full overflow-hidden rounded-lg border border-white/20">
+            <video
+              className="h-full w-full object-cover"
+              src="/videos/PackCardAtemu.mp4"
+              autoPlay
+              loop
+              muted
+            />
+            {/* <ImageKit
             src="/images/PackCardAtemu.gif"
             // src=""
             alt=""
             className="h-full
          w-full "
           /> */}
+          </div>
+          <div className="flex flex-1 flex-col gap-3">
+            <About />
+            <Mint phases={phases} />
+            <Phases phases={phases} />
+          </div>
         </div>
-        <div className="flex flex-1 flex-col gap-3">
-          <About />
-          <Mint phases={phases} />
-          <Phases phases={phases} />
-        </div>
-      </div>
+      </AtemuMintProvider>
     </>
   );
 };
