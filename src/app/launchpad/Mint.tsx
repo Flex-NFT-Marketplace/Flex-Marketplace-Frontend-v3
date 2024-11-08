@@ -14,7 +14,7 @@ const Mint: React.FC<MintProps> = ({ phases }) => {
   const [isClientRendered, setIsClientRendered] = useState(false);
   const [phaseActive, setPhaseActive] = useState(-1);
   const [secs, mins, hrs, days] = useCountdown(
-    phases[phaseActive]?.dateTime?.toString()
+    phases[phaseActive]?.dateTime?.toString() || "2024-11-06T21:00:00Z"
   );
 
   useEffect(() => {
