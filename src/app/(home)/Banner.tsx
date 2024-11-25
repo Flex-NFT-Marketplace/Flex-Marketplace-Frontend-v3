@@ -9,6 +9,7 @@ import BannerSkeleton from "@/app/(skeletonLoading)/homeSkeleton/BannerSkeleton"
 import Button from "@/packages/@ui-kit/Button";
 import Image from "next/image";
 import ImageKit from "@/packages/@ui-kit/Image";
+import useGetBannerCollections from "@/services/api/collection/useGetBannerCollections";
 
 interface IBannerItem {
   index: number;
@@ -62,7 +63,8 @@ const Banner = () => {
     router.push(path);
   };
 
-  const { collectionsBanner, isFetching } = useCollectionContext();
+  // const { collectionsBanner, isFetching } = useCollectionContext();
+  const { data: collectionsBanner, isFetching } = useGetBannerCollections();
 
   const [collectionActive, setCollectionActive] = useState<ICollection>();
 
@@ -79,7 +81,7 @@ const Banner = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex(
-        (prevIndex) => (prevIndex + 1) % (collectionsBanner?.length ?? 0) || 0,
+        (prevIndex) => (prevIndex + 1) % (collectionsBanner?.length ?? 0) || 0
       );
     }, 10000); // change banner every 3 seconds
 

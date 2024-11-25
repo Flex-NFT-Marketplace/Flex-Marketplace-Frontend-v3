@@ -1,3 +1,5 @@
+import { ICollection } from "@/types/ICollection";
+import { IStagingCollection } from "@/types/IStagingCollection";
 import { BigNumber, ethers } from "ethers";
 import { shortString } from "starknet";
 
@@ -193,3 +195,50 @@ export function calculateDaysElapsed(timestamp: number): string {
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
 };
+
+export const convertStagingCollectionTypeToICollectionType = (staginCollection: IStagingCollection): ICollection => {
+  
+    const collectionConverted: ICollection = {
+      contract_address: staginCollection?.nftContract,
+
+      schema: staginCollection?.standard,
+    
+      name: staginCollection?.name,
+    
+      description: staginCollection?.description,
+    
+      symbol: staginCollection?.symbol,
+    
+      external_url: "",
+    
+      image_url: staginCollection?.avatar,
+    
+      banner_url: staginCollection?.cover,
+
+      stats: {
+        collection_best_offer: 0,
+        nft_count: 0,
+        owner_count: 0,
+        asset_count: 0,
+        total_volume: 0,
+        total_listing_count: 0,
+        collection_floor_price: 0,
+        stats1D: {
+          sale_count: 0,
+          volume: 0,  
+          avg_price: 0,
+        }
+      },
+        status: {
+          is_active: true,
+          is_banner: false,
+          is_verified: false,
+          is_new_collection: false,
+          is_trending: false,
+          is_18: false,
+          banner_prioritize: 0,
+        }
+    }
+
+    return collectionConverted;
+}

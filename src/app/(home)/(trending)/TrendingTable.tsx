@@ -5,9 +5,11 @@ import { useCollectionContext } from "@/services/providers/CollectionProvider";
 import { useRouter } from "next/navigation";
 import FormatPrice from "@/components/FormatPrice";
 import ImageKit from "@/packages/@ui-kit/Image";
+import useGetTrendingCollections from "@/services/api/collection/useGetTrendingCollections";
 
 const TrendingTable = () => {
-  const { collectionTrending } = useCollectionContext();
+  // const { collectionTrending } = useCollectionContext();
+  const { data: collectionTrending } = useGetTrendingCollections();
   const router = useRouter();
 
   const onNavigate = (path: string) => {
