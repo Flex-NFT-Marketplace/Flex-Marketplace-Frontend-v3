@@ -3,7 +3,6 @@ import ActionNFT from "@/components/ActionNFT";
 import FormatAddress from "@/components/FormatAddress";
 
 import FormatTime from "@/components/FormatTime";
-import IImage from "@/lib/@core/Image";
 import TableList from "./TableList";
 import { useRouter } from "next/navigation";
 
