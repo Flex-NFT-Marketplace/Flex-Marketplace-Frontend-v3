@@ -5,9 +5,11 @@ import { useCollectionContext } from "@/services/providers/CollectionProvider";
 import { useRouter } from "next/navigation";
 import FormatPrice from "@/components/FormatPrice";
 import ImageKit from "@/packages/@ui-kit/Image";
+import useGetTrendingCollections from "@/services/api/collection/useGetTrendingCollections";
 
 const TrendingTable = () => {
-  const { collectionTrending } = useCollectionContext();
+  // const { collectionTrending } = useCollectionContext();
+  const { data: collectionTrending } = useGetTrendingCollections();
   const router = useRouter();
 
   const onNavigate = (path: string) => {
@@ -34,49 +36,48 @@ const TrendingTable = () => {
             <tr
               key={index}
               className="cursor-pointer rounded-lg text-right transition-all hover:bg-dark-black"
-              onClick={() => onNavigate("/collection/" + item.contract_address)}
+              onClick={() => onNavigate("/collection/" + item?.nftContract)}
             >
               <td className="hidden text-center lg:table-cell">{index + 1}</td>
               <td className="flex items-center text-left">
                 <ImageKit
-                  src={item.image_url}
+                  src={item?.nftCollection?.avatar}
                   alt=""
                   className="h-12 w-12 object-cover"
                 />
-                <p className="ml-4 font-normal">{item.name}</p>
+                <p className="ml-4 font-normal">{item?.nftCollection?.name}</p>
               </td>
               <td className="hidden lg:table-cell">
-                <FormatPrice
-                  price={item.stats.collection_floor_price}
-                  className="flex justify-end"
-                />
+                <FormatPrice price={0} className="flex justify-end" />
               </td>
               <td className="hidden lg:table-cell">
-                {item.stats.stats1D.avg_price > 0 ? (
+                {item?.oneDayChange > 0 ? (
                   <p className="text-shadow-max text-buy">
-                    {item.stats.stats1D.avg_price.toFixed(2)}%
+                    {item?.oneDayChange?.toFixed(2)}%
                   </p>
                 ) : (
                   <p className="text-shadow-min text-cancel">
-                    {item.stats.stats1D.avg_price.toFixed(2)}%
+                    {item?.oneDayChange
+                      ? `${item?.oneDayChange?.toFixed(2)}%`
+                      : `- %`}
                   </p>
                 )}
               </td>
               <td className="hidden sm:table-cell">
                 <FormatPrice
-                  price={item.stats.stats1D.volume}
+                  price={item?.oneDayChange}
                   className="flex justify-end"
                 />
               </td>
               <td>
                 <FormatPrice
-                  price={item.stats.total_volume}
+                  price={Number(BigInt(item?.totalVol)) / 1e18}
                   decimal={2}
                   className="flex justify-end"
                 />
               </td>
-              <td className="hidden lg:table-cell">{item.stats.owner_count}</td>
-              <td className="hidden lg:table-cell">{item.stats.nft_count}</td>
+              <td className="hidden lg:table-cell">{item?.totalOwners}</td>
+              <td className="hidden lg:table-cell">{item?.totalSupply}</td>
             </tr>
           ))}
         </tbody>

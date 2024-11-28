@@ -1,3 +1,5 @@
+import { ICollection } from "@/types/ICollection";
+import { IStagingCollection } from "@/types/IStagingCollection";
 import { BigNumber, ethers } from "ethers";
 import { shortString } from "starknet";
 

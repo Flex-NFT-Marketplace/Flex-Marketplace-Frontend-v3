@@ -20,6 +20,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAccountContext } from "@/services/providers/AccountProvider";
 import { strShortPrefixAddress } from "@/utils/string";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { deleteCookie } from "@/helpers/cookie";
+import { ACCESS_TOKEN, USER_ADDRESS } from "@/constants/cookies";
 
 const ConnectWallet = () => {
   const { address, status, account } = useAccount();
@@ -40,6 +42,8 @@ const ConnectWallet = () => {
 
   const onDisconnect = async () => {
     disconnect();
+    deleteCookie(USER_ADDRESS);
+    deleteCookie(ACCESS_TOKEN);
     onShowToast("Disconnected successfully ", MessageTypeEnum.INFO);
   };
 

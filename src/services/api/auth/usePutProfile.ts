@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN } from "@/constants/cookies";
 import { IProfile } from "@/types/IProfile";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -12,7 +13,7 @@ export const usePutProfile = () => {
         body.profile,
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("tokenAccess")}`,
+            Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN)}`,
           },
         },
       );

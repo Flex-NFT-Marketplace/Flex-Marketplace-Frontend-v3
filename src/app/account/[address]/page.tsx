@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 
 import CardNFT from "@/components/CardNFT";
-import IImage from "@/lib/@core/Image";
 import { MdContentCopy, MdOutlineFilterAlt } from "react-icons/md";
 import Profile from "./Profile";
 import { TbReload } from "react-icons/tb";
@@ -46,7 +45,7 @@ const AccountPage = () => {
     setAddress(address as string);
   }, [address]);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     setTabActive(TabEnum.INVENTORY);

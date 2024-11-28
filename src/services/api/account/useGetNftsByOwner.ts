@@ -1,7 +1,9 @@
+import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import { ICollection } from "@/types/ICollection";
 import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { convertStagingNftTypeToINft } from "@/utils/convertType";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export interface INftAccountResponse {
@@ -27,5 +29,32 @@ const useGetNftsByOwner = (address: string) => {
     retry: 1,
   });
 };
+
+export const useGetNftsByOwner1 = (address: string) => {
+  let initialPageParam = 1;
+  let hasNextPage = true;
+  let allData: INft[] = [];
+  return useMutation({
+    mutationKey: ["GET_All_NFTS_BY_OWNER", address],
+    mutationFn: async (address: string) => {
+      if(!address) return allData;
+      while (hasNextPage) {
+        const data = await axiosWithoutAccessToken.post("nft/get-nfts", {
+          page: initialPageParam,
+          size: 10,
+          owner: address,
+        })
+        for (let i = 0; i < data.data.data.items.length; i++) {
+          allData.push(convertStagingNftTypeToINft(data.data.data.items[i]));
+        }
+      
+        data.data.data.hasNext ? initialPageParam++ : hasNextPage = false;
+        
+      }
+      return allData;
+    },
+    retry: 1,
+  })
+}
 
 export default useGetNftsByOwner;
