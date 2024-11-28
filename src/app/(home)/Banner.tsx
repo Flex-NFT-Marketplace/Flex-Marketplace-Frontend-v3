@@ -10,6 +10,7 @@ import Button from "@/packages/@ui-kit/Button";
 import Image from "next/image";
 import ImageKit from "@/packages/@ui-kit/Image";
 import useGetBannerCollections from "@/services/api/collection/useGetBannerCollections";
+import { FormatPriceWithIcon } from "@/components/FormatPrice";
 
 interface IBannerItem {
   index: number;
@@ -130,8 +131,8 @@ const Banner = () => {
                 <span>Trade Collection</span>
               </Button>
             </div>
-            <div className="flex items-end gap-9 max-lg:hidden">
-              {/* <div className="flex gap-14">
+            <div className="flex flex-col items-end gap-9 max-lg:hidden">
+              <div className="flex gap-14">
                 <div className="flex flex-col items-center">
                   <p className="text-2xl font-normal text-buy">
                     {collectionActive?.stats.collection_floor_price} ETH
@@ -149,24 +150,29 @@ const Banner = () => {
                     SELL NOW
                   </p>
                 </div>
-              </div> */}
+              </div>
 
-              {/* <div className="flex gap-x-6 pb-1 max-sm:gap-y-2">
+              <div className="flex gap-x-6 pb-1 max-sm:gap-y-2">
                 <div className="flex gap-1 font-normal">
                   <p className="text-sm text-[#c0c0c0]">TOTAL VOL:</p>
-                  <FormatPriceWithIcon price={collectionActive?.stats.total_volume} />
+                  <FormatPriceWithIcon
+                    price={collectionActive?.stats.total_volume}
+                  />
                 </div>
                 <div className="flex gap-1 font-normal">
                   <p className="text-sm text-[#c0c0c0]">7D VOL:</p>
-                  <FormatPriceWithIcon price={collectionActive?.stats.stats1D.volume} />
+                  <FormatPriceWithIcon
+                    price={collectionActive?.stats.stats1D.volume}
+                  />
                 </div>
                 <div className="flex gap-1 font-normal">
                   <p className="text-sm text-[#c0c0c0]">LISTED / SUPPLY:</p>
                   <p>
-                    {collectionActive?.stats.total_listing_count} / {collectionActive?.stats.asset_count}
+                    {collectionActive?.stats.total_listing_count} /{" "}
+                    {collectionActive?.stats.asset_count}
                   </p>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
 
