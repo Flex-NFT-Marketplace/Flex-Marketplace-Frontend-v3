@@ -6,7 +6,6 @@ import { useGetProfile } from "../api/useGetProfile";
 import useGetNftByAddress, {
   INftAccountResponse,
 } from "../api/account/useGetNftsByOwner";
-import { useGetNft } from "../api/nft/useGetNft";
 import { ISignature } from "@/types/ISignature";
 import { usePathname } from "next/navigation";
 import useGetNftsByOwner from "../api/account/useGetNftsByOwner";
@@ -18,7 +17,7 @@ import { usePutProfile } from "../api/auth/usePutProfile";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 
 interface AccountContextType {
-  nfts: INftAccountResponse[];
+  nfts: INft[];
   profile?: IProfile;
   setAddress: (address: string) => void;
   onReload: (nft: INft) => void;
@@ -27,13 +26,13 @@ interface AccountContextType {
   bids: ISignature[];
   loading: boolean;
   profileOwner?: IProfile;
-  nftsOwner: INftAccountResponse[];
+  nftsOwner: INft[];
   onUpdateProfile: (profile: any) => Promise<void>;
   getProfileByAddressOwner: () => void;
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export const AccountProvider = ({
@@ -47,8 +46,8 @@ export const AccountProvider = ({
   const [address, setAddress] = useState("");
   const [profile, setProfile] = useState<IProfile>();
   const [profileOwner, setProfileOwner] = useState<IProfile>();
-  const [nfts, setNfts] = useState<INftAccountResponse[]>([]);
-  const [nftsOwner, setNftsOwner] = useState<INftAccountResponse[]>([]);
+  const [nfts, setNfts] = useState<INft[]>([]);
+  const [nftsOwner, setNftsOwner] = useState<INft[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [orders, setOrders] = useState<ISignature[]>([]);
@@ -131,8 +130,8 @@ export const AccountProvider = ({
     // Step 2: Find the index of the NFT to update
     const index = nfts.findIndex(
       (nft) =>
-        nft.nft.contract_address === updatedNftData.nft.contract_address &&
-        nft.nft.token_id === updatedNftData.nft.token_id,
+        nft.contract_address === updatedNftData.nft.contract_address &&
+        nft.token_id === updatedNftData.nft.token_id
     );
 
     // Check if the NFT was found
@@ -226,7 +225,7 @@ export const useAccountContext = () => {
   const context = useContext(AccountContext);
   if (!context) {
     throw new Error(
-      "useCollectionContext must be used within a CollectionProvider",
+      "useCollectionContext must be used within a CollectionProvider"
     );
   }
   return context;

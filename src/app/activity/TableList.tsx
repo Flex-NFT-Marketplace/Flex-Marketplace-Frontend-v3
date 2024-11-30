@@ -30,7 +30,7 @@ const TableList = () => {
         }
       }
     },
-    [isLoading, fetchNextPage],
+    [isLoading, fetchNextPage]
   );
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const TableList = () => {
       "/starknet/asset/" +
         signature.nft.contract_address +
         "/" +
-        signature.nft.token_id,
+        signature.nft.token_id
     );
   };
 
@@ -96,11 +96,11 @@ const TableList = () => {
               <ActionNFT status={_?.status} />
             </div>
             <div className="relative flex flex-1 items-center">
-              <ImageKit
+              {/* <ImageKit
                 src={_?.nft?.image_url}
                 alt=""
                 className="ml-2 h-[52px] w-[52px] rounded"
-              />
+              /> */}
 
               <p className="ml-4 truncate font-normal ">{_?.nft?.name}</p>
             </div>

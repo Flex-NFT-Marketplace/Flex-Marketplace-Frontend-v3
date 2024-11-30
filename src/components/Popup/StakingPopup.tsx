@@ -76,23 +76,23 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
       return;
     }
 
-    for (let i = 0; i < stakeNfts.length; i++) {
-      if (stakeNfts[i].checked) {
-        let nft = stakeNfts[i];
-        let bodyPost: IStaking = {
-          contract_address: nft.contract_address,
-          token_id: nft.token_id,
-          nft: nft._id,
-          owner_address: address || "",
-          from: address || "",
-          to: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-          transaction_hash_stake: tx,
-          status: StakingStatusEnum.STAKED,
-        };
+    // for (let i = 0; i < stakeNfts.length; i++) {
+    //   if (stakeNfts[i].checked) {
+    //     let nft = stakeNfts[i];
+    //     let bodyPost: IStaking = {
+    //       contract_address: nft.contract_address,
+    //       token_id: nft.token_id,
+    //       nft: nft._id,
+    //       owner_address: address || "",
+    //       from: address || "",
+    //       to: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
+    //       transaction_hash_stake: tx,
+    //       status: StakingStatusEnum.STAKED,
+    //     };
 
-        await _postStakingNFT.mutateAsync(bodyPost);
-      }
-    }
+    //     await _postStakingNFT.mutateAsync(bodyPost);
+    //   }
+    // }
 
     await provider.waitForTransaction(tx);
 
@@ -111,7 +111,7 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
 
   const checkApprovalCollection = async (
     contractAddress: string,
-    accountAddress: string,
+    accountAddress: string
   ) => {
     try {
       const nftContract = new Contract(erc721Abi, contractAddress, provider);
@@ -120,7 +120,7 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
       const resERC721 = await nftContract.isApprovedForAll(
         accountAddress,
         process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        { parseResponse: true, formatResponse: formatAnswer },
+        { parseResponse: true, formatResponse: formatAnswer }
       );
 
       if (resERC721.isApproved === "1") {
@@ -146,7 +146,7 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
       for (let i = 0; i < nfts.length; i++) {
         const approved = await checkApprovalCollection(
           nfts[i].contract_address,
-          address || "",
+          address || ""
         );
 
         if (

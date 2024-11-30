@@ -195,3 +195,14 @@ export function calculateDaysElapsed(timestamp: number): string {
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
 };
+
+export const formatLink = (link: string) => {
+  if (!link) return "";
+  if (
+    !link.startsWith("http://") &&
+    !link.startsWith("https://") &&
+    !link.startsWith("data:")
+  ) {
+    return "https://" + link;
+  } else return link;
+};

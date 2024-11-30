@@ -12,12 +12,14 @@ import EditProfilePopup from "@/components/Popup/EditProfilePopup";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 import { useAuth } from "@/services/providers/AuthProvider";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { getCookie } from "@/helpers/cookie";
+import { ACCESS_TOKEN } from "@/constants/cookies";
 
 const Profile = () => {
   const { address } = useParams();
   const { profile, setAddress, onUpdateProfile, profileOwner } =
     useAccountContext();
-  const { token, signMessageValidate } = useAuth();
+  const { signMessageValidate } = useAuth();
 
   const { isShow: isShowEditProfile, toggle: toggleShowEditProfile } =
     useModal();
@@ -39,6 +41,7 @@ const Profile = () => {
   };
 
   const openEditProfile = () => {
+    const token = getCookie(ACCESS_TOKEN);
     if (!token) {
       signMessageValidate().then((res) => {
         if (res) {
@@ -103,13 +106,13 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="flex gap-7 font-normal">
+      {/* <div className="flex gap-7 font-normal">
         <Button
           icon={<IoSettings />}
           variant="icon"
           onClick={openEditProfile}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

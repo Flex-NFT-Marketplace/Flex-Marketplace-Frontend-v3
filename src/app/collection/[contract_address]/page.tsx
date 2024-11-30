@@ -58,7 +58,7 @@ const CollectionPage = () => {
         }
       }
     },
-    [isFetching, fetchNextPage],
+    [isFetching, fetchNextPage]
   );
 
   useEffect(() => {

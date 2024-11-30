@@ -19,7 +19,7 @@ const useGetBannerCollections = () => {
             }
           )
           const { items } = response?.data?.data;
-          
+            
         return items as ITrendingCollection[];
     },
     retry: 1,

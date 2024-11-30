@@ -77,7 +77,7 @@ const Staking = () => {
     for (let i = 0; i < nftsStaked?.length; i++) {
       let res = await _getNftDetail.mutateAsync({
         contract_address: formattedContractAddress(
-          nftsStaked[i].contract_address,
+          nftsStaked[i].contract_address
         ),
         token_id: nftsStaked[i].token_id,
       });
@@ -146,27 +146,27 @@ const Staking = () => {
     let numEvo = nfts.filter(
       (item) =>
         item.contract_address ==
-        "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd",
+        "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd"
     ).length;
 
     let numStakeEvo = nfts.filter(
       (item) =>
         item.contract_address ==
           "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd" &&
-        item.staking.status == StakingStatusEnum.STAKED,
+        item.staking.status == StakingStatusEnum.STAKED
     ).length;
 
     let numDreamy = nfts.filter(
       (item) =>
         item.contract_address ==
-        "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd",
+        "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd"
     ).length;
 
     let numStakeDreamy = nfts.filter(
       (item) =>
         item.contract_address ==
           "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd" &&
-        item.staking.status == StakingStatusEnum.STAKED,
+        item.staking.status == StakingStatusEnum.STAKED
     ).length;
 
     setStatsNFTDreamy({
@@ -248,7 +248,7 @@ const Staking = () => {
     let isActionStaked =
       arr.findIndex(
         (item) =>
-          item.staking.status == StakingStatusEnum.STAKED && item.checked,
+          item.staking.status == StakingStatusEnum.STAKED && item.checked
       ) < 0;
 
     setActionStaked(isActionStaked);
@@ -265,7 +265,7 @@ const Staking = () => {
       const nftContract = new Contract(
         stakingABI,
         process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        provider,
+        provider
       );
 
       const totalPoint = await nftContract.getUserTotalPoint(address, {
@@ -286,13 +286,13 @@ const Staking = () => {
 
   const getTotalPointItem = async (
     contract_address: string,
-    token_id: string,
+    token_id: string
   ) => {
     try {
       const nftContract = new Contract(
         stakingABI,
         process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        provider,
+        provider
       );
 
       const totalPoint = await nftContract.getUserPointByItem(
@@ -301,7 +301,7 @@ const Staking = () => {
         token_id,
         {
           parseResponse: true,
-        },
+        }
       );
 
       return Number(totalPoint);
@@ -317,7 +317,7 @@ const Staking = () => {
         if (nfts[i].staking.status == StakingStatusEnum.STAKED) {
           let point = await getTotalPointItem(
             nfts[i].contract_address,
-            nfts[i].token_id,
+            nfts[i].token_id
           );
           console.log(point);
           tempArr[i].point = point;

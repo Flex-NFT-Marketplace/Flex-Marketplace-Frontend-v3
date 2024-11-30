@@ -3,6 +3,7 @@ import Image, { StaticImageData } from "next/image";
 import ImageDefault from "./default.webp";
 import { HTMLProps, useEffect, useState } from "react";
 import clsx from "clsx";
+import { formatLink } from "@/utils/string";
 export interface ImageProps {
   width?: number;
   height?: number;

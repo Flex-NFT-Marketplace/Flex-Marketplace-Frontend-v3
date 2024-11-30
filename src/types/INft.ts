@@ -40,3 +40,4 @@ export enum SchemaTypeEnum {
 export interface INftCollection extends INft {
   signatures: ISignature;
 }
+

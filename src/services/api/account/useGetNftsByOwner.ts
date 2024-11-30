@@ -15,22 +15,22 @@ export interface INftAccountResponse {
   };
 }
 
-const useGetNftsByOwner = (address: string) => {
-  return useMutation({
-    mutationKey: ["GET_NFT_BY_ADDRESS", address],
-    mutationFn: async (address: string) => {
-      if (!address) return [] as INftAccountResponse[];
-      const { data } = await axios.get(
-        process.env.NEXT_PUBLIC_API_HOST + "nfts/account/" + address,
-      );
+// const useGetNftsByOwner = (address: string) => {
+//   return useMutation({
+//     mutationKey: ["GET_NFT_BY_ADDRESS", address],
+//     mutationFn: async (address: string) => {
+//       if (!address) return [] as INftAccountResponse[];
+//       const { data } = await axios.get(
+//         process.env.NEXT_PUBLIC_API_HOST + "nfts/account/" + address,
+//       );
 
-      return data.data as INftAccountResponse[];
-    },
-    retry: 1,
-  });
-};
+//       return data.data as INftAccountResponse[];
+//     },
+//     retry: 1,
+//   });
+// };
 
-export const useGetNftsByOwner1 = (address: string) => {
+export const useGetNftsByOwner = (address: string) => {
   let initialPageParam = 1;
   let hasNextPage = true;
   let allData: INft[] = [];
@@ -39,18 +39,20 @@ export const useGetNftsByOwner1 = (address: string) => {
     mutationFn: async (address: string) => {
       if(!address) return allData;
       while (hasNextPage) {
-        const data = await axiosWithoutAccessToken.post("nft/get-nfts", {
+        const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
           page: initialPageParam,
           size: 10,
           owner: address,
         })
-        for (let i = 0; i < data.data.data.items.length; i++) {
-          allData.push(convertStagingNftTypeToINft(data.data.data.items[i]));
+        console.log(data.data);
+        
+        for (let i = 0; i < data.data.items.nft.length; i++) {
+          allData.push(convertStagingNftTypeToINft(data.data.items.nft[i]));
         }
       
-        data.data.data.hasNext ? initialPageParam++ : hasNextPage = false;
-        
+        data.data.hasNext ? initialPageParam++ : hasNextPage = false;
       }
+      
       return allData;
     },
     retry: 1,
