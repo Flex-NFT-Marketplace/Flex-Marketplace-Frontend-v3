@@ -1,12 +1,15 @@
 import { MdOutlineDescription } from "react-icons/md";
 import FlexLogo from "@/assets/not-found.jpeg";
 import { useNftContext } from "@/services/providers/NFTProvider";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { IoMdShare } from "react-icons/io";
 import { TbReload } from "react-icons/tb";
 import { FaRegFlag } from "react-icons/fa";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { useEffect, useState } from "react";
+import { useGetNft } from "@/services/api/nft/useGetNft";
+import { IStagingNft } from "@/types/IStagingNft";
 
 const Profile = () => {
   const router = useRouter();
@@ -14,15 +17,15 @@ const Profile = () => {
     router.push(path);
   };
 
-  const { nft, collection } = useNftContext();
+  const { nftStaging } = useNftContext();
 
   const onNavigationCollection = () => {
-    onNavigate("/collection/" + collection?.contract_address);
+    onNavigate("/collection/" + nftStaging?.nftContract);
   };
 
   return (
     <div className="flex w-[445px] flex-col max-lg:w-full">
-      <p className="truncate text-2xl font-normal">{nft?.name}</p>
+      <p className="truncate text-2xl font-normal">{nftStaging?.name}</p>
 
       <div className="mt-1 flex items-center justify-between">
         <div
@@ -30,12 +33,15 @@ const Profile = () => {
           onClick={onNavigationCollection}
         >
           <ImageKit
-            src={collection?.image_url || "https://via.placeholder.com/272"}
+            src={
+              nftStaging?.nftCollection.avatar ||
+              "https://via.placeholder.com/272"
+            }
             alt=""
             className="h-5 w-5"
           />
           <p className="ml-2 font-normal hover:text-primary">
-            {collection?.name}
+            {nftStaging?.nftCollection.name}
           </p>
         </div>
 
@@ -49,7 +55,7 @@ const Profile = () => {
       <div className="mt-4 w-[445px] max-lg:h-auto max-lg:w-full">
         <ImageKit
           alt=""
-          src={nft?.image_url}
+          src={nftStaging?.image}
           className="h-full w-full rounded-md object-cover"
         />
       </div>
@@ -61,7 +67,7 @@ const Profile = () => {
             Description
           </p>
         </div>
-        <p className="mt-4 text-sm">{nft?.description}</p>
+        <p className="mt-4 text-sm">{nftStaging?.description}</p>
       </div>
     </div>
   );

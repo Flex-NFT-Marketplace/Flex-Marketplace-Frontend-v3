@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    deviceSizes: [1320, 420, 768, 991, 1024, 1200, 1500],
+    path: "/_next/image",
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**", // Allows all hostnames
-        pathname: "**", // Allows all paths
+        hostname: "**",
       },
     ],
   },
-
   async rewrites() {
     return [
       {

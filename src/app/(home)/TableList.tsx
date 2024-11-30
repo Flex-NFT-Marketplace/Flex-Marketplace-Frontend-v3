@@ -32,7 +32,7 @@ const TableList = () => {
       "/starknet/asset/" +
         signature.nft.contract_address +
         "/" +
-        signature.nft.token_id,
+        signature.nft.token_id
     );
   };
 
@@ -67,33 +67,33 @@ const TableList = () => {
             className="flex cursor-pointer items-center py-1 font-normal hover:bg-dark-black"
           >
             <div className="flex min-w-[120px] items-center justify-start max-md:min-w-[32px]">
-              <ActionNFT status={signature.status} isShowStatus={false} />
+              <ActionNFT status={signature?.status} isShowStatus={false} />
             </div>
             <div className="flex flex-1 items-center">
               <ImageKit
-                src={signature.nft.image_url}
+                src={signature?.nft?.image_url}
                 alt=""
                 className="h-[48px] w-[48px] sm:h-[52px] sm:w-[52px]"
               />
               <p className="ml-4 truncate font-normal max-xl:max-w-64 max-sm:max-w-32">
-                {signature.nft.name}
+                {signature?.nft?.name}
               </p>
             </div>
 
             <div className="flex min-w-[150px] items-center justify-end max-sm:min-w-[75px]">
               <FormatPrice
-                price={signature.price}
-                currency={signature.currency}
+                price={signature?.price}
+                currency={signature?.currency}
               />
             </div>
             <div className="hidden min-w-[150px] items-center justify-end lg:flex">
-              <FormatAddress address={signature.signer} />
+              <FormatAddress address={signature?.signer} />
             </div>
             <div className="hidden min-w-[150px] items-center justify-end lg:flex">
-              <FormatAddress address={signature.signer} />
+              <FormatAddress address={signature?.signer} />
             </div>
             <div className="flex min-w-[100px] items-center justify-end max-sm:min-w-[75px]">
-              <FormatTime2 time={signature.updatedAt} />
+              <FormatTime2 time={signature?.updatedAt} />
             </div>
           </div>
         ))}

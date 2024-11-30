@@ -55,14 +55,14 @@ const EditProfilePopup: React.FC<IEditProfilePopupProps> = (props) => {
   const addFormData = (
     formData: FormData,
     data: any,
-    parentKey: string | null = null,
+    parentKey: string | null = null
   ): FormData => {
     if (data && typeof data === "object" && !(data instanceof File)) {
       Object.keys(data).forEach((key) => {
         addFormData(
           formData,
           data[key],
-          parentKey ? `${parentKey}[${key}]` : key,
+          parentKey ? `${parentKey}[${key}]` : key
         );
       });
     } else {
@@ -102,6 +102,7 @@ const EditProfilePopup: React.FC<IEditProfilePopupProps> = (props) => {
         temp[keys[keys.length - 1]] = value;
         return updatedData;
       });
+      console.log(profileData);
     } else {
       setProfileData({ ...profileData, [key]: value });
     }

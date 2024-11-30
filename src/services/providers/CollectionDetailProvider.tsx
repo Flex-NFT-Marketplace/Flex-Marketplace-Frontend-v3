@@ -7,9 +7,18 @@ import { useParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
 import { INftCollection } from "@/types/INft";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  ICollectionCounter,
+  ICollectionEconomic,
+  IStagingCollection,
+} from "@/types/IStagingCollection";
+import { useGetCollectionEconomic } from "../api/collection/useGetCollectionEconomic";
+import { useGetCollectionCount } from "../api/collection/useGetNftCount";
 
 interface CollectionDetailContextType {
-  collection?: ICollection;
+  collectionCount?: ICollectionCounter;
+  collectionEconomic?: ICollectionEconomic;
+  collection?: IStagingCollection;
   nfts: INftCollection[];
   getCollectionData: (contract_address: string) => void;
   fetchNextPage: () => void;
@@ -63,15 +72,19 @@ export const CollectionDetailProvider = ({
   const queryClient = useQueryClient();
 
   const { contract_address } = useParams();
-  const [collection, setCollection] = useState<ICollection>();
+  const [collection, setCollection] = useState<IStagingCollection>();
+  const [collectionEconomic, setCollectionEconomic] =
+    useState<ICollectionEconomic>();
+
+  const [collectionCount, setCollectionCount] = useState<ICollectionCounter>();
   const [nfts, setNfts] = useState<INftCollection[]>([]);
 
   const [priceSortType, setPriceSortType] = useState<PriceSortType>(
-    PriceSortEnum.ASC,
+    PriceSortEnum.ASC
   );
 
   const [sortStatus, setSortStatus] = useState<SortStatusType>(
-    SortStatusEnum.ALL,
+    SortStatusEnum.ALL
   );
 
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -81,10 +94,14 @@ export const CollectionDetailProvider = ({
   useEffect(() => {
     if (contract_address) {
       getCollectionData(contract_address as string);
+      getCollectionEconomic(contract_address as string);
+      getCollectionCount(contract_address as string);
     }
   }, [contract_address]);
 
   const _getCollectionDetail = useGetCollectionDetail();
+  const _getCollectionEconomic = useGetCollectionEconomic();
+  const _getCollectionCount = useGetCollectionCount();
 
   const {
     data: nftsRes,
@@ -98,7 +115,7 @@ export const CollectionDetailProvider = ({
     sortStatus,
     minPrice,
     maxPrice,
-    searchValue,
+    searchValue
   );
 
   useEffect(() => {
@@ -120,7 +137,19 @@ export const CollectionDetailProvider = ({
     setCollection(res);
   };
 
+  const getCollectionEconomic = async (contract_address: string) => {
+    const res = await _getCollectionEconomic.mutateAsync(contract_address);
+    setCollectionEconomic(res);
+  };
+
+  const getCollectionCount = async (contract_address: string) => {
+    const res = await _getCollectionCount.mutateAsync(contract_address);
+    setCollectionCount(res);
+  };
+
   const value = {
+    collectionCount,
+    collectionEconomic,
     collection,
     nfts,
     isLoading,
@@ -156,7 +185,7 @@ export const useCollectionDetailContext = () => {
   const context = useContext(CollectionDetailContext);
   if (!context) {
     throw new Error(
-      "useCollectionContext must be used within a CollectionProvider",
+      "useCollectionContext must be used within a CollectionProvider"
     );
   }
   return context;

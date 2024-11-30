@@ -7,12 +7,13 @@ import EthSVG from "@/assets/EthereumBadge.svg";
 import ImageKit from "@/packages/@ui-kit/Image";
 
 const Profile = () => {
-  const { collection } = useCollectionDetailContext();
+  const { collection, collectionEconomic, collectionCount } =
+    useCollectionDetailContext();
   const [copied, setCopied] = useState(false); // State for copy status
 
   const copyAddress = async () => {
     try {
-      await navigator.clipboard.writeText(collection?.contract_address || "");
+      await navigator.clipboard.writeText(collection?.nftContract || "");
       setCopied(true); // Update copied state for feedback
     } catch (err) {
       console.error("Failed to copy address:", err);
@@ -27,7 +28,7 @@ const Profile = () => {
       <div className="relative">
         <div className="absolute z-[1] h-full w-full bg-gradient-to-b from-transparent via-black/30 to-black"></div>
         <ImageKit
-          src={collection?.banner_url}
+          src={collection?.cover}
           alt=""
           className="max-h-[350px] w-full object-contain"
         />
@@ -35,7 +36,7 @@ const Profile = () => {
       <div className="absolute bottom-0 z-[2] flex w-full flex-wrap items-center justify-between gap-y-4 border-b border-stroke px-8 py-3 max-md:px-5">
         <div className="flex gap-2 sm:gap-3">
           <ImageKit
-            src={collection?.image_url}
+            src={collection?.avatar}
             alt=""
             className="h-[52px] w-[52px] rounded-sm"
           />
@@ -44,7 +45,7 @@ const Profile = () => {
             <p className="text-xl font-bold sm:text-2xl">{collection?.name}</p>
 
             <div className="flex flex-wrap items-center text-xs sm:text-sm">
-              <FormatAddress address={collection?.contract_address} />
+              <FormatAddress address={collection?.nftContract} />
               <MdContentCopy
                 className="ml-2 cursor-pointer"
                 onClick={copyAddress}
@@ -52,7 +53,7 @@ const Profile = () => {
               <p className="ml-2">{copied ? "Copied!" : ""}</p>
               <div className="mx-2 h-4 w-[1px] bg-stroke sm:mx-4"></div>
               <p className="text-grays">Items</p>
-              <p className="ml-2">{collection?.stats.nft_count}</p>
+              <p className="ml-2">{collectionCount?.supply || "-"}</p>
               <p className="ml-4 text-grays sm:ml-5">Creator Earnings</p>
               <p className="ml-2">-%</p>
             </div>
@@ -63,7 +64,9 @@ const Profile = () => {
           <div className="flex min-w-[600px] basis-[600px] gap-7 font-normal">
             <div>
               <p className="flex items-center gap-1 font-bold">
-                {collection?.stats.total_volume.toFixed(3)}{" "}
+                {collectionEconomic?.totalVol
+                  ? (Number(collectionEconomic?.totalVol) / 1e18).toFixed(3)
+                  : "-"}{" "}
                 <span>
                   <Image src={EthSVG} alt="" className="h-4 w-4" />
                 </span>
@@ -72,24 +75,27 @@ const Profile = () => {
             </div>
             <div>
               <p className="font-bold">
-                {collection?.stats?.collection_floor_price.toFixed(3)} ETH
+                {collection?.stats?.collection_floor_price?.toFixed(3) || "-"}{" "}
+                ETH
               </p>
               <p className="text-sm text-grays">Floor Price</p>
             </div>
             <div>
               <p className="font-bold">
-                {collection?.stats.collection_best_offer.toFixed(3)} ETH
+                {collection?.stats?.collection_best_offer?.toFixed(3) || "-"}{" "}
+                ETH
               </p>
               <p className="text-sm text-grays">Best Offer</p>
             </div>
             <div>
-              {collection?.stats.stats1D.avg_price ?? 0 > 0 ? (
+              {collectionEconomic?.oneDayChange &&
+              collectionEconomic?.oneDayChange > 0 ? (
                 <p className="text-shadow-max text-buy">
-                  {collection?.stats.stats1D.avg_price.toFixed(2)}%
+                  {collectionEconomic?.oneDayChange?.toFixed(2)}%
                 </p>
               ) : (
                 <p className="text-shadow-min text-cancel">
-                  {collection?.stats.stats1D.avg_price.toFixed(2)}%
+                  {collectionEconomic?.oneDayChange?.toFixed(2)}%
                 </p>
               )}
               <p className="text-sm text-grays">1D Change</p>
@@ -99,9 +105,7 @@ const Profile = () => {
             <p className="text-sm text-grays">7D Change</p>
           </div> */}
             <div>
-              <p className="font-bold">
-                {collection?.stats?.stats1D?.volume.toFixed(3)} ETH
-              </p>
+              <p className="font-bold">{collectionEconomic?.oneDayVol} ETH</p>
               <p className="text-sm text-grays">1D Volume</p>
             </div>
             {/* <div>
@@ -109,13 +113,11 @@ const Profile = () => {
             <p className="text-sm text-grays">7D Volume</p>
           </div> */}
             <div>
-              <p className="font-bold">
-                {collection?.stats?.total_listing_count}
-              </p>
+              <p className="font-bold">{"-"}</p>
               <p className="text-sm text-grays">Listed</p>
             </div>
             <div>
-              <p className="font-bold">{collection?.stats.owner_count}</p>
+              <p className="font-bold">{collectionCount?.owners}</p>
               <p className="text-sm text-grays">Owners</p>
             </div>
           </div>

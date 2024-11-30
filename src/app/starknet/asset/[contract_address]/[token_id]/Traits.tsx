@@ -30,7 +30,7 @@ const TraitsItem: React.FC<TraitsItemProps> = (props) => {
 };
 
 const Traits = () => {
-  const { nft } = useNftContext();
+  const { nftStaging } = useNftContext();
 
   return (
     <div className="flex flex-col justify-between">
@@ -39,9 +39,11 @@ const Traits = () => {
       </div>
 
       <div className="mt-2 grid grid-cols-3 gap-x-2 gap-y-3 max-sm:grid-cols-2">
-        {nft &&
-          nft?.attributes?.length > 0 &&
-          nft?.attributes.map((item, i) => <TraitsItem data={item} key={i} />)}
+        {nftStaging &&
+          nftStaging?.attributes?.length > 0 &&
+          nftStaging?.attributes.map((item, i) => (
+            <TraitsItem data={item} key={i} />
+          ))}
       </div>
     </div>
   );

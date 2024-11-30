@@ -1,6 +1,5 @@
 "use client";
 
-import { useGetNft } from "@/services/api/nft/useGetNft";
 import Activity from "./Activity";
 import Infor from "./Infor";
 import Profile from "./Profile";
