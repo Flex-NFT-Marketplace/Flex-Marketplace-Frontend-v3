@@ -1,3 +1,4 @@
+"use client";
 import SocialCardCollection from "@/components/SocialCardCollection";
 import { useGetOpenEditions } from "@/services/api/useGetOpenEditions";
 import { useRouter } from "next/navigation";

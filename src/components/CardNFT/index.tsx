@@ -20,9 +20,10 @@ import styles from "./CardNFT.module.css";
 import clsx from "clsx";
 import FormatPrice, { FormatPriceWithIcon } from "../FormatPrice";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
 
 interface CardNFTProps {
-  nft: INft;
+  nft: IStagingNft;
   isOwner?: boolean;
   isShowFilter?: boolean;
   isShowActivity?: boolean;
@@ -67,7 +68,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   };
 
   const onNavigateDetail = () => {
-    onNavigate("/starknet/asset/" + nft.contract_address + "/" + nft.token_id);
+    onNavigate("/starknet/asset/" + nft.nftContract + "/" + nft.tokenId);
   };
 
   useEffect(() => {
@@ -169,7 +170,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
         onClick={onNavigateDetail}
       >
         <ImageKit
-          src={nft?.image_url || "https://via.placeholder.com/272"}
+          src={nft?.image || "https://via.placeholder.com/272"}
           alt=""
           className={`aspect-square w-full rounded-t ${isHover == true ? "scale-110 rounded" : "scale-[1.01]"} transition-all`}
         />
@@ -178,7 +179,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
       <div className="relative flex flex-col gap-1 px-3 py-2">
         <div className="cursor-pointer" onClick={onNavigateDetail}>
           <p className="line-clamp-1 truncate text-lg font-normal">
-            {nft?.name || "#" + nft?.token_id}
+            {nft?.name || "#" + nft?.tokenId}
           </p>
           <div className="h-7">
             {(bestAsk?.price && (

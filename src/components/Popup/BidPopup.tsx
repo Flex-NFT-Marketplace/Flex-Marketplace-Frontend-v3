@@ -25,13 +25,14 @@ import Dropdown from "@/packages/@ui-kit/Dropdown";
 import DatePickup from "@/packages/@ui-kit/DatePickup";
 import Image from "next/image";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
 
 dayjs.extend(utc);
 
 interface ISelPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  nftData?: INft;
+  nftData?: IStagingNft;
   onReload: () => void;
   schema: string;
 }
@@ -99,9 +100,9 @@ const BidPopup: React.FC<ISelPopupProps> = (props) => {
       timeEnd.unix(),
       price,
       amount,
-      nftData?.contract_address || "",
-      nftData?.token_id || "",
-      currencySelected.value,
+      nftData?.nftContract || "",
+      nftData?.tokenId || "",
+      currencySelected.value
     );
 
     toggleModal();
@@ -128,7 +129,7 @@ const BidPopup: React.FC<ISelPopupProps> = (props) => {
             width={100}
             height={100}
             alt=""
-            src={nftData?.image_url}
+            src={nftData?.image}
             className="aspect-square w-[75px] rounded-md"
           />
           <div className="flex flex-1 flex-col">

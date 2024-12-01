@@ -27,7 +27,7 @@ const TableList = () => {
         }
       }
     },
-    [isLoading, fetchNextPage],
+    [isLoading, fetchNextPage]
   );
 
   useEffect(() => {
@@ -91,12 +91,12 @@ const TableList = () => {
             <div className="sticky left-0 flex flex-1 items-center">
               <div className="h-5 w-5">{/* <Checkbox /> */}</div>
               <ImageKit
-                src={_.image_url}
+                src={_?.image}
                 alt=""
                 className="ml-2 h-[52px] w-[52px]"
               />
 
-              <p className="ml-4  truncate font-normal ">{_.name}</p>
+              <p className="ml-4  truncate font-normal ">{_?.name}</p>
             </div>
 
             {/* <div className="flex min-w-[100px] items-center justify-end">
@@ -104,8 +104,8 @@ const TableList = () => {
             </div> */}
             <div className="flex min-w-[100px] items-center justify-end">
               <FormatPrice
-                price={_.signatures.price}
-                currency={_.signatures.currency}
+                price={_?.signatures?.price}
+                currency={_?.signatures?.currency}
               />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
@@ -118,7 +118,7 @@ const TableList = () => {
               <FormatAddress />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
-              <FormatTime2 time={_.signatures.updatedAt} />
+              <FormatTime2 time={_?.signatures?.updatedAt} />
             </div>
           </div>
         ))}

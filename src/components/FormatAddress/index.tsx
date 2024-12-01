@@ -1,3 +1,4 @@
+"use client";
 import { useGetProfile } from "@/services/api/useGetProfile";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
