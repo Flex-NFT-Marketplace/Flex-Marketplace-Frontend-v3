@@ -1,5 +1,7 @@
 import NftItemSkeleton from "@/app/(skeletonLoading)/share/CardNftSkeleton";
 import CardNFT from "@/components/CardNFT";
+import { INft } from "@/types/INft";
+import { IStagingNft } from "@/types/IStagingNft";
 import { useEffect } from "react";
 
 const TableCard = (props: any) => {
@@ -18,7 +20,7 @@ const TableCard = (props: any) => {
         paddingRight: isShowActivity ? "0.3rem" : "",
       }}
     >
-      {nfts?.map((_: any, index: number) => (
+      {nfts?.map((_: IStagingNft, index: number) => (
         <CardNFT
           key={index}
           nft={_}

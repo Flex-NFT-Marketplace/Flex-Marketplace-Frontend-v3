@@ -1,3 +1,4 @@
+import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import {
   PriceSortType,
   SortStatusType,
@@ -15,26 +16,42 @@ export const useGetNFTCollection = (
 ) => {
   return useInfiniteQuery({
     queryKey: ["NFT_COLLECTION", contract_address, sortPriceType, status],
+    // queryFn: async ({ pageParam }) => {
+    //   const { data } = await axios.get(
+    //     process.env.NEXT_PUBLIC_API_HOST + "nfts/" + contract_address,
+    //     {
+    //       params: {
+    //         page: pageParam,
+    //         sortPrice: sortPriceType,
+    //         status: status,
+    //         minPrice: minPrice,
+    //         maxPrice: maxPrice,
+    //         search: search,
+    //       },
+    //     },
+    //   );
+
+    //   return data;
+    // },
     queryFn: async ({ pageParam }) => {
-      const { data } = await axios.get(
-        process.env.NEXT_PUBLIC_API_HOST + "nfts/" + contract_address,
-        {
-          params: {
+      const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
             page: pageParam,
+            size: 20,
+            nftContract: contract_address,
             sortPrice: sortPriceType,
             status: status,
             minPrice: minPrice,
             maxPrice: maxPrice,
             search: search,
-          },
-        },
-      );
-
-      return data;
+      })
+      console.log(data.data);
+      
+      return data.data;
     },
+
     initialPageParam: 1,
-    getNextPageParam: (lastPage, page) => {
-      return lastPage.nextPage ? lastPage.nextPage : undefined;
+    getNextPageParam: (lastPage, page) => {  
+      return lastPage.hasNext ? lastPage.page + 1 : undefined;
     },
   });
 };

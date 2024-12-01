@@ -1,4 +1,3 @@
-"use client";
 import Banner from "./(home)/Banner";
 import FooterImage from "../assets/footer.svg";
 import Trending from "./(home)/(trending)/Trending";

@@ -5,7 +5,7 @@ import { ICollection } from "@/types/ICollection";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
 import { useParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
-import { INftCollection } from "@/types/INft";
+import { INft, INftCollection } from "@/types/INft";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ICollectionCounter,
@@ -14,12 +14,13 @@ import {
 } from "@/types/IStagingCollection";
 import { useGetCollectionEconomic } from "../api/collection/useGetCollectionEconomic";
 import { useGetCollectionCount } from "../api/collection/useGetNftCount";
+import { IStagingNft } from "@/types/IStagingNft";
 
 interface CollectionDetailContextType {
   collectionCount?: ICollectionCounter;
   collectionEconomic?: ICollectionEconomic;
   collection?: IStagingCollection;
-  nfts: INftCollection[];
+  nfts: IStagingNft[];
   getCollectionData: (contract_address: string) => void;
   fetchNextPage: () => void;
   isLoading: boolean;
@@ -77,7 +78,7 @@ export const CollectionDetailProvider = ({
     useState<ICollectionEconomic>();
 
   const [collectionCount, setCollectionCount] = useState<ICollectionCounter>();
-  const [nfts, setNfts] = useState<INftCollection[]>([]);
+  const [nfts, setNfts] = useState<IStagingNft[]>([]);
 
   const [priceSortType, setPriceSortType] = useState<PriceSortType>(
     PriceSortEnum.ASC
@@ -123,10 +124,10 @@ export const CollectionDetailProvider = ({
   }, [priceSortType, sortStatus, minPrice, maxPrice, searchValue]);
 
   useEffect(() => {
-    let nftsArr: INftCollection[] = [];
+    let nftsArr: IStagingNft[] = [];
 
     nftsRes?.pages.map((page) => {
-      nftsArr = [...nftsArr, ...page.data];
+      nftsArr = [...nftsArr, ...page.items.nft];
     });
 
     setNfts(nftsArr);
