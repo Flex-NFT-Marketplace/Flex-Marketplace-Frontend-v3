@@ -1,6 +1,5 @@
-import { ICollection } from "@/types/ICollection";
+import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import { IStagingCollection } from "@/types/IStagingCollection";
-import { convertStagingCollectionTypeToICollectionType } from "@/utils/convertType";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -11,13 +10,10 @@ const useGetBannerCollections = () => {
     queryKey: ["banner_collections"],
     queryFn: async () => {
       
-      const responses = await axios.get(`${process.env.NEXT_PUBLIC_API_STAGING}system-setting/bannerCollection`)
-        
-      const {nftCollectionBanner} = responses.data?.data;
+      const { data } = await axiosWithoutAccessToken.get(`system-setting/bannerCollection`)
+        console.log(data.data.nftCollectionBanner);
       
-      const dataConverted = nftCollectionBanner.map((item: IStagingCollection) => convertStagingCollectionTypeToICollectionType(item))
-      
-      return dataConverted as ICollection[];
+      return data.data.nftCollectionBanner as IStagingCollection[];
     },
     retry: 1,
   });

@@ -1,7 +1,7 @@
 import NftItemSkeleton from "@/app/(skeletonLoading)/share/CardNftSkeleton";
 import CardNFT from "@/components/CardNFT";
 import { INft } from "@/types/INft";
-import { IStagingNft } from "@/types/IStagingNft";
+import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
 import { useEffect } from "react";
 
 const TableCard = (props: any) => {
@@ -20,11 +20,11 @@ const TableCard = (props: any) => {
         paddingRight: isShowActivity ? "0.3rem" : "",
       }}
     >
-      {nfts?.map((_: IStagingNft, index: number) => (
+      {nfts?.map((_: IStagingNftResponse, index: number) => (
         <CardNFT
           key={index}
-          nft={_}
-          bestAsk={_.signatures}
+          nft={_.nftData}
+          bestAsk={_?.orderData?.bestAsk}
           onReload={() => {}}
           isShowFilter={isShowFilter}
           isShowActivity={isShowActivity}

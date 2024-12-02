@@ -20,9 +20,8 @@ export const useGetCollectionDetail = () => {
     mutationKey: ["collection"],
     mutationFn: async (contractAddress: string) => {
       const { data } = await axiosWithoutAccessToken.get(`/nft-collection/${contractAddress}`);
-      console.log(data.data.data);
-      
-      return data.data.data as IStagingCollection;
+
+      return data.data as IStagingCollection;
     }
   })
 

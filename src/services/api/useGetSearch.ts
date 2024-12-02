@@ -29,8 +29,6 @@ const useGetSearch = (value: string) => {
         "desc": "desc",
         "search": value,
       })
-
-      console.log("search", data.data);
       
 
       return data.data

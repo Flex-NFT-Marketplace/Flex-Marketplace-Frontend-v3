@@ -7,6 +7,7 @@ import { num, uint256 } from "starknet";
 import { typedDataValidate } from "./type";
 import { useActionBidNft } from "../api/nft/useActionBidNft";
 import { useNotify } from "../providers/NotifyProvider";
+import { IStagingNft } from "@/types/IStagingNft";
 
 const useAcceptBid = () => {
   const { status, account, address } = useAccount();
@@ -19,7 +20,7 @@ const useAcceptBid = () => {
 
   const generateBidCalldataSignature = (
     signature: ISignature,
-    nft: INft,
+    nft: IStagingNft,
     amount: number,
   ) => {
     if (!signature) return null;
@@ -29,9 +30,9 @@ const useAcceptBid = () => {
       address, //   taker
       convertEtherToWei((signature.price * amount).toString()).toString(), //   price
       (typedDataValidate.message["tokenId.low"] = num.hexToDecimalString(
-        uint256.bnToUint256(nft.token_id).low.toString(),
+        uint256.bnToUint256(nft.tokenId).low.toString(),
       )), //   tokenId
-      num.hexToDecimalString(uint256.bnToUint256(nft.token_id).high.toString()), //   tokenId
+      num.hexToDecimalString(uint256.bnToUint256(nft.tokenId).high.toString()), //   tokenId
       signature.amount, //   amount
       "8500", // minPercentageToAsk
       "0", // params
@@ -41,9 +42,9 @@ const useAcceptBid = () => {
       convertEtherToWei(signature.price.toString()).toString(), //   price
       // signature.buyer_address,
       (typedDataValidate.message["tokenId.low"] = num.hexToDecimalString(
-        uint256.bnToUint256(nft.token_id).low.toString(),
+        uint256.bnToUint256(nft.tokenId).low.toString(),
       )), //   tokenId
-      num.hexToDecimalString(uint256.bnToUint256(nft.token_id).high.toString()), //   tokenId
+      num.hexToDecimalString(uint256.bnToUint256(nft.tokenId).high.toString()), //   tokenId
       signature.amount_sig, //   amount
       addresses.strategyStandardSaleForFixedPrice.address, //   strategy
       signature.currency, //   currency
@@ -60,19 +61,19 @@ const useAcceptBid = () => {
 
   const onAcceptBid = async (
     signature: ISignature,
-    nft: INft,
+    nft: IStagingNft,
     amount: number,
   ) => {
     if (status == "connected") {
       try {
         const result = await account?.execute([
           {
-            contractAddress: nft.contract_address || "",
+            contractAddress: nft.nftContract || "",
             entrypoint: "setApprovalForAll",
             calldata: [addresses.transferManagerERC721.address, 0x1],
           },
           {
-            contractAddress: nft.contract_address || "",
+            contractAddress: nft.nftContract || "",
             entrypoint: "setApprovalForAll",
             calldata: [addresses.transferManagerERC1155.address, 0x1],
           },

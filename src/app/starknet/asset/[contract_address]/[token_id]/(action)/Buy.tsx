@@ -15,9 +15,10 @@ import Button from "@/packages/@ui-kit/Button";
 import { useAccount, useConnect } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useStarknetkitConnectModal } from "starknetkit";
+import { IStagingNft } from "@/types/IStagingNft";
 
 type BuyProps = {
-  nftData: INft | undefined;
+  nftData: IStagingNft | undefined;
   signature: ISignature;
   schema?: string;
 };

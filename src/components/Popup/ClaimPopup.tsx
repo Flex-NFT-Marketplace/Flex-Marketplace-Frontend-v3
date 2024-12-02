@@ -61,8 +61,8 @@ const ClaimPopup: React.FC<IClaimPopupProps> = (props) => {
 
       let dreamyNfts: any[] = res.filter(
         (nft) =>
-          nft.collection?.contract_address ==
-          "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd",
+          nft.nftData?.nftContract ==
+          "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd"
       );
 
       if (dreamyNfts.length == 0) {
@@ -99,11 +99,11 @@ const ClaimPopup: React.FC<IClaimPopupProps> = (props) => {
       const contract = new Contract(
         claimABI,
         "0x020aa11175274adf42e8095daf59dbcf760ef16f14294df59a37378015c1ff00",
-        provider,
+        provider
       );
       const res = await contract.is_claimed_rewards(token_id);
       return res;
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const onClaim = async () => {
@@ -156,7 +156,7 @@ const ClaimPopup: React.FC<IClaimPopupProps> = (props) => {
             </p>
             <div className="flex w-full border border-stroke p-5">
               <ImageKit
-                src={collection?.image_url}
+                src={collection?.avatar}
                 alt=""
                 className="h-[92px] w-[92px]"
               />
@@ -185,33 +185,35 @@ const ClaimPopup: React.FC<IClaimPopupProps> = (props) => {
               </div>
             </div>
 
-            {nfts.length > 0 && <div className="flex w-[486px] items-center justify-center gap-2 overflow-x-auto">
-              {nfts?.map((_, i) => (
-                <div
-                  className="flex flex-shrink-0 flex-col items-center gap-2"
-                  key={i}
-                >
-                  <div className="relative">
-                    {_.claimed && (
-                      <>
-                        <div className="absolute inset-0 bg-black/70"></div>
-                        <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-normal text-white">
-                          Claimed
-                        </p>
-                      </>
-                    )}
+            {nfts.length > 0 && (
+              <div className="flex w-[486px] items-center justify-center gap-2 overflow-x-auto">
+                {nfts?.map((_, i) => (
+                  <div
+                    className="flex flex-shrink-0 flex-col items-center gap-2"
+                    key={i}
+                  >
+                    <div className="relative">
+                      {_.claimed && (
+                        <>
+                          <div className="absolute inset-0 bg-black/70"></div>
+                          <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-normal text-white">
+                            Claimed
+                          </p>
+                        </>
+                      )}
 
-                    <ImageKit
-                      src={_.nft.image_url}
-                      alt=""
-                      className="h-[84px] w-[84px]"
-                    />
+                      <ImageKit
+                        src={_.nft.image_url}
+                        alt=""
+                        className="h-[84px] w-[84px]"
+                      />
+                    </div>
+
+                    <p className="font-normal">#{_.nft.token_id}</p>
                   </div>
-
-                  <p className="font-normal">#{_.nft.token_id}</p>
-                </div>
-              ))}
-            </div>}
+                ))}
+              </div>
+            )}
 
             <div className="text-center">
               <p className=" text-center font-normal text-grays">

@@ -7,9 +7,13 @@ import {
   useCollectionDetailContext,
 } from "@/services/providers/CollectionDetailProvider";
 import { ITraits } from "@/types/IStagingCollection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Traits from "./Traits";
+import {
+  IAttributesCollection,
+  IAttributesCollectionFilter,
+} from "@/types/INft";
 
 const Filter = () => {
   const [isShowPrice, setIsShowPrice] = useState(true);
@@ -17,6 +21,7 @@ const Filter = () => {
 
   const [_minPrice, _setMinPrice] = useState(0);
   const [_maxPrice, _setMaxPrice] = useState(1000);
+  const [traitsActive, setTraitsActive] = useState<IAttributesCollection[]>([]);
 
   const {
     priceSortType,
@@ -25,7 +30,8 @@ const Filter = () => {
     setSortStatus,
     setMinPrice,
     setMaxPrice,
-    collection,
+    collectionAttributes,
+    setAttributesFilter,
   } = useCollectionDetailContext();
 
   const onSortByPrice = () => {
@@ -44,6 +50,38 @@ const Filter = () => {
       setIsShowPrice(false);
     }
   };
+
+  const changeTraitsActive = (traitFilter: IAttributesCollection) => {
+    if (isFiltered(traitFilter.trait_type as string)) {
+      const newTraitsActive: IAttributesCollection[] = JSON.parse(
+        JSON.stringify(traitsActive)
+      );
+      newTraitsActive.map((item) => {
+        if (item.trait_type == traitFilter.trait_type) {
+          return { key: item.trait_type, value: traitFilter.value };
+        } else return item;
+      });
+      console.log(newTraitsActive);
+
+      setTraitsActive(() => newTraitsActive);
+    } else {
+      setTraitsActive([...traitsActive, traitFilter]);
+    }
+  };
+
+  const isFiltered = (key: string) => {
+    let isKeyFiltered = false;
+    traitsActive.forEach((traitActive) => {
+      if (traitActive.trait_type == key) {
+        isKeyFiltered = true;
+      }
+    });
+    return isKeyFiltered;
+  };
+
+  useEffect(() => {
+    setAttributesFilter(traitsActive);
+  }, [traitsActive]);
 
   return (
     <div
@@ -136,7 +174,7 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         <div
           className="flex cursor-pointer items-center justify-between text-xl transition-all"
           onClick={() => setIsShowTraits(!isShowTraits)}
@@ -145,12 +183,19 @@ const Filter = () => {
           {isShowTraits ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </div>
         <div className={`${!isShowTraits && "hidden"} flex flex-col gap-6`}>
-          {collection?.traits?.map((traits: ITraits, index: number) => {
-            return <Traits traits={traits} key={index} />;
-          })}
- 
+          {collectionAttributes?.map(
+            (attributes: IAttributesCollectionFilter, index: number) => {
+              return (
+                <Traits
+                  traits={attributes}
+                  key={index}
+                  onChange={changeTraitsActive}
+                />
+              );
+            }
+          )}
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

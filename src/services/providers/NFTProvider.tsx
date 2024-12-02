@@ -12,11 +12,13 @@ import { ISignature } from "@/types/ISignature";
 import { useGetNftByOwner } from "../api/account/useGetNftByOwner";
 import { IStagingNft } from "@/types/IStagingNft";
 import { useGetNft } from "../api/nft/useGetNft";
+import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
+import { IStagingCollection } from "@/types/IStagingCollection";
 
 export interface NftContextType {
-  nft?: INft;
+  nft?: IStagingNft;
   nftStaging?: IStagingNft;
-  collection?: ICollection;
+  collection?: IStagingCollection;
   isOwner: boolean;
   getData: (contractAddress: string, tokenId: string, address: string) => void;
   clearData: () => void;
@@ -46,9 +48,9 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const { address } = useAccount();
-  const [nft, setNft] = useState<INft | undefined>(undefined);
+  const [nft, setNft] = useState<IStagingNft | undefined>(undefined);
   const [listAsk, setListAsk] = useState<ISignature[]>([]);
-  const [collection, setCollection] = useState<ICollection>();
+  const [collection, setCollection] = useState<IStagingCollection>();
   const [bestAsk, setBestAsk] = useState<ISignature | undefined>(undefined);
   const [listBid, setListBid] = useState<ISignature[]>([]);
   const [isOwner, setIsOwner] = useState(false);
@@ -71,19 +73,26 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
         setNftStaging(nftRes);
       }
     };
+    const getCollection = async () => {
+      if (!contract_address) return;
+      const res = await _getCollection.mutateAsync(contract_address as string);
+      setCollection(res);
+    };
     getNft();
+    getCollection();
   }, [contract_address, token_id]);
 
   const _nftInfo = useGetNft();
+  const _getCollection = useGetCollectionDetail();
   const _getNft = useGetNftByOwner();
   const _getIsOwner = useGetIsOwnerNft();
 
-  const getOwner = async (_nft: INft, address: string) => {
+  const getOwner = async (_nft: IStagingNft, address: string) => {
     if (!_nft || !address) return;
     setIsOwner(false);
 
     try {
-      await getIsOwner(_nft.contract_address, _nft.token_id, address);
+      await getIsOwner(_nft.nftContract, _nft.tokenId, address);
     } catch (error) {}
 
     setLoadingStatus(NftLoadActionEnum.LOADED_IS_OWNER);
@@ -123,7 +132,7 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       setNft(res.nft);
-      setCollection(res.collection);
+      // setCollection(res.collection);
       setBestAsk(res.orderData.bestAsk);
       setListAsk(res.orderData.listAsk);
       setListBid(res.orderData.listBid);
@@ -141,7 +150,7 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
 
   const onReload = () => {
     if (nft) {
-      getData(nft.contract_address, nft.token_id, address as string);
+      getData(nft.nftContract, nft.tokenId, address as string);
     }
   };
 

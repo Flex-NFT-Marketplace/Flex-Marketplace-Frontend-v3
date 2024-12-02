@@ -63,276 +63,276 @@ const Staking = () => {
   const [actionStaked, setActionStaked] = useState(true);
   const _getNftDetail = useGetNftDetail();
 
-  useEffect(() => {
-    getNFTStaked();
-  }, [address]);
+  // useEffect(() => {
+  //   getNFTStaked();
+  // }, [address]);
 
-  const getNFTStaked = async () => {
-    if (!address) return [];
+  // const getNFTStaked = async () => {
+  //   if (!address) return [];
 
-    const nftsStaked = await getStaked(address);
+  //   const nftsStaked = await getStaked(address);
 
-    let nfts = [];
+  //   let nfts = [];
 
-    for (let i = 0; i < nftsStaked?.length; i++) {
-      let res = await _getNftDetail.mutateAsync({
-        contract_address: formattedContractAddress(
-          nftsStaked[i].contract_address
-        ),
-        token_id: nftsStaked[i].token_id,
-      });
+  //   for (let i = 0; i < nftsStaked?.length; i++) {
+  //     let res = await _getNftDetail.mutateAsync({
+  //       contract_address: formattedContractAddress(
+  //         nftsStaked[i].contract_address
+  //       ),
+  //       token_id: nftsStaked[i].token_id,
+  //     });
 
-      nfts.push(res);
-    }
+  //     nfts.push(res);
+  //   }
 
-    setStakings(nfts);
-  };
+  //   setStakings(nfts);
+  // };
 
-  const [statsNFTEvo, setStatsNFTEvo] = useState({
-    point: 20,
-    holding: 0,
-    staking: 0,
-  });
+  // const [statsNFTEvo, setStatsNFTEvo] = useState({
+  //   point: 20,
+  //   holding: 0,
+  //   staking: 0,
+  // });
 
-  const [statsNFTDreamy, setStatsNFTDreamy] = useState({
-    point: 10,
-    holding: 0,
-    staking: 0,
-  });
+  // const [statsNFTDreamy, setStatsNFTDreamy] = useState({
+  //   point: 10,
+  //   holding: 0,
+  //   staking: 0,
+  // });
 
-  useEffect(() => {
-    if (!nftsOwner || nftsOwner.length < 0) return;
+  // useEffect(() => {
+  //   if (!nftsOwner || nftsOwner.length < 0) return;
 
-    const arr = nftsOwner.filter((nft) => {
-      if (STAKECOLLECTION.includes(nft.collection.contract_address))
-        return true;
-      return false;
-    });
+  //   const arr = nftsOwner.filter((nft) => {
+  //     if (STAKECOLLECTION.includes(nft.collection.contract_address))
+  //       return true;
+  //     return false;
+  //   });
 
-    let nfts = arr.map((nft) => {
-      return {
-        ...nft.nft,
-        staking: {
-          status: StakingStatusEnum.UNSTAKED,
-        },
-        checked: false,
-      };
-    });
+  //   let nfts = arr.map((nft) => {
+  //     return {
+  //       ...nft.nft,
+  //       staking: {
+  //         status: StakingStatusEnum.UNSTAKED,
+  //       },
+  //       checked: false,
+  //     };
+  //   });
 
-    let nftStaked = stakings.map((stake) => {
-      return {
-        ...stake,
-        staking: {
-          status: StakingStatusEnum.STAKED,
-        },
-        checked: false,
-        point: 0,
-      };
-    });
+  //   let nftStaked = stakings.map((stake) => {
+  //     return {
+  //       ...stake,
+  //       staking: {
+  //         status: StakingStatusEnum.STAKED,
+  //       },
+  //       checked: false,
+  //       point: 0,
+  //     };
+  //   });
 
-    setNumNftStaked(nftStaked.length);
+  //   setNumNftStaked(nftStaked.length);
 
-    const nftStakedIds = new Set(nftStaked.map((nft) => nft._id));
-    nfts = nfts.filter((nft) => !nftStakedIds.has(nft._id));
+  //   const nftStakedIds = new Set(nftStaked.map((nft) => nft._id));
+  //   nfts = nfts.filter((nft) => !nftStakedIds.has(nft._id));
 
-    nfts = [...nfts, ...nftStaked];
+  //   nfts = [...nfts, ...nftStaked];
 
-    nfts = nfts.sort((a, b) => {
-      if (a.staking.status == StakingStatusEnum.STAKED) return -1;
-      if (a.staking.status == StakingStatusEnum.UNSTAKED) return 1;
-      return 0;
-    });
+  //   nfts = nfts.sort((a, b) => {
+  //     if (a.staking.status == StakingStatusEnum.STAKED) return -1;
+  //     if (a.staking.status == StakingStatusEnum.UNSTAKED) return 1;
+  //     return 0;
+  //   });
 
-    let numEvo = nfts.filter(
-      (item) =>
-        item.contract_address ==
-        "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd"
-    ).length;
+  //   let numEvo = nfts.filter(
+  //     (item) =>
+  //       item.contract_address ==
+  //       "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd"
+  //   ).length;
 
-    let numStakeEvo = nfts.filter(
-      (item) =>
-        item.contract_address ==
-          "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd" &&
-        item.staking.status == StakingStatusEnum.STAKED
-    ).length;
+  //   let numStakeEvo = nfts.filter(
+  //     (item) =>
+  //       item.contract_address ==
+  //         "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd" &&
+  //       item.staking.status == StakingStatusEnum.STAKED
+  //   ).length;
 
-    let numDreamy = nfts.filter(
-      (item) =>
-        item.contract_address ==
-        "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd"
-    ).length;
+  //   let numDreamy = nfts.filter(
+  //     (item) =>
+  //       item.contract_address ==
+  //       "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd"
+  //   ).length;
 
-    let numStakeDreamy = nfts.filter(
-      (item) =>
-        item.contract_address ==
-          "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd" &&
-        item.staking.status == StakingStatusEnum.STAKED
-    ).length;
+  //   let numStakeDreamy = nfts.filter(
+  //     (item) =>
+  //       item.contract_address ==
+  //         "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd" &&
+  //       item.staking.status == StakingStatusEnum.STAKED
+  //   ).length;
 
-    setStatsNFTDreamy({
-      ...statsNFTDreamy,
-      holding: numDreamy,
-      staking: numStakeDreamy,
-    });
+  //   setStatsNFTDreamy({
+  //     ...statsNFTDreamy,
+  //     holding: numDreamy,
+  //     staking: numStakeDreamy,
+  //   });
 
-    setStatsNFTEvo({
-      ...statsNFTEvo,
-      holding: numEvo,
-      staking: numStakeEvo,
-    });
+  //   setStatsNFTEvo({
+  //     ...statsNFTEvo,
+  //     holding: numEvo,
+  //     staking: numStakeEvo,
+  //   });
 
-    calculatePointsItem(nfts);
-  }, [nftsOwner, stakings]);
+  //   calculatePointsItem(nfts);
+  // }, [nftsOwner, stakings]);
 
-  const renderAction = (status: StakingStatus) => {
-    switch (status) {
-      case StakingStatusEnum.STAKED:
-        return (
-          <div>
-            <p className="font-bold text-[#92F7CB]">Staked</p>
-          </div>
-        );
+  // const renderAction = (status: StakingStatus) => {
+  //   switch (status) {
+  //     case StakingStatusEnum.STAKED:
+  //       return (
+  //         <div>
+  //           <p className="font-bold text-[#92F7CB]">Staked</p>
+  //         </div>
+  //       );
 
-      case StakingStatusEnum.UNSTAKED:
-        return (
-          <div>
-            <p>N/A</p>
-          </div>
-        );
+  //     case StakingStatusEnum.UNSTAKED:
+  //       return (
+  //         <div>
+  //           <p>N/A</p>
+  //         </div>
+  //       );
 
-      default:
-        return <Button title="No Action"></Button>;
-    }
-  };
+  //     default:
+  //       return <Button title="No Action"></Button>;
+  //   }
+  // };
 
-  const onStake = () => {
-    const arr = nfts.filter((item) => {
-      return item.staking.status == StakingStatusEnum.UNSTAKED;
-    });
+  // const onStake = () => {
+  //   const arr = nfts.filter((item) => {
+  //     return item.staking.status == StakingStatusEnum.UNSTAKED;
+  //   });
 
-    setNftsStake(arr);
-    toggleModalStake();
-  };
+  //   setNftsStake(arr);
+  //   toggleModalStake();
+  // };
 
-  const onUnstake = () => {
-    const arr = nfts.filter((item) => {
-      return item.staking.status == StakingStatusEnum.STAKED;
-    });
+  // const onUnstake = () => {
+  //   const arr = nfts.filter((item) => {
+  //     return item.staking.status == StakingStatusEnum.STAKED;
+  //   });
 
-    setNftsUnStake(arr);
-    toggleModalUnStake();
-  };
+  //   setNftsUnStake(arr);
+  //   toggleModalUnStake();
+  // };
 
-  const onChecked = (nft: any, status: boolean) => {
-    const arr = nfts.map((item) => {
-      if (
-        item.contract_address == nft.contract_address &&
-        item.token_id == nft.token_id
-      ) {
-        return {
-          ...item,
-          checked: status,
-        };
-      }
+  // const onChecked = (nft: any, status: boolean) => {
+  //   const arr = nfts.map((item) => {
+  //     if (
+  //       item.contract_address == nft.contract_address &&
+  //       item.token_id == nft.token_id
+  //     ) {
+  //       return {
+  //         ...item,
+  //         checked: status,
+  //       };
+  //     }
 
-      if (nft.staking.status != item.staking.status) {
-        return {
-          ...item,
-          checked: false,
-        };
-      }
+  //     if (nft.staking.status != item.staking.status) {
+  //       return {
+  //         ...item,
+  //         checked: false,
+  //       };
+  //     }
 
-      return item;
-    });
+  //     return item;
+  //   });
 
-    let isActionStaked =
-      arr.findIndex(
-        (item) =>
-          item.staking.status == StakingStatusEnum.STAKED && item.checked
-      ) < 0;
+  //   let isActionStaked =
+  //     arr.findIndex(
+  //       (item) =>
+  //         item.staking.status == StakingStatusEnum.STAKED && item.checked
+  //     ) < 0;
 
-    setActionStaked(isActionStaked);
-    setNfts(arr);
-  };
+  //   setActionStaked(isActionStaked);
+  //   setNfts(arr);
+  // };
 
-  const onReloadData = () => {
-    getNFTStaked();
-    onReloadNftOwner();
-  };
+  // const onReloadData = () => {
+  //   getNFTStaked();
+  //   onReloadNftOwner();
+  // };
 
-  const getUserTotalPoint = async () => {
-    try {
-      const nftContract = new Contract(
-        stakingABI,
-        process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        provider
-      );
+  // const getUserTotalPoint = async () => {
+  //   try {
+  //     const nftContract = new Contract(
+  //       stakingABI,
+  //       process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
+  //       provider
+  //     );
 
-      const totalPoint = await nftContract.getUserTotalPoint(address, {
-        parseResponse: true,
-      });
+  //     const totalPoint = await nftContract.getUserTotalPoint(address, {
+  //       parseResponse: true,
+  //     });
 
-      setNumTotalPoint(Number(totalPoint));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setNumTotalPoint(Number(totalPoint));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (address) {
-      getUserTotalPoint();
-    }
-  }, [address]);
+  // useEffect(() => {
+  //   if (address) {
+  //     getUserTotalPoint();
+  //   }
+  // }, [address]);
 
-  const getTotalPointItem = async (
-    contract_address: string,
-    token_id: string
-  ) => {
-    try {
-      const nftContract = new Contract(
-        stakingABI,
-        process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        provider
-      );
+  // const getTotalPointItem = async (
+  //   contract_address: string,
+  //   token_id: string
+  // ) => {
+  //   try {
+  //     const nftContract = new Contract(
+  //       stakingABI,
+  //       process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
+  //       provider
+  //     );
 
-      const totalPoint = await nftContract.getUserPointByItem(
-        address,
-        contract_address,
-        token_id,
-        {
-          parseResponse: true,
-        }
-      );
+  //     const totalPoint = await nftContract.getUserPointByItem(
+  //       address,
+  //       contract_address,
+  //       token_id,
+  //       {
+  //         parseResponse: true,
+  //       }
+  //     );
 
-      return Number(totalPoint);
-    } catch (error) {
-      return 0;
-    }
-  };
+  //     return Number(totalPoint);
+  //   } catch (error) {
+  //     return 0;
+  //   }
+  // };
 
-  const calculatePointsItem = async (nfts: any[]) => {
-    try {
-      const tempArr = [...nfts];
-      for (let i = 0; i < nfts.length; i++) {
-        if (nfts[i].staking.status == StakingStatusEnum.STAKED) {
-          let point = await getTotalPointItem(
-            nfts[i].contract_address,
-            nfts[i].token_id
-          );
-          console.log(point);
-          tempArr[i].point = point;
-        }
-      }
+  // const calculatePointsItem = async (nfts: any[]) => {
+  //   try {
+  //     const tempArr = [...nfts];
+  //     for (let i = 0; i < nfts.length; i++) {
+  //       if (nfts[i].staking.status == StakingStatusEnum.STAKED) {
+  //         let point = await getTotalPointItem(
+  //           nfts[i].contract_address,
+  //           nfts[i].token_id
+  //         );
+  //         console.log(point);
+  //         tempArr[i].point = point;
+  //       }
+  //     }
 
-      setNfts(tempArr);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setNfts(tempArr);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="fixed-height-under-header flex w-full flex-col overflow-auto">
-      <StakingPopup
+      {/* <StakingPopup
         isOpen={isOpenStake}
         toggleModal={toggleModalStake}
         nfts={nftsStake}
@@ -515,7 +515,7 @@ const Staking = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

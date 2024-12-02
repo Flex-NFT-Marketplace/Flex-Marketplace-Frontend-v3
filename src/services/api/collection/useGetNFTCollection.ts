@@ -3,9 +3,8 @@ import {
   PriceSortType,
   SortStatusType,
 } from "@/services/providers/CollectionDetailProvider";
-import { INft } from "@/types/INft";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { IAttributesCollection } from "@/types/INft";
+import { useInfiniteQuery, } from "@tanstack/react-query";
 export const useGetNFTCollection = (
   contract_address: string,
   sortPriceType: PriceSortType,
@@ -13,9 +12,10 @@ export const useGetNFTCollection = (
   minPrice?: number,
   maxPrice?: number,
   search?: string,
+  attributes?: IAttributesCollection[],
 ) => {
   return useInfiniteQuery({
-    queryKey: ["NFT_COLLECTION", contract_address, sortPriceType, status],
+    queryKey: ["NFT_COLLECTION", contract_address, sortPriceType, status, attributes],
     // queryFn: async ({ pageParam }) => {
     //   const { data } = await axios.get(
     //     process.env.NEXT_PUBLIC_API_HOST + "nfts/" + contract_address,
@@ -34,18 +34,28 @@ export const useGetNFTCollection = (
     //   return data;
     // },
     queryFn: async ({ pageParam }) => {
+      let params = {
+        page: pageParam,
+        size: 20,
+        nftContract: contract_address,
+        sortPrice: sortPriceType,
+        status: status,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        search: search,
+      }
+
+      if(attributes && attributes?.length > 0) {
+        let newParams = {
+          ...params,
+          attributes: attributes,
+        }
+        params = newParams;
+      }
+
       const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
-            page: pageParam,
-            size: 20,
-            nftContract: contract_address,
-            sortPrice: sortPriceType,
-            status: status,
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-            search: search,
+            ...params
       })
-      console.log(data.data);
-      
       return data.data;
     },
 

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import ImageDemo from "@/assets/banner.webp";
 import { useCollectionContext } from "@/services/providers/CollectionProvider";
 import { useRouter } from "next/navigation";
@@ -57,15 +57,13 @@ const TrendingTable = () => {
                   </p>
                 ) : (
                   <p className="text-shadow-min text-cancel">
-                    {item?.oneDayChange
-                      ? `${item?.oneDayChange?.toFixed(2)}%`
-                      : `- %`}
+                    {`${item?.oneDayChange?.toFixed(2) || 0}%`}
                   </p>
                 )}
               </td>
               <td className="hidden sm:table-cell">
                 <FormatPrice
-                  price={item?.oneDayChange}
+                  price={item?.oneDayChange || 0}
                   className="flex justify-end"
                 />
               </td>

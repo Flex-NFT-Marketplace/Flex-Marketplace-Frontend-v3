@@ -12,6 +12,17 @@ export interface IAttributesCollection {
   value: string | string[];
 }
 
+export interface IAttributesCollectionFilter {
+  trait_type: string;
+  options: IAttributesCollectionOption[];
+}
+
+export interface IAttributesCollectionOption {
+  rarity: number;
+  total: number;
+  value: string;
+}
+
 export interface INft {
   signatures: ISignature | undefined;
   _id: string;

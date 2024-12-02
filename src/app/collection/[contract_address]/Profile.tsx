@@ -11,6 +11,9 @@ const Profile = () => {
     useCollectionDetailContext();
   const [copied, setCopied] = useState(false); // State for copy status
 
+  useEffect(() => {
+    console.log(collection);
+  }, [collection]);
   const copyAddress = async () => {
     try {
       await navigator.clipboard.writeText(collection?.nftContract || "");
@@ -75,14 +78,14 @@ const Profile = () => {
             </div>
             <div>
               <p className="font-bold">
-                {collection?.stats?.collection_floor_price?.toFixed(3) || "-"}{" "}
+                {collection?.nftCollectionStats?.floorPrice?.toFixed(3) || "-"}{" "}
                 ETH
               </p>
               <p className="text-sm text-grays">Floor Price</p>
             </div>
             <div>
               <p className="font-bold">
-                {collection?.stats?.collection_best_offer?.toFixed(3) || "-"}{" "}
+                {collection?.nftCollectionStats?.bestOffer?.toFixed(3) || "-"}{" "}
                 ETH
               </p>
               <p className="text-sm text-grays">Best Offer</p>
@@ -113,7 +116,9 @@ const Profile = () => {
             <p className="text-sm text-grays">7D Volume</p>
           </div> */}
             <div>
-              <p className="font-bold">{"-"}</p>
+              <p className="font-bold">
+                {collection?.nftCollectionStats?.totalListingCount || "-"}
+              </p>
               <p className="text-sm text-grays">Listed</p>
             </div>
             <div>

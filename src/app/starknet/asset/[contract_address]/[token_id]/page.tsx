@@ -35,18 +35,18 @@ const NFTDetail = () => {
 
   const renderAction = () => {
     if (loadingStatus === NftLoadActionEnum.LOADED_IS_OWNER) {
-      if (collection?.schema == SchemaTypeEnum.ERC721) {
+      if (collection?.standard == SchemaTypeEnum.ERC721) {
         if (bestAsk && bestAsk.status === SignStatusEnum.BUYING)
           return <Pending signature={bestAsk} />;
 
         if (isOwner) {
           if (!bestAsk)
-            return <Sell nftData={nft} schema={collection?.schema} />;
+            return <Sell nftData={nft} schema={collection?.standard} />;
           return (
             <CancelOrder
               nftData={nft}
               signature={bestAsk}
-              schema={collection?.schema}
+              schema={collection?.standard}
             />
           );
         } else {
@@ -55,23 +55,23 @@ const NFTDetail = () => {
               <Buy
                 nftData={nft}
                 signature={bestAsk}
-                schema={collection?.schema}
+                schema={collection?.standard}
               />
             );
-          else return <Bid nftData={nft} schema={collection?.schema} />;
+          else return <Bid nftData={nft} schema={collection?.standard} />;
         }
-      } else if (collection?.schema == SchemaTypeEnum.ERC1155) {
+      } else if (collection?.standard == SchemaTypeEnum.ERC1155) {
         if (bestAsk?.signer == address) {
           if (bestAsk && bestAsk.status === SignStatusEnum.BUYING)
             return <Pending signature={bestAsk} />;
 
           if (!bestAsk)
-            return <Sell nftData={nft} schema={collection?.schema} />;
+            return <Sell nftData={nft} schema={collection?.standard} />;
           return (
             <CancelOrder
               nftData={nft}
               signature={bestAsk}
-              schema={collection?.schema}
+              schema={collection?.standard}
             />
           );
         } else {
@@ -80,22 +80,26 @@ const NFTDetail = () => {
               <Buy
                 nftData={nft}
                 signature={bestAsk}
-                schema={collection?.schema}
+                schema={collection?.standard}
               />
             );
           else if (isOwner)
-            return <Sell nftData={nft} schema={collection?.schema} />;
-          else return <Bid nftData={nft} schema={collection?.schema} />;
+            return <Sell nftData={nft} schema={collection?.standard} />;
+          else return <Bid nftData={nft} schema={collection?.standard} />;
         }
       } else return <></>;
     } else {
       if (status == "disconnected" && bestAsk)
         return (
-          <Buy nftData={nft} signature={bestAsk} schema={collection?.schema} />
+          <Buy
+            nftData={nft}
+            signature={bestAsk}
+            schema={collection?.standard}
+          />
         );
       else if (isOwner)
-        return <Sell nftData={nft} schema={collection?.schema} />;
-      else return <Bid nftData={nft} schema={collection?.schema} />;
+        return <Sell nftData={nft} schema={collection?.standard} />;
+      else return <Bid nftData={nft} schema={collection?.standard} />;
     }
   };
 
@@ -109,7 +113,7 @@ const NFTDetail = () => {
 
         {/* <Action /> */}
         <Traits />
-        <Action schema={collection?.schema} />
+        <Action schema={collection?.standard} />
 
         {/* <div className="w-full">
           <div className="flex items-center gap-4 border-b border-stroke pb-2">

@@ -35,7 +35,7 @@ interface CardNFTProps {
 
 enum CardNFTModeAction {
   NOT_LISTED = "NOT_LISTED",
-  LISTED = "LISTED",
+  LISTING = "LISTING",
   PENDING = "PENDING",
 }
 
@@ -76,9 +76,9 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
       if (collection?.schema == "ERC721") {
         if (bestAsk.status == SignStatusEnum.BUYING)
           setCardMode(CardNFTModeAction.PENDING);
-        else setCardMode(CardNFTModeAction.LISTED);
+        else setCardMode(CardNFTModeAction.LISTING);
       } else if (collection?.schema == "ERC1155") {
-        if (bestAsk.signer == address) setCardMode(CardNFTModeAction.LISTED);
+        if (bestAsk.signer == address) setCardMode(CardNFTModeAction.LISTING);
         else setCardMode(CardNFTModeAction.NOT_LISTED);
       }
     } else setCardMode(CardNFTModeAction.NOT_LISTED);

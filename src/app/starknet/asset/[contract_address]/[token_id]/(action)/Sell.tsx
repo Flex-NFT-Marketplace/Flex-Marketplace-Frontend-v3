@@ -7,9 +7,10 @@ import { useNftContext } from "@/services/providers/NFTProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/packages/@ui-kit/Button";
+import { IStagingNft } from "@/types/IStagingNft";
 
 type SellProps = {
-  nftData: INft | undefined;
+  nftData: IStagingNft | undefined;
   schema?: string;
 };
 

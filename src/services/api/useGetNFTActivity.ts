@@ -1,10 +1,10 @@
+import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import {
   PriceSortType,
-  SortStatusType,
 } from "./../providers/CollectionDetailProvider";
 
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { SortStatusType } from "../providers/ActivityProvider";
 
 export const useGetNFTActivity = (
   contract_address: string,
@@ -17,26 +17,41 @@ export const useGetNFTActivity = (
   return useInfiniteQuery({
     queryKey: ["NFT_ACTIVITY", sortPriceType, status, contract_address, search, minPrice, maxPrice],
     queryFn: async ({ pageParam }) => {
-      const { data } = await axios.get(
-        process.env.NEXT_PUBLIC_API_HOST + "signatures/activity/",
+      let params = {
+        page: pageParam,
+        size: 50,
+        sortPrice: sortPriceType,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        search: search,
+      }
+      if (contract_address) {
+        const newParams = {
+          contract_address: contract_address,
+          ...params
+        }
+        params = newParams
+      }
+
+      if (status) {
+        const newParams = {
+          status: status,
+          ...params
+        }
+        params = newParams
+      }
+      
+      const { data } = await axiosWithoutAccessToken.get("signatures/activity/",
         {
-          params: {
-            contract_address: contract_address,
-            page: pageParam,
-            sortPrice: sortPriceType,
-            status: status,
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-            search: search,
-          },
+          params: params
         },
       );
-
+      
       return data;
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, page) => {
-      return lastPage.nextPage ? lastPage.nextPage : undefined;
+      return lastPage.data.hasNext ? lastPage.data.page + 1 : undefined;
     },
   });
 };

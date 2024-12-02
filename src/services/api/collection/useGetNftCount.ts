@@ -10,7 +10,6 @@ export const useGetCollectionCount = () => {
     mutationKey: ["collection_count"],
     mutationFn: async (contractAddress: string) => {
       const {data} = await axiosWithoutAccessToken.get(`/nft-collection/total-suppply/${contractAddress}`);
-      console.log(data.data);
 
       return data.data as ICollectionCounter;
     }

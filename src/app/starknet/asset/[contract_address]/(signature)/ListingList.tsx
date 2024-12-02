@@ -71,7 +71,7 @@ const ListingList = () => {
         nft={nft}
         signature={signature}
         onReload={() => onReload()}
-        schema={collection?.schema}
+        schema={collection?.standard}
       />
 
       <UnListPopup

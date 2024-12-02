@@ -8,15 +8,17 @@ import Checkbox from "@/lib/@core/Checkbox";
 import Input from "@/lib/@core/Input";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useGetNFTActivity } from "@/services/api/useGetNFTActivity";
+import { useActivityContext } from "@/services/providers/ActivityProvider";
 import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
+import { IStagingNft } from "@/types/IStagingNft";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 interface IActivityProps {
   signature: ISignature;
-  nft: INft;
+  nft: IStagingNft;
 }
 
 const ActivityItem: React.FC<IActivityProps> = (props) => {
@@ -29,7 +31,7 @@ const ActivityItem: React.FC<IActivityProps> = (props) => {
   };
 
   const onNavigateDetail = () => {
-    onNavigate("/starknet/asset/" + nft.contract_address + "/" + nft.token_id);
+    onNavigate("/starknet/asset/" + nft.nftContract + "/" + nft.tokenId);
   };
 
   return (
@@ -37,12 +39,12 @@ const ActivityItem: React.FC<IActivityProps> = (props) => {
       className="flex cursor-pointer hover:bg-dark-black"
       onClick={onNavigateDetail}
     >
-      <ImageKit src={nft?.image_url} alt="" className="h-[72px] w-[72px]" />
+      <ImageKit src={nft?.image} alt="" className="h-[72px] w-[72px]" />
 
       <div className="ml-2 flex flex-col justify-between overflow-hidden max-sm:flex-1">
         <div>
           <p className="overflow-hidden text-ellipsis whitespace-nowrap font-normal text-grays">
-            #{nft?.token_id}
+            #{nft?.tokenId}
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm">
@@ -62,21 +64,34 @@ const ActivityItem: React.FC<IActivityProps> = (props) => {
 };
 
 const Activity = () => {
-  const [isShowPrice, setIsShowPrice] = useState(false);
-  const [isShowTraits, setIsShowTraits] = useState(false);
-  const { contract_address } = useParams();
-  const [signatures, setSignatures] = useState<ISignature[]>();
-  const { data: signatureRes } = useGetNFTActivity(contract_address as string);
+  const { signatures, isLoading, fetchNextPage, hasNextPage } =
+    useActivityContext();
+  const [loading, setLoading] = useState(true);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const handleScroll = useCallback(
+    (e: any) => {
+      const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+
+      if (scrollTop + clientHeight >= scrollHeight - 1) {
+        if (!isLoading && hasNextPage) {
+          fetchNextPage();
+          setLoading(true);
+        }
+      }
+    },
+    [isLoading, fetchNextPage]
+  );
 
   useEffect(() => {
-    let nftsArr: ISignature[] = [];
+    if (!scrollRef.current) return;
+    // const scrollContainer = document.getElementById("scroll-container");
+    scrollRef.current.addEventListener("scroll", handleScroll);
 
-    signatureRes?.pages.map((page) => {
-      nftsArr = [...nftsArr, ...page.data];
-    });
-
-    setSignatures(nftsArr);
-  }, [signatureRes]);
+    if (!isLoading) {
+      setLoading(false);
+    }
+  }, [isLoading]);
 
   return (
     <div className="fixed-height-avtivity sticky top-[52px] flex min-w-[260px] flex-col gap-4 border-stroke pl-4 pr-8 pt-4 max-sm:w-[100vw]">
@@ -86,15 +101,18 @@ const Activity = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 overflow-auto pb-4 max-sm:w-full">
+      <div
+        ref={scrollRef}
+        className="flex flex-1 flex-col gap-4 overflow-auto pb-4 max-sm:w-full"
+      >
         {signatures?.map((_, i) => (
           <ActivityItem key={i} signature={_} nft={_.nft} />
         ))}
 
-        {!signatureRes &&
+        {/* {!loading &&
           [...Array(10)].map((_, index) => (
             <ActivityItemSkeleton key={index} />
-          ))}
+          ))} */}
       </div>
     </div>
   );

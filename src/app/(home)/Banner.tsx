@@ -11,10 +11,11 @@ import Image from "next/image";
 import ImageKit from "@/packages/@ui-kit/Image";
 import useGetBannerCollections from "@/services/api/collection/useGetBannerCollections";
 import { FormatPriceWithIcon } from "@/components/FormatPrice";
+import { IStagingCollection } from "@/types/IStagingCollection";
 
 interface IBannerItem {
   index: number;
-  data: ICollection;
+  data: IStagingCollection;
   isActive?: boolean;
   onSetActiveCollection: (index: number) => void;
   onClick?: () => void;
@@ -32,7 +33,7 @@ const BannerItem: React.FC<IBannerItem> = (props) => {
       onClick={onClick}
     >
       <Image
-        src={data.banner_url}
+        src={data.cover}
         alt=""
         width={1920}
         height={1080}
@@ -42,7 +43,7 @@ const BannerItem: React.FC<IBannerItem> = (props) => {
       <div className="absolute bottom-0 left-0 right-0 flex flex-row justify-start gap-2 p-3">
         <div className="h-8 w-8 rounded-full">
           <ImageKit
-            src={data.image_url}
+            src={data.avatar}
             alt=""
             className="h-full w-full rounded-full object-cover"
           />
@@ -67,7 +68,8 @@ const Banner = () => {
   // const { collectionsBanner, isFetching } = useCollectionContext();
   const { data: collectionsBanner, isFetching } = useGetBannerCollections();
 
-  const [collectionActive, setCollectionActive] = useState<ICollection>();
+  const [collectionActive, setCollectionActive] =
+    useState<IStagingCollection>();
 
   // init collection active
   const [activeIndex, setActiveIndex] = useState(0);
@@ -96,7 +98,7 @@ const Banner = () => {
   };
 
   const onNavigateCollection = () => {
-    onNavigate(`/collection/${collectionActive?.contract_address}`);
+    onNavigate(`/collection/${collectionActive?.nftContract}`);
   };
 
   if (isFetching) return <BannerSkeleton />;
@@ -104,7 +106,7 @@ const Banner = () => {
   return (
     <div className="fixed-height-with-header relative w-full animate-fade max-sm:h-[80vh]">
       <ImageKit
-        src={collectionActive?.banner_url}
+        src={collectionActive?.cover}
         alt=""
         className="h-[75%] w-full object-cover"
       />
@@ -116,7 +118,7 @@ const Banner = () => {
               <div className="flex gap-2 text-xl font-normal md:text-2xl">
                 <p>By</p>
                 <FormatAddress
-                  address={collectionActive?.contract_address}
+                  address={collectionActive?.nftContract}
                   convertName
                 />
               </div>
@@ -135,7 +137,7 @@ const Banner = () => {
               <div className="flex gap-14">
                 <div className="flex flex-col items-center">
                   <p className="text-2xl font-normal text-buy">
-                    {collectionActive?.stats.collection_floor_price} ETH
+                    {collectionActive?.nftCollectionStats?.floorPrice} ETH
                   </p>
                   <p className="text-sm font-normal uppercase text-thin-[#c0c0c0] ">
                     BUY NOW
@@ -144,7 +146,7 @@ const Banner = () => {
 
                 <div className="flex flex-col items-center">
                   <p className="text-2xl font-normal text-sell">
-                    {collectionActive?.stats.collection_best_offer} ETH
+                    {collectionActive?.nftCollectionStats?.bestOffer} ETH
                   </p>
                   <p className="text-sm font-normal uppercase text-thin-[#c0c0c0]">
                     SELL NOW
@@ -156,20 +158,22 @@ const Banner = () => {
                 <div className="flex gap-1 font-normal">
                   <p className="text-sm text-[#c0c0c0]">TOTAL VOL:</p>
                   <FormatPriceWithIcon
-                    price={collectionActive?.stats.total_volume}
+                    price={collectionActive?.nftCollectionStats?.totalVolume}
                   />
                 </div>
                 <div className="flex gap-1 font-normal">
                   <p className="text-sm text-[#c0c0c0]">7D VOL:</p>
                   <FormatPriceWithIcon
-                    price={collectionActive?.stats.stats1D.volume}
+                    price={
+                      collectionActive?.nftCollectionStats?.stats1D?.volume
+                    }
                   />
                 </div>
                 <div className="flex gap-1 font-normal">
                   <p className="text-sm text-[#c0c0c0]">LISTED / SUPPLY:</p>
                   <p>
-                    {collectionActive?.stats.total_listing_count} /{" "}
-                    {collectionActive?.stats.asset_count}
+                    {collectionActive?.nftCollectionStats?.totalListingCount} /{" "}
+                    {collectionActive?.nftCollectionStats?.totalListingCount}
                   </p>
                 </div>
               </div>
@@ -185,8 +189,7 @@ const Banner = () => {
                 onSetActiveCollection={onSetActiveCollection}
                 onClick={onNavigateCollection}
                 isActive={
-                  collectionActive?.contract_address ==
-                  collection.contract_address
+                  collectionActive?.nftContract == collection.nftContract
                 }
               />
             ))}
