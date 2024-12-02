@@ -6,12 +6,13 @@ import useListActionNft from "@/services/context/useListActionNft";
 import { useNftContext } from "@/services/providers/NFTProvider";
 import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
+import { IStagingNft } from "@/types/IStagingNft";
 import { formatTimestamp } from "@/utils/string";
 import { useAccount } from "@starknet-react/core";
 import { useEffect } from "react";
 
 interface CancelOrderProps {
-  nftData: INft | undefined;
+  nftData: IStagingNft | undefined;
   signature: ISignature | undefined;
   schema?: string;
 }
@@ -28,9 +29,9 @@ const CancelOrder: React.FC<CancelOrderProps> = (props) => {
     try {
       await onCancelOrder(signature?._id as string);
       getData(
-        nftData?.contract_address as string,
-        nftData?.token_id as string,
-        address as string,
+        nftData?.nftContract as string,
+        nftData?.tokenId as string,
+        address as string
       );
     } catch (error) {
       error;

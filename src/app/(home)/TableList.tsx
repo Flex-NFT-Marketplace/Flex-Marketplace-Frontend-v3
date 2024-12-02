@@ -30,9 +30,9 @@ const TableList = () => {
   const onNavigateDetail = (signature: ISignature) => {
     onNavigate(
       "/starknet/asset/" +
-        signature.nft.contract_address +
+        signature.nft.nftContract +
         "/" +
-        signature.nft.token_id
+        signature.nft.tokenId
     );
   };
 
@@ -70,11 +70,11 @@ const TableList = () => {
               <ActionNFT status={signature?.status} isShowStatus={false} />
             </div>
             <div className="flex flex-1 items-center">
-              <ImageKit
-                src={signature?.nft?.image_url}
+              {/* <ImageKit
+                src={signature?.nft?.image}
                 alt=""
                 className="h-[48px] w-[48px] sm:h-[52px] sm:w-[52px]"
-              />
+              /> */}
               <p className="ml-4 truncate font-normal max-xl:max-w-64 max-sm:max-w-32">
                 {signature?.nft?.name}
               </p>

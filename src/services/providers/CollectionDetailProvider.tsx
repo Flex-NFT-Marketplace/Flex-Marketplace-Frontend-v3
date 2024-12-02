@@ -5,7 +5,12 @@ import { ICollection } from "@/types/ICollection";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
 import { useParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
-import { INft, INftCollection } from "@/types/INft";
+import {
+  IAttributesCollection,
+  IAttributesCollectionFilter,
+  INft,
+  INftCollection,
+} from "@/types/INft";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ICollectionCounter,
@@ -14,18 +19,22 @@ import {
 } from "@/types/IStagingCollection";
 import { useGetCollectionEconomic } from "../api/collection/useGetCollectionEconomic";
 import { useGetCollectionCount } from "../api/collection/useGetNftCount";
-import { IStagingNft } from "@/types/IStagingNft";
+import { IStagingNftResponse } from "@/types/IStagingNft";
+import { useGetAttributesCollection } from "../api/collection/useGetAttributesCollection";
 
 interface CollectionDetailContextType {
   collectionCount?: ICollectionCounter;
   collectionEconomic?: ICollectionEconomic;
   collection?: IStagingCollection;
-  nfts: IStagingNft[];
+  collectionAttributes: IAttributesCollectionFilter[];
+  nfts: IStagingNftResponse[];
   getCollectionData: (contract_address: string) => void;
   fetchNextPage: () => void;
   isLoading: boolean;
   isFetching: boolean;
   hasNextPage: boolean;
+
+  setAttributesFilter: (attributes: IAttributesCollection[]) => void;
 
   priceSortType: PriceSortType;
   setPriceSortType: (type: PriceSortType) => void;
@@ -78,7 +87,10 @@ export const CollectionDetailProvider = ({
     useState<ICollectionEconomic>();
 
   const [collectionCount, setCollectionCount] = useState<ICollectionCounter>();
-  const [nfts, setNfts] = useState<IStagingNft[]>([]);
+  const [collectionAttributes, setCollectionAtributes] = useState<
+    IAttributesCollectionFilter[]
+  >([]);
+  const [nfts, setNfts] = useState<IStagingNftResponse[]>([]);
 
   const [priceSortType, setPriceSortType] = useState<PriceSortType>(
     PriceSortEnum.ASC
@@ -91,18 +103,25 @@ export const CollectionDetailProvider = ({
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(1000);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [attributesFilter, setAttributesFilter] = useState<
+    IAttributesCollection[]
+  >([]);
 
   useEffect(() => {
     if (contract_address) {
       getCollectionData(contract_address as string);
       getCollectionEconomic(contract_address as string);
       getCollectionCount(contract_address as string);
+      getAttributesCollection(contract_address as string);
     }
   }, [contract_address]);
 
   const _getCollectionDetail = useGetCollectionDetail();
   const _getCollectionEconomic = useGetCollectionEconomic();
   const _getCollectionCount = useGetCollectionCount();
+  const _getCollectionAttributes = useGetAttributesCollection(
+    contract_address as string
+  );
 
   const {
     data: nftsRes,
@@ -116,7 +135,8 @@ export const CollectionDetailProvider = ({
     sortStatus,
     minPrice,
     maxPrice,
-    searchValue
+    searchValue,
+    attributesFilter
   );
 
   useEffect(() => {
@@ -124,10 +144,10 @@ export const CollectionDetailProvider = ({
   }, [priceSortType, sortStatus, minPrice, maxPrice, searchValue]);
 
   useEffect(() => {
-    let nftsArr: IStagingNft[] = [];
+    let nftsArr: IStagingNftResponse[] = [];
 
     nftsRes?.pages.map((page) => {
-      nftsArr = [...nftsArr, ...page.items.nft];
+      nftsArr = [...nftsArr, ...page.items];
     });
 
     setNfts(nftsArr);
@@ -148,16 +168,24 @@ export const CollectionDetailProvider = ({
     setCollectionCount(res);
   };
 
+  const getAttributesCollection = async (contract_address: string) => {
+    const res = await _getCollectionAttributes.mutateAsync(contract_address);
+    setCollectionAtributes(res);
+  };
+
   const value = {
     collectionCount,
     collectionEconomic,
     collection,
+    collectionAttributes,
     nfts,
     isLoading,
     isFetching,
     getCollectionData,
     fetchNextPage,
     hasNextPage,
+
+    setAttributesFilter,
 
     priceSortType,
     setPriceSortType,

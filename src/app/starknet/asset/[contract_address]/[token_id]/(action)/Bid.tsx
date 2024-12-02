@@ -7,9 +7,10 @@ import BidPopup from "@/components/Popup/BidPopup";
 import Button from "@/packages/@ui-kit/Button";
 import { useAccount, useConnect } from "@starknet-react/core";
 import { useStarknetkitConnectModal } from "starknetkit";
+import { IStagingNft } from "@/types/IStagingNft";
 
 type SellProps = {
-  nftData: INft | undefined;
+  nftData: IStagingNft | undefined;
   schema?: string;
 };
 

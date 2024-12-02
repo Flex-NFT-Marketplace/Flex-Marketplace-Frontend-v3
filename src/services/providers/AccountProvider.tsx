@@ -15,18 +15,23 @@ import useGetBidByAddress from "../api/useGetBidByAddress";
 import useGetSignatureByAddress from "../api/useGetSignatureByAddress copy";
 import { usePutProfile } from "../api/auth/usePutProfile";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import {
+  IProfileStaging,
+  IStagingNft,
+  IStagingNftResponse,
+} from "@/types/IStagingNft";
 
 interface AccountContextType {
-  nfts: INft[];
-  profile?: IProfile;
+  nfts: IStagingNftResponse[];
+  profile?: IProfileStaging;
   setAddress: (address: string) => void;
-  onReload: (nft: INft) => void;
+  onReload: (nft: IStagingNft) => void;
   onReloadNftOwner: () => void;
   orders: ISignature[];
   bids: ISignature[];
   loading: boolean;
-  profileOwner?: IProfile;
-  nftsOwner: INft[];
+  profileOwner?: IProfileStaging;
+  nftsOwner: IStagingNftResponse[];
   onUpdateProfile: (profile: any) => Promise<void>;
   getProfileByAddressOwner: () => void;
 }
@@ -44,10 +49,10 @@ export const AccountProvider = ({
   const pathName = usePathname();
   const { address: accountAddress } = useAccount();
   const [address, setAddress] = useState("");
-  const [profile, setProfile] = useState<IProfile>();
-  const [profileOwner, setProfileOwner] = useState<IProfile>();
-  const [nfts, setNfts] = useState<INft[]>([]);
-  const [nftsOwner, setNftsOwner] = useState<INft[]>([]);
+  const [profile, setProfile] = useState<IProfileStaging>();
+  const [profileOwner, setProfileOwner] = useState<IProfileStaging>();
+  const [nfts, setNfts] = useState<IStagingNftResponse[]>([]);
+  const [nftsOwner, setNftsOwner] = useState<IStagingNftResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [orders, setOrders] = useState<ISignature[]>([]);
@@ -61,8 +66,9 @@ export const AccountProvider = ({
 
   const getProfileByAddress = async (address: string) => {
     try {
-      if (address === "") return;
+      if (!address) return;
       const res = await _getProfile.mutateAsync(address);
+
       setProfile(res);
     } catch (error) {
       console.error(error);
@@ -79,16 +85,17 @@ export const AccountProvider = ({
     }
   };
 
-  const getNfts = async (address: string) => {
-    try {
-      if (address === "" || !address) return;
-      const res = await _getNfts.mutateAsync(address);
-      setNfts(res);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
+  // const getNfts = async (address: string) => {
+  //   try {
+  //     if (address === "" || !address) return;
+  //     const res = await _getNfts.mutateAsync(address);
+
+  //     setNfts(res);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //   }
+  // };
 
   const getOrder = async () => {
     try {
@@ -122,16 +129,16 @@ export const AccountProvider = ({
   useEffect(() => {
     setLoading(true);
     setNfts([]);
-    getNfts(address);
+    // getNftOfOwner();
     getProfileByAddress(address);
   }, [address]);
 
-  const updateNftInArray = (updatedNftData: INftAccountResponse) => {
+  const updateNftInArray = (updatedNftData: IStagingNft) => {
     // Step 2: Find the index of the NFT to update
     const index = nfts.findIndex(
       (nft) =>
-        nft.contract_address === updatedNftData.nft.contract_address &&
-        nft.token_id === updatedNftData.nft.token_id
+        nft.nftData.nftContract === updatedNftData.nftContract &&
+        nft.nftData.tokenId === updatedNftData.tokenId
     );
 
     // Check if the NFT was found
@@ -145,24 +152,24 @@ export const AccountProvider = ({
     }
   };
 
-  const onReloadNft = async (nft: INft) => {
+  const onReloadNft = async (nft: IStagingNft) => {
     try {
       let res = await _getNft.mutateAsync({
-        contract_address: nft.contract_address,
-        token_id: nft.token_id,
+        contract_address: nft.nftContract,
+        token_id: nft.tokenId,
         owner_address: address,
       });
 
       getOrder();
       getBid();
-      updateNftInArray(res);
+      updateNftInArray(res.nft);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
   };
 
-  const onReload = (nft: INft) => {
+  const onReload = (nft: IStagingNft) => {
     if (nft) {
       setLoading(true);
       onReloadNft(nft);

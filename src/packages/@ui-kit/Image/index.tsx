@@ -3,7 +3,6 @@ import Image, { StaticImageData } from "next/image";
 import ImageDefault from "./default.webp";
 import { HTMLProps, useEffect, useState } from "react";
 import clsx from "clsx";
-import { formatLink } from "@/utils/string";
 export interface ImageProps {
   width?: number;
   height?: number;
@@ -17,7 +16,7 @@ const ImageKit: React.FC<ImageProps> = (props) => {
   const {
     width = 1000,
     height = 1000,
-    src = "",
+    src = ImageDefault.src,
     alt = "",
     className,
     unLoading = false,
@@ -36,7 +35,7 @@ const ImageKit: React.FC<ImageProps> = (props) => {
   };
 
   useEffect(() => {
-    if (src || src == "") {
+    if (src) {
       setImageSrc(src);
       setIsLoading(false);
     } else {

@@ -19,9 +19,9 @@ const Biding = () => {
   const onNavigateDetail = (signature: ISignature) => {
     onNavigate(
       "/starknet/asset/" +
-        signature.nft.contract_address +
+        signature.nft.nftContract +
         "/" +
-        signature.nft.token_id,
+        signature.nft.tokenId
     );
   };
 
@@ -48,7 +48,7 @@ const Biding = () => {
                 <td onMouseDown={() => onNavigateDetail(_)}>
                   <div className="relative flex flex-1 items-center">
                     <ImageKit
-                      src={_.nft.image_url}
+                      src={_.nft.image}
                       alt=""
                       className=" h-[52px] w-[52px]"
                     />

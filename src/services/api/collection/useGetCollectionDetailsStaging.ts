@@ -10,3 +10,6 @@ export const getCollectionDetailStaging = async (contract_address: string) => {
     return { success: false, message: error, data: null };
   }
 };
+
+
+

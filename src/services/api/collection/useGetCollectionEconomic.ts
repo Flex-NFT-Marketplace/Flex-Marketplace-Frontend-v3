@@ -14,7 +14,6 @@ export const useGetCollectionEconomic = () => {
         size: 10,
         nftContract: contractAddress
       });
-      console.log(data.data.items[0]);
 
       return data.data.items[0] as ICollectionEconomic;
     }

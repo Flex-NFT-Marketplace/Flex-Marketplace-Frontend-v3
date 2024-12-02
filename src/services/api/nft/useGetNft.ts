@@ -19,7 +19,8 @@ export const useGetNft = () => {
           tokenId: bodyData.token_id,
         }
       })
-      
+        console.log(res);
+        
       return res?.data?.data as IStagingNft;
     },
   });

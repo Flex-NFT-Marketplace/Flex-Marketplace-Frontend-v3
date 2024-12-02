@@ -11,7 +11,7 @@ import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 
 const BidList = () => {
-  const { nft, onReload, collection, listBid } = useNftContext();
+  const { nft, onReload, collection, listBid, nftStaging } = useNftContext();
   const { address } = useAccount();
   const { isOpen, toggleModal } = useModal();
   const { isOpen: isOpenUnBid, toggleModal: toggleUnBid } = useModal();
@@ -60,7 +60,7 @@ const BidList = () => {
         nft={nft}
         signature={signature}
         onReload={() => onReload()}
-        schema={collection?.schema}
+        schema={collection?.standard}
       />
 
       <UnBidPopup
@@ -69,7 +69,7 @@ const BidList = () => {
         nft={nft}
         signature={signature}
         onReload={() => onReload()}
-        schema={collection?.schema}
+        schema={collection?.standard}
       />
 
       <table className="w-full min-w-[550px] font-normal">
@@ -83,7 +83,7 @@ const BidList = () => {
           </tr>
         </thead>
         <tbody className="h-10 font-normal">
-          {listBid?.map((_, index) => (
+          {nftStaging?.orderData?.listBid?.map((_, index) => (
             <tr key={index} className="h-8 text-left">
               <td>
                 <FormatPrice price={_.price} currency={_.currency} />
@@ -110,7 +110,7 @@ const BidList = () => {
           ))}
         </tbody>
       </table>
-      {listBid?.length === 0 && (
+      {nftStaging?.orderData?.listBid?.length === 0 && (
         <p className="text-center">No data available</p>
       )}
     </div>

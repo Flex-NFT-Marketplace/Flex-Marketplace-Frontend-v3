@@ -17,7 +17,7 @@ export type IStagingCollection = {
 
     cover: string;
     
-    stats: IStatsCollection;
+    nftCollectionStats: IStatsCollection;
 
     status: IStatusCollection;
 

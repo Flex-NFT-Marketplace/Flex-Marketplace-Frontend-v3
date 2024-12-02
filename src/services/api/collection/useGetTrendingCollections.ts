@@ -1,8 +1,5 @@
-import { ICollection } from "@/types/ICollection";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { IStagingCollection } from "@/types/IStagingCollection";
-import { convertStagingCollectionTypeToICollectionType } from "@/utils/convertType";
 import { ITrendingCollection } from "@/types/ITrendingCollection";
 
 const useGetBannerCollections = () => {

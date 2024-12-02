@@ -55,13 +55,15 @@ const SocialCardCollection: React.FC<SocialCardCollectionProps> = ({
       try {
         if (openEdition) {
           const collection = await getCollectionDetailStaging(
-            openEdition?.nftCollection?.nftContract,
+            openEdition?.nftCollection?.nftContract
           );
           setCollectionDetail(collection?.data);
-          const profileOwner = await getProfile.mutate(
-            collection?.data?.owner?.address,
-          );
-          setOwner(profileOwner);
+          // if (collection?.data?.owner?.address) {
+          //   const profileOwner = await getProfile.mutate(
+          //     collection?.data?.owner?.address
+          //   );
+          //   setOwner(profileOwner);
+          // }
         }
       } catch (error) {
         console.error("Failed to fetch collection details:", error);
@@ -77,7 +79,7 @@ const SocialCardCollection: React.FC<SocialCardCollectionProps> = ({
         window.open(
           "https://beta-open-editions.hyperflex.market/open-edition/" +
             openEdition?.nftCollection?.nftContract,
-          "_self",
+          "_self"
         );
       }}
     >

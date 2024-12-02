@@ -2,11 +2,11 @@ import Checkbox from "@/lib/@core/Checkbox";
 import Button from "@/packages/@ui-kit/Button";
 import Input from "@/packages/@ui-kit/Input";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { useActivityContext } from "@/services/providers/ActivityProvider";
 import {
-  PriceSortEnum,
   SortStatusEnum,
-} from "@/services/providers/CollectionDetailProvider";
+  useActivityContext,
+} from "@/services/providers/ActivityProvider";
+import { PriceSortEnum } from "@/services/providers/CollectionDetailProvider";
 
 import { useState } from "react";
 import {

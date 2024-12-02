@@ -105,13 +105,17 @@ const ConnectWallet = () => {
             onClick={() => setIsShowDropdown(!isShowDropdown)}
           >
             <p className="lowercase">
-              {profileOwner != undefined && profileOwner.name != ""
-                ? profileOwner?.name
-                : strShortPrefixAddress(address as string)}
+              {
+                // profileOwner != undefined && profileOwner.username != ""
+                //   ? profileOwner?.username
+                //   :
+                strShortPrefixAddress(address as string)
+              }
             </p>
             {/* <FormatAddress address={address} /> */}
             <ImageKit
-              src={profileOwner?.avatar || profileOwner?.image}
+              // src={profileOwner?.avatar || profileOwner?.image }
+              src={""}
               width={40}
               height={40}
               alt="Flex"

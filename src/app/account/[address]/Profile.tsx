@@ -74,16 +74,19 @@ const Profile = () => {
         /> */}
 
         <ImageKit
-          src={profile?.avatar || profile?.image || UserImg.src}
+          // src={profile?.avatar || profile?.image || UserImg.src}
+          src={UserImg.src}
           alt=""
           className="h-[52px] w-[52px] rounded-sm"
         />
 
         <div className="flex flex-col justify-center">
           <p className="text-2xl font-bold">
-            {profile?.name ||
-              profile?.nick_name ||
-              strShortAddress(address as string)}
+            {
+              // profile?.username ||
+              //   profile?.nick_name ||
+              strShortAddress(address as string)
+            }
           </p>
 
           <div className="flex items-center max-sm:flex-col max-sm:items-start">
