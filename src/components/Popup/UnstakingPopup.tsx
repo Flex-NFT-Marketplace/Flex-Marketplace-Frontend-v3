@@ -11,12 +11,13 @@ import Modal from "@/packages/@ui-kit/Modal";
 import Button from "@/packages/@ui-kit/Button";
 import { IoClose } from "react-icons/io5";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNftResponse } from "@/types/IStagingNft";
 
 interface IStakingPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  nfts?: any[];
-  setNfts: (nfts: any[]) => void;
+  nfts: IStagingNftResponse[];
+  setNfts: (nfts: IStagingNftResponse[]) => void;
   onReload: () => void;
 }
 const UnStakingPopup: React.FC<IStakingPopupProps> = (props) => {
@@ -30,41 +31,18 @@ const UnStakingPopup: React.FC<IStakingPopupProps> = (props) => {
 
   const [txHash, setTxHash] = useState("");
 
-  const _putUnstakingNFT = usePutUnStakeNFT();
-
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const onChecked = (nft: any, status: boolean) => {
-    if (!nfts) return;
-
-    let arr = nfts.map((item) => {
-      if (
-        item.contract_address == nft.contract_address &&
-        item.token_id == nft.token_id
-      ) {
-        return {
-          ...item,
-          checked: status,
-        };
-      }
-
-      return item;
-    });
-
-    setNfts(arr);
-  };
 
   const onUnstake = async () => {
     setIsProcessing(true);
-    const stakeNfts = nfts?.filter((nft) => nft.checked);
 
-    if (!stakeNfts || stakeNfts.length == 0) {
+    if (nfts.length == 0) {
       onShowNotify("Please select nft to unstake");
       setIsProcessing(false);
       return;
     }
 
-    const tx = await onSignUnstake(stakeNfts);
+    const tx = await onSignUnstake(nfts);
 
     if (!tx) {
       onShowNotify("Unstake failed");
@@ -72,19 +50,19 @@ const UnStakingPopup: React.FC<IStakingPopupProps> = (props) => {
       return;
     }
 
-    for (let i = 0; i < stakeNfts.length; i++) {
-      if (stakeNfts[i].checked) {
-        let nft = stakeNfts[i];
+    // for (let i = 0; i < stakeNfts.length; i++) {
+    //   if (stakeNfts[i].checked) {
+    //     let nft = stakeNfts[i];
 
-        let bodyPost = {
-          owner_address: address || "",
-          nft_id: nft._id,
-          tx_hash: tx,
-        };
+    //     let bodyPost = {
+    //       owner_address: address || "",
+    //       nft_id: nft._id,
+    //       tx_hash: tx,
+    //     };
 
-        await _putUnstakingNFT.mutateAsync(bodyPost);
-      }
-    }
+    //     await _putUnstakingNFT.mutateAsync(bodyPost);
+    //   }
+    // }
 
     await provider.waitForTransaction(tx);
 
@@ -94,7 +72,7 @@ const UnStakingPopup: React.FC<IStakingPopupProps> = (props) => {
     setIsProcessing(false);
   };
 
-  const onSignUnstake = async (nfts: any[]) => {
+  const onSignUnstake = async (nfts: IStagingNftResponse[]) => {
     try {
       if (status == "disconnected" || !account) {
         onShowNotify("Please connect your wallet");
@@ -109,8 +87,8 @@ const UnStakingPopup: React.FC<IStakingPopupProps> = (props) => {
             process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
           entrypoint: "unstakeNFT",
           calldata: CallData.compile({
-            collection: nft.contract_address,
-            tokenId: uint256.bnToUint256(nft.token_id),
+            collection: nft.nftData.nftContract,
+            tokenId: uint256.bnToUint256(nft.nftData.tokenId),
           }),
         });
       });
@@ -150,21 +128,23 @@ const UnStakingPopup: React.FC<IStakingPopupProps> = (props) => {
                   <div
                     className=" flex w-full items-center hover:bg-dark-black"
                     key={index}
-                    onMouseDown={() => {
-                      onChecked(_, !_.checked);
-                    }}
+                    // onMouseDown={() => {
+                    //   onChecked(_, !_.checked);
+                    // }}
                   >
                     <div className="relative flex flex-1 items-center justify-start">
                       <ImageKit
                         alt=""
-                        src={_.image_url}
+                        src={_?.nftData?.image}
                         className="ml-2 h-[40px] w-[40px]"
                       />
 
-                      <p className="ml-4 truncate font-bold ">{_.name}</p>
+                      <p className="ml-4 truncate font-bold ">
+                        {_?.nftData?.name}
+                      </p>
                     </div>
 
-                    <Checkbox isChecked={_.checked} onChange={() => {}} />
+                    {/* <Checkbox isChecked={_.checked} onChange={() => {}} /> */}
                   </div>
                 );
               })}

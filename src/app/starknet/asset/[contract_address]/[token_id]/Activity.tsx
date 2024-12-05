@@ -52,6 +52,8 @@ const Activity = () => {
         contractAddress: contract_address as string,
         tokenId: token_id as string,
       });
+      console.log(res);
+
       setActivitys(res);
     } catch (error) {
       console.log(error);

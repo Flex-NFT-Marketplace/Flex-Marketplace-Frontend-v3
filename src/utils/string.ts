@@ -112,7 +112,7 @@ export function timeElapsed(pastDate: string): string {
 
   // Kiểm tra xem 'past' có phải là một ngày hợp lệ không
   if (isNaN(past.getTime())) {
-    throw new Error("Invalid date format");
+    return "-";
   }
 
   const diffInMs: number = now.getTime() - past.getTime();

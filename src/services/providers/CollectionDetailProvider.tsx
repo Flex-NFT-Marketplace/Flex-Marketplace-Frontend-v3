@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { ICollection } from "@/types/ICollection";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
 import {
   IAttributesCollection,
@@ -33,6 +33,11 @@ interface CollectionDetailContextType {
   isLoading: boolean;
   isFetching: boolean;
   hasNextPage: boolean;
+
+  traitsActive: IAttributesCollection[];
+  setTraitsActive: (newTraitsActive: IAttributesCollection[]) => void;
+
+  changeTraitsActive: (newTraitActive: IAttributesCollection) => void;
 
   setAttributesFilter: (attributes: IAttributesCollection[]) => void;
 
@@ -106,6 +111,11 @@ export const CollectionDetailProvider = ({
   const [attributesFilter, setAttributesFilter] = useState<
     IAttributesCollection[]
   >([]);
+  const [traitsActive, setTraitsActive] = useState<IAttributesCollection[]>([]);
+
+  const searchParams = useSearchParams();
+  const traitType = searchParams.get("trait_type");
+  const traitValue = searchParams.get("value");
 
   useEffect(() => {
     if (contract_address) {
@@ -173,6 +183,41 @@ export const CollectionDetailProvider = ({
     setCollectionAtributes(res);
   };
 
+  const changeTraitsActive = (traitFilter: IAttributesCollection) => {
+    if (isFiltered(traitFilter.trait_type as string)) {
+      const newTraitsActive = traitsActive.map((item) => {
+        if (item.trait_type == traitFilter.trait_type) {
+          return traitFilter;
+        } else return item;
+      });
+
+      setTraitsActive(() => newTraitsActive);
+    } else {
+      setTraitsActive([...traitsActive, traitFilter]);
+    }
+  };
+
+  const isFiltered = (key: string) => {
+    let isKeyFiltered = false;
+    traitsActive.forEach((traitActive) => {
+      if (traitActive.trait_type == key) {
+        isKeyFiltered = true;
+      }
+    });
+    return isKeyFiltered;
+  };
+
+  useEffect(() => {
+    setAttributesFilter(traitsActive);
+  }, [traitsActive]);
+
+  useEffect(() => {
+    setTraitsActive([]);
+    if (traitType && value) {
+      setTraitsActive([{ trait_type: traitType, value: traitValue as string }]);
+    }
+  }, [traitType, traitValue]);
+
   const value = {
     collectionCount,
     collectionEconomic,
@@ -184,6 +229,11 @@ export const CollectionDetailProvider = ({
     getCollectionData,
     fetchNextPage,
     hasNextPage,
+
+    traitsActive,
+    setTraitsActive,
+
+    changeTraitsActive,
 
     setAttributesFilter,
 

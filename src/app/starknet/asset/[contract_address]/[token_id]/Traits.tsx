@@ -1,8 +1,7 @@
 import { useNftContext } from "@/services/providers/NFTProvider";
 import { IAttributesCollection } from "@/types/INft";
-import { arrToString } from "@/utils/string";
-import { FaEthereum } from "react-icons/fa";
-import { MdOutlineDescription } from "react-icons/md";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface TraitsItemProps {
   data: IAttributesCollection;
@@ -11,8 +10,20 @@ interface TraitsItemProps {
 const TraitsItem: React.FC<TraitsItemProps> = (props) => {
   const { data } = props;
 
+  const router = useRouter();
+  const { contract_address } = useParams();
+
+  const onNavigate = () => {
+    router.push(
+      `/collection/${contract_address}?trait_type=${data.trait_type}&value=${data.value}`
+    );
+  };
+
   return (
-    <div className="flex cursor-pointer justify-between gap-4 rounded-md border border-line px-4 py-2 hover:border-primary">
+    <div
+      onClick={onNavigate}
+      className="flex cursor-pointer justify-between gap-4 rounded-md border border-line px-4 py-2 hover:border-primary"
+    >
       <div className="flex flex-col overflow-hidden">
         <p className="text-grays">{data.trait_type}</p>
         <p className="mt-1 truncate font-bold">{data.value}</p>

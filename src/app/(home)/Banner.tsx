@@ -67,7 +67,6 @@ const Banner = () => {
 
   // const { collectionsBanner, isFetching } = useCollectionContext();
   const { data: collectionsBanner, isFetching } = useGetBannerCollections();
-
   const [collectionActive, setCollectionActive] =
     useState<IStagingCollection>();
 
@@ -165,7 +164,7 @@ const Banner = () => {
                   <p className="text-sm text-[#c0c0c0]">7D VOL:</p>
                   <FormatPriceWithIcon
                     price={
-                      collectionActive?.nftCollectionStats?.stats1D?.volume
+                      collectionActive?.nftCollectionStats?.stats7D?.volume
                     }
                   />
                 </div>
@@ -173,7 +172,7 @@ const Banner = () => {
                   <p className="text-sm text-[#c0c0c0]">LISTED / SUPPLY:</p>
                   <p>
                     {collectionActive?.nftCollectionStats?.totalListingCount} /{" "}
-                    {collectionActive?.nftCollectionStats?.totalListingCount}
+                    {collectionActive?.nftCollectionStats?.nftCount}
                   </p>
                 </div>
               </div>

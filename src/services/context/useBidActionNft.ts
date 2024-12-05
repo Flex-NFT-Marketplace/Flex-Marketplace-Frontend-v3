@@ -11,6 +11,7 @@ import utc from "dayjs/plugin/utc";
 import { usePostSignature } from "../api/usePostSignature";
 import { useCancelOrder } from "../api/nft/useCancelOrder";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { useGetNft } from "../api/nft/useGetNft";
 
 dayjs.extend(utc);
 
@@ -19,9 +20,9 @@ const useBidActionNft = () => {
 
   const { onShowToast } = useToast();
 
-  const _getOwner721 = useGetNftOwner721();
   const _postSignature = usePostSignature();
   const _cancelOrder = useCancelOrder();
+  const _getNft721 = useGetNft();
 
   const handleModifyTypedDataBidMessage = async (
     timeEnd: number,
@@ -57,10 +58,16 @@ const useBidActionNft = () => {
     token_id: string,
     currency: string,
   ) => {
-    const owner_address = await _getOwner721.mutateAsync({
+    const nftRes = await _getNft721.mutateAsync({
       contract_address: contract_address,
       token_id: token_id,
-    });
+    })
+
+    const owner_address = nftRes.nftData.owner.address;
+    // const owner_address = await _getOwner721.mutateAsync({
+    //   contract_address: contract_address,
+    //   token_id: token_id,
+    // });
 
     let nonce = dayjs().utc().unix();
 
@@ -112,10 +119,10 @@ const useBidActionNft = () => {
     currency: string,
   ) => {
     if (status == "connected") {
-      const owner_address = await _getOwner721.mutateAsync({
-        contract_address: contract_address,
-        token_id: token_id,
-      });
+      // const owner_address = await _getOwner721.mutateAsync({
+      //   contract_address: contract_address,
+      //   token_id: token_id,
+      // });
 
       try {
         await account?.execute({

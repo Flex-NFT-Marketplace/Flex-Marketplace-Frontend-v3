@@ -8,10 +8,6 @@ import { useEffect } from "react";
 const Infor = () => {
   const { collection, bestAsk, nftStaging } = useNftContext();
 
-  useEffect(() => {
-    console.log(nftStaging);
-  }, [nftStaging]);
-
   const classes = clsx(
     "flex flex-col gap-1 w-1/2 md:w-auto min-w-[100px] md:min-w-0 max-md:text-center"
   );

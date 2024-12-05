@@ -23,16 +23,12 @@ const CancelOrder: React.FC<CancelOrderProps> = (props) => {
   const { isOpen, toggleModal } = useModal();
 
   const { onCancelOrder } = useListActionNft();
-  const { onReload, isOwner, collection, getData } = useNftContext();
+  const { onReload, isOwner, collection, getNft } = useNftContext();
 
   const onCancel = async () => {
     try {
       await onCancelOrder(signature?._id as string);
-      getData(
-        nftData?.nftContract as string,
-        nftData?.tokenId as string,
-        address as string
-      );
+      getNft();
     } catch (error) {
       error;
     }

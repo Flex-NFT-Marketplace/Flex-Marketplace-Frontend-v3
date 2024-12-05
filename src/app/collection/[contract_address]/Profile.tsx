@@ -11,9 +11,6 @@ const Profile = () => {
     useCollectionDetailContext();
   const [copied, setCopied] = useState(false); // State for copy status
 
-  useEffect(() => {
-    console.log(collection);
-  }, [collection]);
   const copyAddress = async () => {
     try {
       await navigator.clipboard.writeText(collection?.nftContract || "");

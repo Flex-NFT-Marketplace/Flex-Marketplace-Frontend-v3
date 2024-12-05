@@ -109,10 +109,10 @@ const Activity = () => {
           <ActivityItem key={i} signature={_} nft={_.nft} />
         ))}
 
-        {/* {!loading &&
+        {!loading &&
           [...Array(10)].map((_, index) => (
             <ActivityItemSkeleton key={index} />
-          ))} */}
+          ))}
       </div>
     </div>
   );

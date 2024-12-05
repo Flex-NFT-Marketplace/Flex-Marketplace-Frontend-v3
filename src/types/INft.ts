@@ -44,8 +44,8 @@ export interface INft {
 }
 
 export enum SchemaTypeEnum {
-  ERC721 = "ERC721",
-  ERC1155 = "ERC1155",
+  ERC721 = "ERC-721",
+  ERC1155 = "ERC-1155",
 }
 
 export interface INftCollection extends INft {

@@ -39,7 +39,6 @@ const AcceptBidPopup: React.FC<IBuyPopupProps> = (props) => {
     try {
       if (isError || signature!.amount < amount) return;
       setLoading(true);
-
       await onAcceptBid(signature as ISignature, nft as IStagingNft, amount);
       toggleModal();
       onReload();

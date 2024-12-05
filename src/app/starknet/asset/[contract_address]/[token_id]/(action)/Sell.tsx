@@ -25,7 +25,7 @@ const Sell: React.FC<SellProps> = (props) => {
         isOpen={isOpen}
         toggleModal={toggleModal}
         nftData={nftData}
-        onReload={onReload}
+        onReload={() => onReload()}
         schema={schema}
       />
       <p className="text-2xl font-bold uppercase">Not listed</p>

@@ -5,7 +5,6 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 
 import BottomBar from "@/app/(share)/ButtonBar";
 import AppProvider from "@/services/providers/AppProvider";
-import useGetCollections from "@/services/api/useGetCollections";
 import Head from "next/head";
 import Header from "./(share)/v2Header";
 

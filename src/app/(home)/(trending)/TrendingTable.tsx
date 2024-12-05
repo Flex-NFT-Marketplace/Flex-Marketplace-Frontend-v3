@@ -23,7 +23,7 @@ const TrendingTable = () => {
           <tr className="h-10 text-right uppercase text-grays">
             <th className="hidden lg:table-cell"></th>
             <th className="text-left">Collection</th>
-            <th className="hidden lg:table-cell">Floor price</th>
+            {/* <th className="hidden lg:table-cell">Floor price</th> */}
             <th className="hidden lg:table-cell">1D Change</th>
             <th className="hidden sm:table-cell">1D Vol</th>
             <th>Total Vol</th>
@@ -36,7 +36,9 @@ const TrendingTable = () => {
             <tr
               key={index}
               className="cursor-pointer rounded-lg text-right transition-all hover:bg-dark-black"
-              onClick={() => onNavigate("/collection/" + item?.nftContract)}
+              onClick={() =>
+                onNavigate("/collection/" + item.nftCollection.nftContract)
+              }
             >
               <td className="hidden text-center lg:table-cell">{index + 1}</td>
               <td className="flex items-center text-left">
@@ -47,13 +49,15 @@ const TrendingTable = () => {
                 />
                 <p className="ml-4 font-normal">{item?.nftCollection?.name}</p>
               </td>
-              <td className="hidden lg:table-cell">
+              {/* <td className="hidden lg:table-cell">
                 <FormatPrice price={0} className="flex justify-end" />
-              </td>
+              </td> */}
               <td className="hidden lg:table-cell">
                 {item?.oneDayChange > 0 ? (
                   <p className="text-shadow-max text-buy">
-                    {item?.oneDayChange?.toFixed(2)}%
+                    {item?.oneDayChange > 100
+                      ? "100%"
+                      : item?.oneDayChange?.toFixed(2) + "%"}
                   </p>
                 ) : (
                   <p className="text-shadow-min text-cancel">
@@ -63,13 +67,14 @@ const TrendingTable = () => {
               </td>
               <td className="hidden sm:table-cell">
                 <FormatPrice
-                  price={item?.oneDayChange || 0}
+                  price={item?.oneDayVol || 0}
                   className="flex justify-end"
                 />
               </td>
               <td>
+                {/* {item?.totalVol} */}
                 <FormatPrice
-                  price={Number(BigInt(item?.totalVol)) / 1e18}
+                  price={Number(item?.totalVol)}
                   decimal={2}
                   className="flex justify-end"
                 />

@@ -14,13 +14,13 @@ import { IStagingNft } from "@/types/IStagingNft";
 import { useGetNft } from "../api/nft/useGetNft";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
 import { IStagingCollection } from "@/types/IStagingCollection";
+import { formattedContractAddress } from "@/utils/string";
 
 export interface NftContextType {
-  nft?: IStagingNft;
   nftStaging?: IStagingNft;
   collection?: IStagingCollection;
   isOwner: boolean;
-  getData: (contractAddress: string, tokenId: string, address: string) => void;
+  getNft: () => void;
   clearData: () => void;
   loadingStatus: NftLoadingAction;
   bestAsk?: ISignature;
@@ -48,7 +48,6 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const { address } = useAccount();
-  const [nft, setNft] = useState<IStagingNft | undefined>(undefined);
   const [listAsk, setListAsk] = useState<ISignature[]>([]);
   const [collection, setCollection] = useState<IStagingCollection>();
   const [bestAsk, setBestAsk] = useState<ISignature | undefined>(undefined);
@@ -63,21 +62,27 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
     clearData();
   }, [pathname]);
 
+  const getNft = async () => {
+    if (contract_address && token_id) {
+      setLoadingStatus(NftLoadActionEnum.LOADING);
+      const nftRes = await _nftInfo.mutateAsync({
+        contract_address: contract_address.toString(),
+        token_id: token_id.toString(),
+      });
+      setNftStaging(nftRes.nftData);
+      setBestAsk(nftRes.orderData.bestAsk);
+      setListAsk(nftRes.orderData.listAsk);
+      setListBid(nftRes.orderData.listBid);
+    }
+  };
+  const getCollection = async () => {
+    if (!contract_address) return;
+    const res = await _getCollection.mutateAsync(contract_address as string);
+
+    setCollection(res);
+  };
+
   useEffect(() => {
-    const getNft = async () => {
-      if (contract_address && token_id) {
-        const nftRes = await _nftInfo.mutateAsync({
-          contract_address: contract_address.toString(),
-          token_id: token_id.toString(),
-        });
-        setNftStaging(nftRes);
-      }
-    };
-    const getCollection = async () => {
-      if (!contract_address) return;
-      const res = await _getCollection.mutateAsync(contract_address as string);
-      setCollection(res);
-    };
     getNft();
     getCollection();
   }, [contract_address, token_id]);
@@ -85,80 +90,91 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
   const _nftInfo = useGetNft();
   const _getCollection = useGetCollectionDetail();
   const _getNft = useGetNftByOwner();
-  const _getIsOwner = useGetIsOwnerNft();
+  // const _getIsOwner = useGetIsOwnerNft();
 
-  const getOwner = async (_nft: IStagingNft, address: string) => {
-    if (!_nft || !address) return;
-    setIsOwner(false);
+  // const getOwner = async (_nft: IStagingNft, address: string) => {
+  //   if (!_nft || !address) return;
+  //   setIsOwner(false);
 
-    try {
-      await getIsOwner(_nft.nftContract, _nft.tokenId, address);
-    } catch (error) {}
+  //   try {
+  //     await getIsOwner(_nft.nftContract, _nft.tokenId, address);
+  //   } catch (error) {}
 
-    setLoadingStatus(NftLoadActionEnum.LOADED_IS_OWNER);
-  };
+  //   setLoadingStatus(NftLoadActionEnum.LOADED_IS_OWNER);
+  // };
 
-  const getIsOwner = async (
-    contractAddress: string,
-    tokenId: string,
-    _address: string
-  ) => {
-    try {
-      const res = await _getIsOwner.mutateAsync({
-        contract_address: contractAddress,
-        token_id: tokenId,
-        address: _address,
-      });
+  // const getIsOwner = async (
+  //   contractAddress: string,
+  //   tokenId: string,
+  //   _address: string
+  // ) => {
+  //   try {
+  //     const res = await _getIsOwner.mutateAsync({
+  //       contract_address: contractAddress,
+  //       token_id: tokenId,
+  //       address: _address,
+  //     });
 
-      setIsOwner(res);
-    } catch (error) {
-      setIsOwner(false);
-      console.error(error);
-    }
-  };
+  //     setIsOwner(res);
+  //   } catch (error) {
+  //     setIsOwner(false);
+  //     console.error(error);
+  //   }
+  // };
 
-  const getData = async (
-    contractAddress: string,
-    tokenId: string,
-    _address: string
-  ) => {
-    try {
-      setLoadingStatus(NftLoadActionEnum.LOADING);
+  // const getData = async (
+  //   contractAddress: string,
+  //   tokenId: string,
+  //   _address: string
+  // ) => {
+  //   try {
+  //     setLoadingStatus(NftLoadActionEnum.LOADING);
 
-      const res = await _getNft.mutateAsync({
-        contract_address: contractAddress,
-        token_id: tokenId,
-        owner_address: address || "",
-      });
+  //     const res = await _getNft.mutateAsync({
+  //       contract_address: contractAddress,
+  //       token_id: tokenId,
+  //       owner_address: address || "",
+  //     });
 
-      setNft(res.nft);
-      // setCollection(res.collection);
-      setBestAsk(res.orderData.bestAsk);
-      setListAsk(res.orderData.listAsk);
-      setListBid(res.orderData.listBid);
+  //     setNft(res.nft);
 
-      getOwner(res.nft, _address);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     // setCollection(res.collection);
+  //     setBestAsk(res.orderData.bestAsk);
+  //     setListAsk(res.orderData.listAsk);
+  //     setListBid(res.orderData.listBid);
+
+  //     // getOwner(res.nft, _address);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const clearData = () => {
-    setNft(undefined);
+    setNftStaging(undefined);
     setCollection(undefined);
   };
 
   const onReload = () => {
-    if (nft) {
-      getData(nft.nftContract, nft.tokenId, address as string);
+    if (nftStaging) {
+      getNft();
     }
   };
 
+  useEffect(() => {
+    if (address && nftStaging) {
+      //
+      setIsOwner(
+        formattedContractAddress(address.toLowerCase()) ==
+          formattedContractAddress(nftStaging?.owner?.address?.toLowerCase())
+      );
+      setLoadingStatus(NftLoadActionEnum.LOADED_IS_OWNER);
+    }
+  }, [address, nftStaging]);
+
   const value = {
-    nft,
     nftStaging,
     collection,
-    getData,
+    getNft,
     clearData,
     isOwner,
     loadingStatus,

@@ -122,6 +122,7 @@ const useListActionNft = (): BuyActionNftType => {
 
     try {
       const nftContract = new Contract(erc721Abi, contractAddress, provider);
+   
       const formatAnswer = { isApproved: "string" };
 
       const resERC721 = await nftContract.isApprovedForAll(
@@ -135,7 +136,7 @@ const useListActionNft = (): BuyActionNftType => {
         addresses.transferManagerERC1155.address,
         { parseResponse: true, formatResponse: formatAnswer },
       );
-
+      
       if (resERC721.isApproved === "1" || resERC1155.isApproved === "1") {
         setStatus(ActionStatus.APPROVED);
       } else {
@@ -273,7 +274,7 @@ const useListActionNft = (): BuyActionNftType => {
   };
 
   const onCancelOrder = async (singId: string): Promise<void> => {
-    try {
+    try {      
       await _cancelOrder.mutateAsync(singId);
       onShowToast("Cancel order successfully");
     } catch (error) {}

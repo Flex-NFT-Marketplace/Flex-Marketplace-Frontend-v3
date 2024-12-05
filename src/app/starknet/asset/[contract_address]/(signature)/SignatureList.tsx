@@ -25,7 +25,7 @@ const SignatureList: React.FC<SignatureListProps> = (props) => {
       <div className="flex w-full items-center gap-8 border-b border-stroke pb-2 uppercase">
         {tabs.map((item, index) => {
           if (schema == "ERC721" && item == TabEnum.LISTINGS) {
-            return <></>;
+            return <div key={index}></div>;
           }
 
           if (tabActive == item)
