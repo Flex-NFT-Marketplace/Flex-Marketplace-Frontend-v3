@@ -24,6 +24,7 @@ const BidList = () => {
 
   const renderAction = (signature: ISignature) => {
     if (!address) return <></>;
+
     if (signature.status == SignStatusEnum.BIDDING) {
       return <p className="text-buy">Processing...</p>;
     }
@@ -43,7 +44,10 @@ const BidList = () => {
           }}
         />
       );
-    } else if (address === signature.signer) {
+    } else if (
+      formattedContractAddress(address) ===
+      formattedContractAddress(signature.signer)
+    ) {
       return (
         <Button
           title="Cancel"

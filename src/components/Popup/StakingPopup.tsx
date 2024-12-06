@@ -1,10 +1,6 @@
 "use client";
-
-import Checkbox from "@/lib/@core/Checkbox";
 import React, { useEffect, useState } from "react";
-import { usePostStakingNFT } from "@/services/api/usePostStakingNFT";
 import { useAccount } from "@starknet-react/core";
-import { IStaking, StakingStatusEnum } from "@/types/IStaking";
 import { useNotify } from "@/services/providers/NotifyProvider";
 import { CallData, Contract, RpcProvider, uint256 } from "starknet";
 import TxHash from "../TxHash";
@@ -35,8 +31,6 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
   const { onShowNotify } = useNotify();
 
   const [txHash, setTxHash] = useState("");
-
-  const _postStakingNFT = usePostStakingNFT();
 
   const [isProcessing, setIsProcessing] = useState(false);
 

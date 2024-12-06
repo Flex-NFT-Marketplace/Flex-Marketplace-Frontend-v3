@@ -98,11 +98,11 @@ const TableList = () => {
               <ActionNFT status={_?.status} />
             </div>
             <div className="relative flex flex-1 items-center">
-              {/* <ImageKit
+              <ImageKit
                 src={_?.nft?.image}
                 alt=""
                 className="ml-2 h-[52px] w-[52px] rounded"
-              /> */}
+              />
 
               <p className="ml-4 truncate font-normal ">{_?.nft?.name}</p>
             </div>

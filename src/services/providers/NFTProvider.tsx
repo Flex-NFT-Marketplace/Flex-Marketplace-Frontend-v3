@@ -1,13 +1,7 @@
 "use client";
-
-import { ICollection } from "@/types/ICollection";
-import { INft } from "@/types/INft";
 import { createContext, useContext, useEffect, useState } from "react";
-import useGetNftByAddress from "../api/account/useGetNftsByOwner";
 import { useAccount } from "@starknet-react/core";
-import { useGetIsOwnerNft } from "../api/nft/useGetIsOwnerNft";
-import { Provider, Contract, Account, ec, json, RpcProvider } from "starknet";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { ISignature } from "@/types/ISignature";
 import { useGetNftByOwner } from "../api/account/useGetNftByOwner";
 import { IStagingNft } from "@/types/IStagingNft";

@@ -61,7 +61,7 @@ const ImageKit: React.FC<ImageProps> = ({
         onLoad={handleLoad}
       />
       {isLoading && !unLoading && (
-        <div className="loading-spinner">Loading...</div> // Tùy chọn hiển thị loader
+        <div className="loading-spinner"></div> // Tùy chọn hiển thị loader
       )}
     </>
   );

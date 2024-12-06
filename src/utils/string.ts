@@ -206,3 +206,9 @@ export const formatLink = (link: string) => {
     return "https://" + link;
   } else return link;
 };
+
+export const getShortTraits = (trait_value: string, maxLength: number) => {
+  if (!trait_value) return "";
+  if (trait_value.toString().length < maxLength) return trait_value;
+  return trait_value.toString().slice(0, maxLength) + "...";
+};

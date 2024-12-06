@@ -1,8 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import useGetNonce from "../api/auth/usePostNonce";
-import usePostValidateSign from "../api/auth/usePostValidateSign";
 import {
   MessageTypeEnum,
   useToast,
@@ -51,7 +49,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const _getNonce = useGetNonce();
-  const _postValidateSign = usePostValidateSign();
   const _getAccessToken = useGetAccessToken();
 
   const signMessageValidate = async () => {

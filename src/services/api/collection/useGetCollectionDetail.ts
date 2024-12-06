@@ -5,16 +5,6 @@ import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import { IStagingCollection } from "@/types/IStagingCollection";
 
 export const useGetCollectionDetail = () => {
-  // return useMutation({
-  //   mutationKey: ["collection"],
-  //   mutationFn: async (contract_address: string) => {
-  //     const { data } = await axios.get(
-  //       process.env.NEXT_PUBLIC_API_HOST + "collections/" + contract_address,
-  //     );
-
-  //     return data.data as ICollection;
-  //   },
-  // });
 
   return useMutation({
     mutationKey: ["collection"],

@@ -16,23 +16,7 @@ export const useGetNFTCollection = (
 ) => {
   return useInfiniteQuery({
     queryKey: ["NFT_COLLECTION", contract_address, sortPriceType, status, attributes],
-    // queryFn: async ({ pageParam }) => {
-    //   const { data } = await axios.get(
-    //     process.env.NEXT_PUBLIC_API_HOST + "nfts/" + contract_address,
-    //     {
-    //       params: {
-    //         page: pageParam,
-    //         sortPrice: sortPriceType,
-    //         status: status,
-    //         minPrice: minPrice,
-    //         maxPrice: maxPrice,
-    //         search: search,
-    //       },
-    //     },
-    //   );
 
-    //   return data;
-    // },
     queryFn: async ({ pageParam }) => {
       let params = {
         page: pageParam,

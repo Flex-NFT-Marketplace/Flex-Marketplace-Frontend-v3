@@ -66,9 +66,7 @@ const useAcceptBid = () => {
   ) => {
     if (status == "connected") {
       try {
-        console.log(addresses.marketplace.address);
-        
-      
+       
         const result = await account?.execute([
           {
             contractAddress: nft.nftContract || "",
@@ -97,8 +95,6 @@ const useAcceptBid = () => {
           await _putTransaction.mutateAsync(bodyData);
           onShowNotify("Accept bid successfully");
         } else {
-         
-          
         }
       } catch (error) {
         console.log(error);

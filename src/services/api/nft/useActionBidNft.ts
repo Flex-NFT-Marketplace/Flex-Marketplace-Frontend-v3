@@ -15,11 +15,6 @@ export const useActionBidNft = () => {
       try {
         const { data } = await axiosWithAccessToken.put("signatures/bid", signature)
 
-        // const { data } = await axios.put(
-        //   process.env.NEXT_PUBLIC_API_HOST + "signatures/bid",
-        //   signature,
-        // );
-
         return data;
       } catch (error) {
         // console.log

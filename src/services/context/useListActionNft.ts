@@ -7,16 +7,12 @@ import { typedDataValidate } from "./type";
 import { convertEtherToWei } from "@/utils/string";
 import { usePostSignature } from "../api/usePostSignature";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
-import { useGetNonce } from "../api/useGetNonce";
-import useGetBalanceERC1155 from "../api/nft/useGetBalanceERC1155";
 
 import { useCancelOrder } from "../api/nft/useCancelOrder";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fetchBalanceERC1155 from "../api/nft/useGetBalanceERC1155";
 import { useRouter } from "next/navigation";
-import { INft } from "@/types/INft";
-import { useNotify } from "../providers/NotifyProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 
 dayjs.extend(utc);

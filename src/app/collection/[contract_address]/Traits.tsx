@@ -1,13 +1,11 @@
-import Checkbox from "@/lib/@core/Checkbox";
 import {
   IAttributesCollection,
   IAttributesCollectionFilter,
   IAttributesCollectionOption,
 } from "@/types/INft";
-import { ITraits } from "@/types/IStagingCollection";
-import { useEffect, useState } from "react";
+import { getShortTraits } from "@/utils/string";
+import { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { getShortTraits } from "./page";
 
 interface TraitsProps {
   traits: IAttributesCollectionFilter;

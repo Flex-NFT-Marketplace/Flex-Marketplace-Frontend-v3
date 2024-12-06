@@ -1,21 +1,12 @@
 "use client";
 
-import Checkbox from "@/lib/@core/Checkbox";
 import React, { useEffect, useState } from "react";
-import { usePutUnStakeNFT } from "@/services/api/usePutUnStakeNFT";
-import { useAccount } from "@starknet-react/core";
-import { useNotify } from "@/services/providers/NotifyProvider";
-import { CallData, RpcProvider, uint256 } from "starknet";
-import TxHash from "../TxHash";
 import Modal from "@/packages/@ui-kit/Modal";
 import Button from "@/packages/@ui-kit/Button";
 import { IoClose } from "react-icons/io5";
 import ImageEditor from "@/packages/@ui-kit/Image/ImageEditor";
-import FormatAddress from "../FormatAddress";
-import { MdContentCopy } from "react-icons/md";
 import Input from "@/packages/@ui-kit/Input";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { useAuth } from "@/services/providers/AuthProvider";
 import { IProfile } from "@/types/IProfile";
 
 interface IEditProfilePopupProps {
@@ -25,26 +16,25 @@ interface IEditProfilePopupProps {
 }
 
 const EditProfilePopup: React.FC<IEditProfilePopupProps> = (props) => {
-  const { isOpen, toggleModal, profile } = props;
-  const { onUpdateProfile, getProfileByAddressOwner } = useAccountContext();
+  const { isOpen, toggleModal } = props;
   const [avatar, setAvatar] = useState<string | null>(null);
   const { profileOwner } = useAccountContext();
   const [profileData, setProfileData] = useState<any>();
 
   const [uploading, setUploading] = useState(false);
 
-  const handleUpdateProfile = () => {
-    setUploading(true);
-    const body = createProfileFormData(profileData);
-    onUpdateProfile(body)
-      .then(() => {
-        toggleModal();
-        getProfileByAddressOwner();
-      })
-      .finally(() => {
-        setUploading(false);
-      });
-  };
+  // const handleUpdateProfile = () => {
+  //   setUploading(true);
+  //   const body = createProfileFormData(profileData);
+  //   onUpdateProfile(body)
+  //     .then(() => {
+  //       toggleModal();
+  //       getProfileByAddressOwner();
+  //     })
+  //     .finally(() => {
+  //       setUploading(false);
+  //     });
+  // };
 
   useEffect(() => {
     if (profileOwner) {
@@ -184,7 +174,7 @@ const EditProfilePopup: React.FC<IEditProfilePopupProps> = (props) => {
             loading={uploading}
             variant="primary"
             className="w-full"
-            onClick={() => handleUpdateProfile()}
+            // onClick={() => handleUpdateProfile()}
           >
             Save
           </Button>

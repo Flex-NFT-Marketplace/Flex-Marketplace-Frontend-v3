@@ -1,12 +1,9 @@
 import TableListItemSkeleton from "@/app/(skeletonLoading)/collectionsSkeleton/TableListItemSkeleton";
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
-import FormatTime from "@/components/FormatTime";
 import FormatTime2 from "@/components/FormatTime2";
-import Checkbox from "@/lib/@core/Checkbox";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useCollectionDetailContext } from "@/services/providers/CollectionDetailProvider";
-import { INft } from "@/types/INft";
 import { IStagingNft } from "@/types/IStagingNft";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";

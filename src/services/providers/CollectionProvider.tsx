@@ -1,14 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { ICollection } from "@/types/ICollection";
-import useGetCollections from "../api/collection/useGetCollections";
+import { createContext, useContext } from "react";
 
-interface CollectionContextType {
-  collectionsBanner?: ICollection[];
-  collectionTrending?: ICollection[];
-  isFetching: boolean;
-}
+interface CollectionContextType {}
 
 export const CollectionContext = createContext<
   CollectionContextType | undefined
@@ -19,22 +13,7 @@ export const CollectionProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { data, isFetching } = useGetCollections();
-  const [collectionsBanner, setCollectionsBanner] = useState<ICollection[]>([]);
-  const [collectionTrending, setCollectionTrending] = useState<ICollection[]>(
-    [],
-  );
-
-  useEffect(() => {
-    setCollectionsBanner(data?.banner || []);
-    setCollectionTrending(data?.trending || []);
-  }, [data]);
-
-  const value = {
-    collectionsBanner,
-    collectionTrending,
-    isFetching,
-  };
+  const value = {};
 
   return (
     <CollectionContext.Provider value={value}>
@@ -47,7 +26,7 @@ export const useCollectionContext = () => {
   const context = useContext(CollectionContext);
   if (!context) {
     throw new Error(
-      "useCollectionContext must be used within a CollectionProvider",
+      "useCollectionContext must be used within a CollectionProvider"
     );
   }
   return context;

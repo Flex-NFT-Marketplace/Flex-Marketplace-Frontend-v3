@@ -1,32 +1,17 @@
 "use client";
-
 import React, { useContext, useEffect, useState } from "react";
-
 import Banner from "@/assets/Staking-banner.svg";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { INft } from "@/types/INft";
-import useGetStakingList from "@/services/api/useGetStakingList";
 import { useAccount } from "@starknet-react/core";
-import {
-  STAKECOLLECTION,
-  StakingStatus,
-  StakingStatusEnum,
-} from "@/types/IStaking";
 import Checkbox from "@/lib/@core/Checkbox";
 import useModal from "@/hooks/useModal";
 import StakingPopup from "@/components/Popup/StakingPopup";
 import UnStakingPopup from "@/components/Popup/UnstakingPopup";
-import {
-  calculatePointsStaking,
-  formatTimestamp,
-  formattedContractAddress,
-  timeElapsed,
-} from "@/utils/string";
+import { formattedContractAddress, timeElapsed } from "@/utils/string";
 import { LoadingHeaderContext } from "@/services/providers/market/LoadingHeaderProvider";
 import StakingSVG from "@/assets/staking.svg";
 import { Contract, RpcProvider } from "starknet";
 import { stakingABI } from "@/types/abi/stakingABI";
-import { useGetNftDetail } from "@/services/api/nft/useGetNftDetail";
 import { getStaked } from "@/services/api/staking/getStaked";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
@@ -58,7 +43,7 @@ enum NFTState {
 
 const Staking = () => {
   const { address } = useAccount();
-  const { nftsOwner, loading, onReloadNftOwner } = useAccountContext();
+  const { loading } = useAccountContext();
 
   const provider = new RpcProvider({
     nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
@@ -161,8 +146,6 @@ const Staking = () => {
       ...DreammyNfts,
       ...FlexEvo,
     ]);
-    console.log(removedDuplicate);
-
     setNftsAbleToStake(removedDuplicate);
   };
 
@@ -536,8 +519,7 @@ const Staking = () => {
               <div className="pb-4">
                 <div className="p-4">
                   <p className="text-grays">
-                    If you can't see your nfts after unstaking, don't worry as
-                    it is in process!
+                    {`If you don’t see your NFTs right after unstaking, don’t worry they’re still being processed!`}
                   </p>
                 </div>
                 {nftsStaked.map(

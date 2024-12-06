@@ -3,7 +3,6 @@ import { addresses } from "./address";
 import { convertEtherToWei } from "@/utils/string";
 import { typedDataValidate } from "./type";
 import { stark, uint256 } from "starknet";
-import { useGetNftOwner721 } from "../api/nft/useGetNftOwner721";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
 
 import dayjs from "dayjs";

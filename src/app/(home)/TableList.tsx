@@ -1,20 +1,16 @@
 import ActionNFT from "@/components/ActionNFT";
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
-import FormatTime from "@/components/FormatTime";
 import FormatTime2 from "@/components/FormatTime2";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useActivityContext } from "@/services/providers/ActivityProvider";
 import { LoadingHeaderContext } from "@/services/providers/market/LoadingHeaderProvider";
 import { ISignature } from "@/types/ISignature";
-import { calculateTimeDifferenceShort } from "@/utils/string";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 
 const TableList = () => {
-  const { signatures, isLoading, fetchNextPage, signatures10 } =
-    useActivityContext();
-  const scrollRef = useRef(null);
+  const { isLoading, signatures10 } = useActivityContext();
   const { setIsLoadingHeader } = useContext(LoadingHeaderContext);
 
   useEffect(() => {
@@ -70,11 +66,11 @@ const TableList = () => {
               <ActionNFT status={signature?.status} isShowStatus={false} />
             </div>
             <div className="flex flex-1 items-center">
-              {/* <ImageKit
+              <ImageKit
                 src={signature?.nft?.image}
                 alt=""
                 className="h-[48px] w-[48px] sm:h-[52px] sm:w-[52px]"
-              /> */}
+              />
               <p className="ml-4 truncate font-normal max-xl:max-w-64 max-sm:max-w-32">
                 {signature?.nft?.name}
               </p>

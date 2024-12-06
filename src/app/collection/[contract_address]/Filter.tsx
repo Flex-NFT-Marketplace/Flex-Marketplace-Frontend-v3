@@ -9,10 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Traits from "./Traits";
-import {
-  IAttributesCollection,
-  IAttributesCollectionFilter,
-} from "@/types/INft";
+import { IAttributesCollectionFilter } from "@/types/INft";
 import { useSearchParams } from "next/navigation";
 
 const Filter = () => {
@@ -21,6 +18,7 @@ const Filter = () => {
 
   const [_minPrice, _setMinPrice] = useState(0);
   const [_maxPrice, _setMaxPrice] = useState(1000);
+  const params = useSearchParams();
 
   const {
     priceSortType,
@@ -34,6 +32,8 @@ const Filter = () => {
     traitsActive,
     setTraitsActive,
     changeTraitsActive,
+    setTraitType,
+    setTraitValue,
   } = useCollectionDetailContext();
 
   const onSortByPrice = () => {
@@ -52,6 +52,15 @@ const Filter = () => {
       setIsShowPrice(false);
     }
   };
+
+  useEffect(() => {
+    const _traitType = params.get("trait_type");
+    const _traitValue = params.get("value");
+    if (_traitType && _traitValue) {
+      setTraitType(_traitType);
+      setTraitValue(_traitValue);
+    }
+  }, []);
 
   return (
     <div

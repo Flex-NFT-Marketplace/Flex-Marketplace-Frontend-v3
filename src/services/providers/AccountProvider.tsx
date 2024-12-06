@@ -1,25 +1,17 @@
 "use client";
-import { createContext, use, useContext, useEffect, useState } from "react";
-import { INft } from "@/types/INft";
-import { IProfile } from "@/types/IProfile";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useGetProfile } from "../api/useGetProfile";
-import useGetNftByAddress, {
-  INftAccountResponse,
-} from "../api/account/useGetNftsByOwner";
-import { ISignature } from "@/types/ISignature";
-import { usePathname } from "next/navigation";
+import { ISignature, SignStatusEnum } from "@/types/ISignature";
 import useGetNftsByOwner from "../api/account/useGetNftsByOwner";
 import { useGetNftByOwner } from "../api/account/useGetNftByOwner";
 import { useAccount } from "@starknet-react/core";
-import useGetBidByAddress from "../api/useGetBidByAddress";
-import useGetSignatureByAddress from "../api/useGetSignatureByAddress copy";
-import { usePutProfile } from "../api/auth/usePutProfile";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import {
   IProfileStaging,
   IStagingNft,
   IStagingNftResponse,
 } from "@/types/IStagingNft";
+import useGetListingsByOwner from "../api/account/useGetListingsByOwner";
+import useGetBidsByOwner from "../api/account/useGetBidsByOwners";
 
 interface AccountContextType {
   nfts: IStagingNftResponse[];
@@ -32,7 +24,6 @@ interface AccountContextType {
   loading: boolean;
   profileOwner?: IProfileStaging;
   nftsOwner: IStagingNftResponse[];
-  onUpdateProfile: (profile: any) => Promise<void>;
   getProfileByAddressOwner: () => void;
 }
 
@@ -45,8 +36,6 @@ export const AccountProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { onShowToast } = useToast();
-  const pathName = usePathname();
   const { address: accountAddress } = useAccount();
   const [address, setAddress] = useState("");
   const [profile, setProfile] = useState<IProfileStaging>();
@@ -61,15 +50,23 @@ export const AccountProvider = ({
   const _getProfile = useGetProfile();
   const _getNfts = useGetNftsByOwner(address);
   const _getNft = useGetNftByOwner();
-  const _getSignature = useGetSignatureByAddress();
-  const _getBid = useGetBidByAddress();
+  const _getListing = useGetListingsByOwner();
+  const _getBid = useGetBidsByOwner();
+
+  const getListingByOwner = async () => {
+    if (!address) return;
+    const listing = await _getListing.mutateAsync({
+      ownerAddress: address,
+      status: SignStatusEnum.LISTING,
+    });
+    setOrders(listing);
+  };
 
   const getProfileByAddress = async (address: string) => {
     try {
       if (!address) return;
       const res = await _getProfile.mutateAsync(address);
-
-      setProfile(res);
+      if (res) setProfile(res);
     } catch (error) {
       console.error(error);
     }
@@ -79,34 +76,19 @@ export const AccountProvider = ({
     try {
       if (accountAddress === "" || !accountAddress) return;
       const res = await _getProfile.mutateAsync(accountAddress as string);
-      setProfileOwner(res);
+      if (res) setProfileOwner(res);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // const getNfts = async (address: string) => {
-  //   try {
-  //     if (address === "" || !address) return;
-  //     const res = await _getNfts.mutateAsync(address);
-
-  //     setNfts(res);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const getOrder = async () => {
-    try {
-      let res = await _getSignature.mutateAsync(accountAddress as string);
-      setOrders(res);
-    } catch (error) {}
-  };
-
   const getBid = async () => {
+    if (!address) return;
     try {
-      let res = await _getBid.mutateAsync(accountAddress as string);
+      let res = await _getBid.mutateAsync({
+        ownerAddress: address,
+        status: SignStatusEnum.BID,
+      });
       setBids(res);
     } catch (error) {}
   };
@@ -117,7 +99,7 @@ export const AccountProvider = ({
     setOrders([]);
     setBids([]);
     if (accountAddress == address) {
-      getOrder();
+      getListingByOwner();
       getBid();
     }
     setLoading(false);
@@ -130,6 +112,8 @@ export const AccountProvider = ({
     setLoading(true);
     setNfts([]);
     // getNftOfOwner();
+    getListingByOwner();
+
     getProfileByAddress(address);
   }, [address]);
 
@@ -160,7 +144,7 @@ export const AccountProvider = ({
         owner_address: address,
       });
 
-      getOrder();
+      getListingByOwner();
       getBid();
       updateNftInArray(res.nft);
       setLoading(false);
@@ -195,19 +179,6 @@ export const AccountProvider = ({
     getNftOfOwner();
   };
 
-  const _putUpdateProfile = usePutProfile();
-  const onUpdateProfile = async (profile: any) => {
-    try {
-      await _putUpdateProfile
-        .mutateAsync({ profile: profile, address: accountAddress as string })
-        .then((res) => {
-          onShowToast("Update profile success");
-        });
-    } catch (error) {}
-
-    return;
-  };
-
   const value: AccountContextType = {
     nfts: nfts,
     profile: profile,
@@ -220,7 +191,6 @@ export const AccountProvider = ({
     loading,
     profileOwner,
     nftsOwner,
-    onUpdateProfile,
   };
 
   return (

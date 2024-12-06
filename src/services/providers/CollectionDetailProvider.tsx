@@ -1,15 +1,12 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { ICollection } from "@/types/ICollection";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
 import {
   IAttributesCollection,
   IAttributesCollectionFilter,
-  INft,
-  INftCollection,
 } from "@/types/INft";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -33,6 +30,12 @@ interface CollectionDetailContextType {
   isLoading: boolean;
   isFetching: boolean;
   hasNextPage: boolean;
+
+  traitType: string;
+  setTraitType: (traitsType: string) => void;
+
+  traitValue: string;
+  setTraitValue: (traitValue: string) => void;
 
   traitsActive: IAttributesCollection[];
   setTraitsActive: (newTraitsActive: IAttributesCollection[]) => void;
@@ -112,10 +115,8 @@ export const CollectionDetailProvider = ({
     IAttributesCollection[]
   >([]);
   const [traitsActive, setTraitsActive] = useState<IAttributesCollection[]>([]);
-
-  const searchParams = useSearchParams();
-  const traitType = searchParams.get("trait_type");
-  const traitValue = searchParams.get("value");
+  const [traitType, setTraitType] = useState("");
+  const [traitValue, setTraitValue] = useState("");
 
   useEffect(() => {
     if (contract_address) {
@@ -232,6 +233,12 @@ export const CollectionDetailProvider = ({
 
     traitsActive,
     setTraitsActive,
+
+    traitType,
+    setTraitType,
+
+    traitValue,
+    setTraitValue,
 
     changeTraitsActive,
 

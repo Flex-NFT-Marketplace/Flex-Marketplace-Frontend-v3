@@ -3,9 +3,9 @@ import CardNFT from "@/components/CardNFT";
 import { useCollectionDetailContext } from "@/services/providers/CollectionDetailProvider";
 import { IAttributesCollection } from "@/types/INft";
 import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
+import { getShortTraits } from "@/utils/string";
 import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
-import { getShortTraits } from "./page";
 
 const TableCard = (props: any) => {
   const { isShowFilter, isShowActivity, nfts, isFetching } = props;
