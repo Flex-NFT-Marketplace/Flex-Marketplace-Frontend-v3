@@ -12,7 +12,6 @@ const useGetBannerCollections = () => {
             {
                 "page": 1,
                 "size": 10,
-                "desc": "desc"
             }
           )
           const { items } = response?.data?.data;
