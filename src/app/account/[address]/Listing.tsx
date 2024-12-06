@@ -5,15 +5,14 @@ import useModal from "@/hooks/useModal";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
 import { IStagingNft } from "@/types/IStagingNft";
-import { formatTimestamp, timeElapsedFromTimestamp } from "@/utils/string";
+import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Listing = () => {
-  const { orders, setAddress, onReload } = useAccountContext();
+  const { orders, onReload } = useAccountContext();
   const { isOpen: isOpenUnListModal, toggleModal: toggleUnListModal } =
     useModal();
 

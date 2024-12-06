@@ -1,10 +1,6 @@
 "use client";
-
-import Checkbox from "@/lib/@core/Checkbox";
 import React, { useEffect, useState } from "react";
-import { usePostStakingNFT } from "@/services/api/usePostStakingNFT";
 import { useAccount } from "@starknet-react/core";
-import { IStaking, StakingStatusEnum } from "@/types/IStaking";
 import { useNotify } from "@/services/providers/NotifyProvider";
 import { CallData, Contract, RpcProvider, uint256 } from "starknet";
 import TxHash from "../TxHash";
@@ -13,14 +9,15 @@ import Modal from "@/packages/@ui-kit/Modal";
 import Button from "@/packages/@ui-kit/Button";
 import { IoClose } from "react-icons/io5";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNftResponse } from "@/types/IStagingNft";
 
 interface IStakingPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  nfts?: any[];
-  setNfts: (nfts: any[]) => void;
+  nfts: IStagingNftResponse[];
+  setNfts: (nfts: IStagingNftResponse[]) => void;
   onReload: () => void;
-  totalStaked?: number;
+  numOfStakingNfts: number;
 }
 
 const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
@@ -29,46 +26,24 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
   });
 
   const { address, status, account } = useAccount();
-  const { isOpen, toggleModal, nfts, setNfts, onReload, totalStaked } = props;
+  const { isOpen, toggleModal, nfts, setNfts, onReload, numOfStakingNfts } =
+    props;
   const { onShowNotify } = useNotify();
 
   const [txHash, setTxHash] = useState("");
 
-  const _postStakingNFT = usePostStakingNFT();
-
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const onChecked = (nft: any, status: boolean) => {
-    if (!nfts) return;
-
-    let arr = nfts.map((item) => {
-      if (
-        item.contract_address == nft.contract_address &&
-        item.token_id == nft.token_id
-      ) {
-        return {
-          ...item,
-          checked: status,
-        };
-      }
-
-      return item;
-    });
-
-    setNfts(arr);
-  };
 
   const onStake = async () => {
     setIsProcessing(true);
-    const stakeNfts = nfts?.filter((nft) => nft.checked);
 
-    if (!stakeNfts || stakeNfts.length == 0) {
+    if (nfts.length == 0) {
       onShowNotify("Please select nft to stake");
       setIsProcessing(false);
       return;
     }
 
-    const tx = await onSignStake(stakeNfts);
+    const tx = await onSignStake(nfts);
 
     if (!tx) {
       onShowNotify("Staking failed");
@@ -133,7 +108,7 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
     }
   };
 
-  const onSignStake = async (nfts: any[]) => {
+  const onSignStake = async (nfts: IStagingNftResponse[]) => {
     try {
       if (status == "disconnected" || !account) {
         onShowNotify("Please connect your wallet");
@@ -145,18 +120,18 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
 
       for (let i = 0; i < nfts.length; i++) {
         const approved = await checkApprovalCollection(
-          nfts[i].contract_address,
+          nfts[i].nftData.nftContract,
           address || ""
         );
 
         if (
           !approved &&
-          !contractNotApproved.includes(nfts[i].contract_address)
+          !contractNotApproved.includes(nfts[i].nftData.nftContract)
         ) {
-          contractNotApproved.push(nfts[i].contract_address);
+          contractNotApproved.push(nfts[i].nftData.nftContract);
 
           messageDataApprove.push({
-            contractAddress: nfts[i].contract_address,
+            contractAddress: nfts[i].nftData.nftContract,
             entrypoint: "setApprovalForAll",
             calldata: CallData.compile({
               operator: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
@@ -172,8 +147,8 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
             process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
           entrypoint: "stakeNFT",
           calldata: CallData.compile({
-            collection: nft.contract_address,
-            tokenId: uint256.bnToUint256(nft.token_id),
+            collection: nft.nftData.nftContract,
+            tokenId: uint256.bnToUint256(nft.nftData.tokenId),
           }),
         });
       });
@@ -192,7 +167,9 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-start">
             <p className="text-2xl font-bold uppercase">stake Nft</p>
-            <p className="text-grays">Current staking NFT: {totalStaked}</p>
+            <p className="text-grays">
+              Current staking NFT: {numOfStakingNfts}
+            </p>
           </div>
           <Button icon={<IoClose />} variant="icon" onClick={toggleModal} />
         </div>
@@ -209,21 +186,23 @@ const StakingPopup: React.FC<IStakingPopupProps> = (props) => {
                   <div
                     className=" flex w-full items-center hover:bg-dark-black"
                     key={index}
-                    onMouseDown={() => {
-                      onChecked(_, !_.checked);
-                    }}
+                    // onMouseDown={() => {
+                    //   onChecked(_, !_.checked);
+                    // }}
                   >
                     <div className="relative flex flex-1 items-center justify-start">
                       <ImageKit
                         alt=""
-                        src={_.image_url}
+                        src={_?.nftData?.image}
                         className="ml-2 h-[40px] w-[40px]"
                       />
 
-                      <p className="ml-4 truncate font-bold ">{_.name}</p>
+                      <p className="ml-4 truncate font-bold ">
+                        {_?.nftData?.name}
+                      </p>
                     </div>
 
-                    <Checkbox isChecked={_.checked} onChange={() => {}} />
+                    {/* <Checkbox isChecked={_.checked} onChange={() => {}} /> */}
                   </div>
                 );
               })}

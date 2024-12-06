@@ -4,11 +4,13 @@ interface NftCollection {
     cover: string;
     description: string;
     symbol: string;
+    nftContract: string;
   }
   
  export interface ITrendingCollection {
     totalVol: string;
-    nftContract: string;
+    oneDayVol: number;
+    sevenDayVol: number;
     oneDayChange: number;
     totalOwners: number;
     totalSupply: number;

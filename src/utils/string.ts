@@ -112,7 +112,7 @@ export function timeElapsed(pastDate: string): string {
 
   // Kiểm tra xem 'past' có phải là một ngày hợp lệ không
   if (isNaN(past.getTime())) {
-    throw new Error("Invalid date format");
+    return "-";
   }
 
   const diffInMs: number = now.getTime() - past.getTime();
@@ -205,4 +205,10 @@ export const formatLink = (link: string) => {
   ) {
     return "https://" + link;
   } else return link;
+};
+
+export const getShortTraits = (trait_value: string, maxLength: number) => {
+  if (!trait_value) return "";
+  if (trait_value.toString().length < maxLength) return trait_value;
+  return trait_value.toString().slice(0, maxLength) + "...";
 };

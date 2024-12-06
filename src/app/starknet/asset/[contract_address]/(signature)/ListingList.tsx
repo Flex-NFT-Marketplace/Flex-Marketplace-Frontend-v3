@@ -5,23 +5,17 @@ import UnListPopup from "@/components/Popup/UnListPopup";
 import useModal from "@/hooks/useModal";
 import Button from "@/packages/@ui-kit/Button";
 import { useNftContext } from "@/services/providers/NFTProvider";
-import {
-  MessageTypeEnum,
-  useNotify,
-} from "@/services/providers/NotifyProvider";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
-import { formatTimestamp, timeElapsedFromTimestamp } from "@/utils/string";
+import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 
 const ListingList = () => {
   const { address } = useAccount();
-  const { listAsk, isOwner } = useNftContext();
+  const { listAsk, nftStaging, onReload, collection } = useNftContext();
   const { isOpen, toggleModal } = useModal();
   const { isOpen: isOpenUnListModal, toggleModal: toggleUnListModal } =
     useModal();
-  const { nft, onReload, collection } = useNftContext();
-  const { onShowNotify } = useNotify();
 
   const [signature, setSignature] = useState<ISignature>();
 
@@ -68,7 +62,7 @@ const ListingList = () => {
       <BuyPopup
         isOpen={isOpen}
         toggleModal={toggleModal}
-        nft={nft}
+        nft={nftStaging}
         signature={signature}
         onReload={() => onReload()}
         schema={collection?.standard}
@@ -79,7 +73,7 @@ const ListingList = () => {
         toggleModal={() => {
           toggleUnListModal();
         }}
-        nft={nft}
+        nft={nftStaging}
         signature={signature as ISignature}
         onReload={() => onReload()}
       />

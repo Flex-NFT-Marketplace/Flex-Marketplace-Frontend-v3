@@ -32,7 +32,7 @@ const CardNFTSkeleton: React.FC<CardNFTProps> = ({
       ? filterAndActivityWidthClasses
       : isShowFilter || isShowActivity
         ? filterOrActivityWidthClasses
-        : widthClasses,
+        : widthClasses
   );
 
   return (

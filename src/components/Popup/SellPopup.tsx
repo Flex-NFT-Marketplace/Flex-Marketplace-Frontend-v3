@@ -159,8 +159,9 @@ const SellPopup: React.FC<ISelPopupProps> = (props) => {
           nftData?.tokenId || "",
           currencySelected.value
         );
-        toggleModal();
         onReload();
+        toggleModal();
+
         break;
       }
       case ActionStatus.CANNOT_TRANSFER: {
@@ -169,7 +170,6 @@ const SellPopup: React.FC<ISelPopupProps> = (props) => {
       }
       case ActionStatus.APPROVED: {
         if (isError) return;
-
         await onListing(
           timeEnd.unix(),
           price,
@@ -178,8 +178,9 @@ const SellPopup: React.FC<ISelPopupProps> = (props) => {
           nftData?.tokenId || "",
           currencySelected.value
         );
-        toggleModal();
         onReload();
+        toggleModal();
+
         break;
       }
       default: {

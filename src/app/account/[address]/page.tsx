@@ -1,19 +1,11 @@
 "use client";
-import { useRouter } from "next/navigation";
-
-import CardNFT from "@/components/CardNFT";
-import { MdContentCopy, MdOutlineFilterAlt } from "react-icons/md";
 import Profile from "./Profile";
-import { TbReload } from "react-icons/tb";
-import Icon from "@/lib/@core/Icon";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { INft } from "@/types/INft";
 import { useContext, useEffect, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useAccount } from "@starknet-react/core";
 import Listing from "./Listing";
 import Inventory from "./Inventory";
-import { Router } from "next/router";
 import { LoadingHeaderContext } from "@/services/providers/market/LoadingHeaderProvider";
 import Biding from "./Biding";
 

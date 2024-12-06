@@ -29,10 +29,7 @@ const Buy: React.FC<BuyProps> = (props) => {
   const { isOpen: isOpenSellPopup, toggleModal: toggleSellPopup } = useModal();
   const { isOpen: isOpenBidPopup, toggleModal: toggleBidPopup } = useModal();
   const { nftData, signature, schema = "ERC721" } = props;
-  const { onReload, isOwner, collection } = useNftContext();
-  const { onShowToast } = useToast();
-
-  const { address, account } = useAccount();
+  const { onReload, isOwner } = useNftContext();
   const { connect, connectors } = useConnect();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
     connectors: connectors as any,
@@ -42,12 +39,6 @@ const Buy: React.FC<BuyProps> = (props) => {
     const { connector } = await starknetkitConnectModal();
     await connect({ connector });
   };
-
-  useEffect(() => {
-    // console.log
-
-    signature;
-  }, []);
 
   return (
     <div className="flex flex-col justify-between gap-4 rounded-md border border-stroke px-4 py-4">

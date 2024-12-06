@@ -27,7 +27,6 @@ type TabType =
   | TabEnum.INVENTORY;
 
 const Trending = () => {
-  const { collectionTrending } = useCollectionContext();
   const [tabActive, setTabActive] = useState<TabType>(TabEnum.TRENDING);
 
   const styleTab = (tab: TabType) => {

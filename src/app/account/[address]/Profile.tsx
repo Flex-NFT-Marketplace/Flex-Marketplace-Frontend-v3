@@ -17,8 +17,7 @@ import { ACCESS_TOKEN } from "@/constants/cookies";
 
 const Profile = () => {
   const { address } = useParams();
-  const { profile, setAddress, onUpdateProfile, profileOwner } =
-    useAccountContext();
+  const { profile, setAddress, profileOwner } = useAccountContext();
   const { signMessageValidate } = useAuth();
 
   const { isShow: isShowEditProfile, toggle: toggleShowEditProfile } =

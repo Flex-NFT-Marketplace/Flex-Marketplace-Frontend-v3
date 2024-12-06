@@ -6,22 +6,19 @@ import {
   SortStatusEnum,
   useCollectionDetailContext,
 } from "@/services/providers/CollectionDetailProvider";
-import { ITraits } from "@/types/IStagingCollection";
 import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Traits from "./Traits";
-import {
-  IAttributesCollection,
-  IAttributesCollectionFilter,
-} from "@/types/INft";
+import { IAttributesCollectionFilter } from "@/types/INft";
+import { useSearchParams } from "next/navigation";
 
 const Filter = () => {
   const [isShowPrice, setIsShowPrice] = useState(true);
-  const [isShowTraits, setIsShowTraits] = useState(false);
+  const [isShowTraits, setIsShowTraits] = useState(true);
 
   const [_minPrice, _setMinPrice] = useState(0);
   const [_maxPrice, _setMaxPrice] = useState(1000);
-  const [traitsActive, setTraitsActive] = useState<IAttributesCollection[]>([]);
+  const params = useSearchParams();
 
   const {
     priceSortType,
@@ -32,6 +29,11 @@ const Filter = () => {
     setMaxPrice,
     collectionAttributes,
     setAttributesFilter,
+    traitsActive,
+    setTraitsActive,
+    changeTraitsActive,
+    setTraitType,
+    setTraitValue,
   } = useCollectionDetailContext();
 
   const onSortByPrice = () => {
@@ -51,37 +53,14 @@ const Filter = () => {
     }
   };
 
-  const changeTraitsActive = (traitFilter: IAttributesCollection) => {
-    if (isFiltered(traitFilter.trait_type as string)) {
-      const newTraitsActive: IAttributesCollection[] = JSON.parse(
-        JSON.stringify(traitsActive)
-      );
-      newTraitsActive.map((item) => {
-        if (item.trait_type == traitFilter.trait_type) {
-          return { key: item.trait_type, value: traitFilter.value };
-        } else return item;
-      });
-      console.log(newTraitsActive);
-
-      setTraitsActive(() => newTraitsActive);
-    } else {
-      setTraitsActive([...traitsActive, traitFilter]);
-    }
-  };
-
-  const isFiltered = (key: string) => {
-    let isKeyFiltered = false;
-    traitsActive.forEach((traitActive) => {
-      if (traitActive.trait_type == key) {
-        isKeyFiltered = true;
-      }
-    });
-    return isKeyFiltered;
-  };
-
   useEffect(() => {
-    setAttributesFilter(traitsActive);
-  }, [traitsActive]);
+    const _traitType = params.get("trait_type");
+    const _traitValue = params.get("value");
+    if (_traitType && _traitValue) {
+      setTraitType(_traitType);
+      setTraitValue(_traitValue);
+    }
+  }, []);
 
   return (
     <div
@@ -175,22 +154,36 @@ const Filter = () => {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <div
-          className="flex cursor-pointer items-center justify-between text-xl transition-all"
-          onClick={() => setIsShowTraits(!isShowTraits)}
-        >
+        <div className="flex cursor-pointer items-center justify-between text-xl transition-all">
           <p className="font-bold">TRAITS</p>
-          {isShowTraits ? <IoIosArrowUp /> : <IoIosArrowDown />}
+          <div className="flex items-center gap-2">
+            {traitsActive.length > 0 && (
+              <p
+                className="text-base hover:text-primary font-bold"
+                onClick={() => setTraitsActive([])}
+              >
+                Clear
+              </p>
+            )}
+            {isShowTraits ? (
+              <IoIosArrowUp onClick={() => setIsShowTraits(!isShowTraits)} />
+            ) : (
+              <IoIosArrowDown onClick={() => setIsShowTraits(!isShowTraits)} />
+            )}
+          </div>
         </div>
-        <div className={`${!isShowTraits && "hidden"} flex flex-col gap-6`}>
+        <div className={`${!isShowTraits && "hidden"} flex flex-col gap-2`}>
           {collectionAttributes?.map(
             (attributes: IAttributesCollectionFilter, index: number) => {
               return (
-                <Traits
-                  traits={attributes}
-                  key={index}
-                  onChange={changeTraitsActive}
-                />
+                attributes.trait_type && (
+                  <Traits
+                    traits={attributes}
+                    key={index + traitsActive.length + attributes.trait_type}
+                    onChange={changeTraitsActive}
+                    traitsActive={traitsActive}
+                  />
+                )
               );
             }
           )}

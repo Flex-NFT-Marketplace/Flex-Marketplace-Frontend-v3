@@ -7,16 +7,12 @@ import { typedDataValidate } from "./type";
 import { convertEtherToWei } from "@/utils/string";
 import { usePostSignature } from "../api/usePostSignature";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
-import { useGetNonce } from "../api/useGetNonce";
-import useGetBalanceERC1155 from "../api/nft/useGetBalanceERC1155";
 
 import { useCancelOrder } from "../api/nft/useCancelOrder";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fetchBalanceERC1155 from "../api/nft/useGetBalanceERC1155";
 import { useRouter } from "next/navigation";
-import { INft } from "@/types/INft";
-import { useNotify } from "../providers/NotifyProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 
 dayjs.extend(utc);
@@ -122,6 +118,7 @@ const useListActionNft = (): BuyActionNftType => {
 
     try {
       const nftContract = new Contract(erc721Abi, contractAddress, provider);
+   
       const formatAnswer = { isApproved: "string" };
 
       const resERC721 = await nftContract.isApprovedForAll(
@@ -135,7 +132,7 @@ const useListActionNft = (): BuyActionNftType => {
         addresses.transferManagerERC1155.address,
         { parseResponse: true, formatResponse: formatAnswer },
       );
-
+      
       if (resERC721.isApproved === "1" || resERC1155.isApproved === "1") {
         setStatus(ActionStatus.APPROVED);
       } else {
@@ -273,7 +270,7 @@ const useListActionNft = (): BuyActionNftType => {
   };
 
   const onCancelOrder = async (singId: string): Promise<void> => {
-    try {
+    try {      
       await _cancelOrder.mutateAsync(singId);
       onShowToast("Cancel order successfully");
     } catch (error) {}

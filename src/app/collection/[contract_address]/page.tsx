@@ -25,14 +25,13 @@ import ClaimPopup from "@/components/Popup/ClaimPopup";
 import { useLoading } from "@/packages/@ui-kit/Loading/LoadingProvider";
 
 const CollectionPage = () => {
-  const { contract_address } = useParams();
   const [isShowFilter, setIsShowFilter] = useState(true);
   const [isShowActivity, setIsShowActivity] = useState(false);
 
   const [isShowList, setIsShowList] = useState(false);
   const [isShowCard, setIsShowCard] = useState(true);
   const { isOpen: isOpenClaim, toggleModal: toggleModalClaim } = useModal();
-  const { nfts, isFetching, fetchNextPage, hasNextPage } =
+  const { nfts, isFetching, fetchNextPage, hasNextPage, setTraitsActive } =
     useCollectionDetailContext();
   const { setLoading } = useLoading();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -88,7 +87,7 @@ const CollectionPage = () => {
         <div className="relative top-0 z-10">
           <Profile />
 
-          <ClaimPopup isOpen={isOpenClaim} toggleModal={toggleModalClaim} />
+          {/* <ClaimPopup isOpen={isOpenClaim} toggleModal={toggleModalClaim} /> */}
         </div>
         <div
           id="filter-bar"
@@ -133,7 +132,7 @@ const CollectionPage = () => {
           </div>
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex">
           {isShowFilter && <Filter />}
           {isShowCard && (
             <TableCard

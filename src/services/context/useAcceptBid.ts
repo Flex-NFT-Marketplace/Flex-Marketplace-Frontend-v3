@@ -66,6 +66,7 @@ const useAcceptBid = () => {
   ) => {
     if (status == "connected") {
       try {
+       
         const result = await account?.execute([
           {
             contractAddress: nft.nftContract || "",
@@ -84,18 +85,20 @@ const useAcceptBid = () => {
               generateBidCalldataSignature(signature, nft, amount) || [],
           },
         ]);
+        
 
         if (result?.transaction_hash) {
           const bodyData = {
             signature_id: signature._id || "",
             transaction_hash: result.transaction_hash || "",
           };
-
           await _putTransaction.mutateAsync(bodyData);
           onShowNotify("Accept bid successfully");
         } else {
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     } else {
     }
   };

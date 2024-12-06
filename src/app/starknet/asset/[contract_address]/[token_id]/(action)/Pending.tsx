@@ -1,8 +1,8 @@
 import FormatAddress from "@/components/FormatAddress";
 import LoadingAnimation from "@/components/LoadingAnimation";
-import Button from "@/lib/@core/Button";
+import { useNftContext } from "@/services/providers/NFTProvider";
 import { ISignature } from "@/types/ISignature";
-import { useAccount } from "@starknet-react/core";
+import { useEffect } from "react";
 import { FaRegShareSquare } from "react-icons/fa";
 
 interface PendingProps {
@@ -11,6 +11,16 @@ interface PendingProps {
 
 const Pending: React.FC<PendingProps> = (props) => {
   const { signature } = props;
+
+  const { onReload, nftStaging } = useNftContext();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onReload();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [nftStaging]);
 
   return (
     <div className="flex flex-col justify-between  gap-4 border border-dashed border-buy bg-[#171921] px-4 py-4">

@@ -42,8 +42,11 @@ const AcceptBidPopup: React.FC<IBuyPopupProps> = (props) => {
 
       await onAcceptBid(signature as ISignature, nft as IStagingNft, amount);
       toggleModal();
-      onReload();
-      setLoading(false);
+
+      setTimeout(() => {
+        onReload();
+        setLoading(false);
+      }, 7000);
     } catch (error) {
       toggleModal();
       setLoading(false);

@@ -23,14 +23,12 @@ import Bid from "./(action)/Bid";
 
 const NFTDetail = () => {
   const { address, status } = useAccount();
-  const pathName = usePathname();
-  const { contract_address, token_id } = useParams();
 
-  const { nft, getData, isOwner, loadingStatus, bestAsk, collection } =
+  const { nftStaging, getNft, isOwner, loadingStatus, bestAsk, collection } =
     useNftContext();
 
   useEffect(() => {
-    getData(contract_address as string, token_id as string, address as string);
+    getNft();
   }, [address]);
 
   const renderAction = () => {
@@ -41,10 +39,10 @@ const NFTDetail = () => {
 
         if (isOwner) {
           if (!bestAsk)
-            return <Sell nftData={nft} schema={collection?.standard} />;
+            return <Sell nftData={nftStaging} schema={collection?.standard} />;
           return (
             <CancelOrder
-              nftData={nft}
+              nftData={nftStaging}
               signature={bestAsk}
               schema={collection?.standard}
             />
@@ -53,12 +51,13 @@ const NFTDetail = () => {
           if (bestAsk)
             return (
               <Buy
-                nftData={nft}
+                nftData={nftStaging}
                 signature={bestAsk}
                 schema={collection?.standard}
               />
             );
-          else return <Bid nftData={nft} schema={collection?.standard} />;
+          else
+            return <Bid nftData={nftStaging} schema={collection?.standard} />;
         }
       } else if (collection?.standard == SchemaTypeEnum.ERC1155) {
         if (bestAsk?.signer == address) {
@@ -66,10 +65,10 @@ const NFTDetail = () => {
             return <Pending signature={bestAsk} />;
 
           if (!bestAsk)
-            return <Sell nftData={nft} schema={collection?.standard} />;
+            return <Sell nftData={nftStaging} schema={collection?.standard} />;
           return (
             <CancelOrder
-              nftData={nft}
+              nftData={nftStaging}
               signature={bestAsk}
               schema={collection?.standard}
             />
@@ -78,28 +77,29 @@ const NFTDetail = () => {
           if (bestAsk)
             return (
               <Buy
-                nftData={nft}
+                nftData={nftStaging}
                 signature={bestAsk}
                 schema={collection?.standard}
               />
             );
           else if (isOwner)
-            return <Sell nftData={nft} schema={collection?.standard} />;
-          else return <Bid nftData={nft} schema={collection?.standard} />;
+            return <Sell nftData={nftStaging} schema={collection?.standard} />;
+          else
+            return <Bid nftData={nftStaging} schema={collection?.standard} />;
         }
       } else return <></>;
     } else {
       if (status == "disconnected" && bestAsk)
         return (
           <Buy
-            nftData={nft}
+            nftData={nftStaging}
             signature={bestAsk}
             schema={collection?.standard}
           />
         );
       else if (isOwner)
-        return <Sell nftData={nft} schema={collection?.standard} />;
-      else return <Bid nftData={nft} schema={collection?.standard} />;
+        return <Sell nftData={nftStaging} schema={collection?.standard} />;
+      else return <Bid nftData={nftStaging} schema={collection?.standard} />;
     }
   };
 
