@@ -39,7 +39,7 @@
 
 .loader div {
   animation: slide 1.5s linear infinite;
-  background: linear-gradient(to left, #FFE720, #ffffff00);
+  background: linear-gradient(to left, #ffe720, #ffffff00);
 }
 
 .loader div:nth-child(1) {
@@ -52,4 +52,19 @@
 
 .loader div:nth-child(3) {
   animation-delay: 1s;
+}
+
+@keyframes show-loading {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 1.25;
+    opacity: 0;
+  }
+}
+
+.animate-show-loading {
+  animation: show-loading 1.5s linear;
 }
