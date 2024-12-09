@@ -56,11 +56,11 @@
 
 @keyframes show-loading {
   0% {
-    scale: 1;
+    scale: 0.75;
     opacity: 1;
   }
   100% {
-    scale: 1.25;
+    scale: 1;
     opacity: 0;
   }
 }

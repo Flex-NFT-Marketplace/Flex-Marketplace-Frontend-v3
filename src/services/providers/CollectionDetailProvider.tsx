@@ -185,23 +185,30 @@ export const CollectionDetailProvider = ({
   };
 
   const changeTraitsActive = (traitFilter: IAttributesCollection) => {
-    if (isFiltered(traitFilter.trait_type as string)) {
-      const newTraitsActive = traitsActive.map((item) => {
-        if (item.trait_type == traitFilter.trait_type) {
-          return traitFilter;
-        } else return item;
+    if (isFiltered(traitFilter)) {
+      const newTraitsActive: IAttributesCollection[] = [];
+      traitsActive.forEach((trait) => {
+        if (
+          !(
+            trait.trait_type == traitFilter.trait_type &&
+            trait.value == traitFilter.value
+          )
+        )
+          newTraitsActive.push(trait);
       });
-
-      setTraitsActive(() => newTraitsActive);
+      setTraitsActive(newTraitsActive);
     } else {
       setTraitsActive([...traitsActive, traitFilter]);
     }
   };
 
-  const isFiltered = (key: string) => {
+  const isFiltered = (traitFilter: IAttributesCollection) => {
     let isKeyFiltered = false;
     traitsActive.forEach((traitActive) => {
-      if (traitActive.trait_type == key) {
+      if (
+        traitActive.trait_type == traitFilter.trait_type &&
+        traitActive.value == traitFilter.value
+      ) {
         isKeyFiltered = true;
       }
     });

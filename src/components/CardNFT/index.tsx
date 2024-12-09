@@ -73,11 +73,11 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
 
   useEffect(() => {
     if (bestAsk) {
-      if (collection?.schema == "ERC721") {
+      if (collection?.schema == SchemaTypeEnum.ERC721) {
         if (bestAsk.status == SignStatusEnum.BUYING)
           setCardMode(CardNFTModeAction.PENDING);
         else setCardMode(CardNFTModeAction.LISTING);
-      } else if (collection?.schema == "ERC1155") {
+      } else if (collection?.schema == SchemaTypeEnum.ERC1155) {
         if (bestAsk.signer == address) setCardMode(CardNFTModeAction.LISTING);
         else setCardMode(CardNFTModeAction.NOT_LISTED);
       }

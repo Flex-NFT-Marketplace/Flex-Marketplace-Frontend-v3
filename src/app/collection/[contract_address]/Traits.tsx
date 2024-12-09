@@ -37,19 +37,34 @@ const Traits: React.FC<TraitsProps> = ({ traits, traitsActive, onChange }) => {
     return selected;
   };
 
+  const countFiltered = (traitType: string): number => {
+    let counter = 0;
+    traitsActive.forEach((trait) => {
+      if (trait.trait_type == traitType) counter++;
+    });
+    return counter;
+  };
+
   return (
     <div>
       <div
-        className="flex cursor-pointer items-center justify-between text-xl transition-all hover:bg-slate-800 py-2 rounded"
+        className="flex cursor-pointer items-center justify-between text-xl transition-all hover:bg-slate-800 p-2 rounded"
         onClick={() => setIsShowTraits(!isShowTraits)}
       >
-        <p
-          className={`font-bold ${isContain(traits) && "text-primary"} text-base`}
-        >
-          {traits?.trait_type}
-        </p>
+        <div className="flex items-center gap-2">
+          <p
+            className={`font-bold ${isContain(traits) && "text-primary"} text-base`}
+          >
+            {traits?.trait_type}
+          </p>
+          {countFiltered(traits.trait_type) > 0 && (
+            <p className="text-black px-1 bg-primary rounded text-sm">
+              {countFiltered(traits.trait_type)}
+            </p>
+          )}
+        </div>
+
         <div className="flex items-center gap-2 text-grays">
-          {/* <p>223</p> */}
           {isShowTraits ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </div>
       </div>
@@ -59,21 +74,20 @@ const Traits: React.FC<TraitsProps> = ({ traits, traitsActive, onChange }) => {
             <label
               htmlFor={`input-${option.value}`}
               key={index}
-              onClick={() =>
+              onMouseUp={() => {
                 onChange({
                   trait_type: traits.trait_type,
                   value: option.value,
-                })
-              }
-              className="flex justify-between items-center gap-2 hover:bg-slate-800 py-2 rounded cursor-pointer"
+                });
+              }}
+              className="flex justify-between items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer"
             >
               <div className="flex items-center gap-2 text-grays">
                 <label className={"container-checkbox"}>
                   <input
                     id={`input-${option.value}`}
-                    defaultChecked={isSelected(traits, option.value)}
-                    type="radio"
-                    name={`traits-${traits?.trait_type}`}
+                    checked={isSelected(traits, option.value)}
+                    type="checkbox"
                   />
                   <span className="checkmark"></span>
                 </label>

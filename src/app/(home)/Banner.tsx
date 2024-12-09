@@ -118,7 +118,7 @@ const Banner = () => {
                 <p>By</p>
                 <FormatAddress
                   address={collectionActive?.nftContract}
-                  convertName
+                  // convertName
                 />
               </div>
               <p className="max-w-full text-4xl font-bold md:max-w-[500px] md:text-[52px]">

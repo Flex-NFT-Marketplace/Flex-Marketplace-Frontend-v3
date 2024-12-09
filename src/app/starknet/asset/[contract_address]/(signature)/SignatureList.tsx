@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ListingList from "./ListingList";
 import BidList from "./BidList";
 import Activity from "../[token_id]/Activity";
+import { SchemaTypeEnum } from "@/types/INft";
 
 enum TabEnum {
   ACTIVITY = "ACTIVITY",
@@ -17,14 +18,14 @@ interface SignatureListProps {
 }
 
 const SignatureList: React.FC<SignatureListProps> = (props) => {
-  const { schema = "ERC721" } = props;
+  const { schema = SchemaTypeEnum.ERC721 } = props;
   const [tabActive, setTabActive] = useState<TabType>(TabEnum.ACTIVITY);
 
   const renderTab = () => {
     return (
-      <div className="flex w-full items-center gap-8 border-b border-stroke pb-2 uppercase">
+      <div className="flex w-full items-center gap-4 border-b border-stroke pb-2 uppercase">
         {tabs.map((item, index) => {
-          if (schema == "ERC721" && item == TabEnum.LISTINGS) {
+          if (schema == SchemaTypeEnum.ERC721 && item == TabEnum.LISTINGS) {
             return <div key={index}></div>;
           }
 
@@ -57,7 +58,9 @@ const SignatureList: React.FC<SignatureListProps> = (props) => {
 
       <div className="mt-2">
         {tabActive == TabEnum.ACTIVITY && <Activity />}
-        {tabActive == TabEnum.LISTINGS && schema == "ERC721" && <ListingList />}
+        {tabActive == TabEnum.LISTINGS && schema == SchemaTypeEnum.ERC1155 && (
+          <ListingList />
+        )}
         {tabActive == TabEnum.BIDS && <BidList />}
       </div>
     </div>

@@ -45,7 +45,7 @@ export default function RootLayout({
           <LoadingReload />
           <Header />
           {children}
-          <BottomBar />
+          {/* <BottomBar /> */}
         </AppProvider>
       </body>
 
