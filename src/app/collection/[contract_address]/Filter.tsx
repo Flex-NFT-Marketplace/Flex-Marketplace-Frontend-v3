@@ -28,7 +28,6 @@ const Filter = () => {
     setMinPrice,
     setMaxPrice,
     collectionAttributes,
-    setAttributesFilter,
     traitsActive,
     setTraitsActive,
     changeTraitsActive,
@@ -179,7 +178,7 @@ const Filter = () => {
                 attributes.trait_type && (
                   <Traits
                     traits={attributes}
-                    key={index + traitsActive.length + attributes.trait_type}
+                    key={index}
                     onChange={changeTraitsActive}
                     traitsActive={traitsActive}
                   />

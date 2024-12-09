@@ -12,10 +12,11 @@ const TableCard = (props: any) => {
 
   const { traitsActive, setTraitsActive } = useCollectionDetailContext();
 
-  const onRemoveFilter = (trait_type: string) => {
+  const onRemoveFilter = (trait: IAttributesCollection) => {
     const newTraitActive: IAttributesCollection[] = [];
     traitsActive.forEach((item) => {
-      if (item.trait_type != trait_type) newTraitActive.push(item);
+      if (!(item.trait_type == trait.trait_type && item.value == trait.value))
+        newTraitActive.push(item);
     });
     if (!newTraitActive || newTraitActive.length == 0) {
       setTraitsActive([]);
@@ -40,7 +41,7 @@ const TableCard = (props: any) => {
                 {item.trait_type}: {getShortTraits(item.value as string, 5)}
               </p>
               <IoClose
-                onClick={() => onRemoveFilter(item.trait_type as string)}
+                onClick={() => onRemoveFilter(item)}
                 className="hover:cursor-pointer"
               />
             </div>
@@ -73,6 +74,8 @@ const TableCard = (props: any) => {
             isShowActivity={isShowActivity}
           />
         ))}
+
+        {!isFetching && nfts?.length == 0 && <p>No NFT found</p>}
 
         {isFetching &&
           Array.from({ length: 10 }).map((_, index) => (

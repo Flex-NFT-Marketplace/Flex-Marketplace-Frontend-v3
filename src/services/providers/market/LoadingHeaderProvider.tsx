@@ -1,6 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 interface LoadingContextType {
   isLoadingHeader: boolean;

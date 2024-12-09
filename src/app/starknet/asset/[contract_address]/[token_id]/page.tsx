@@ -1,10 +1,8 @@
 "use client";
 
-import Activity from "./Activity";
 import Infor from "./Infor";
 import Profile from "./Profile";
 import Traits from "./Traits";
-import { useParams, usePathname } from "next/navigation";
 import {
   NftLoadActionEnum,
   useNftContext,
@@ -12,10 +10,9 @@ import {
 import { useEffect } from "react";
 import Sell from "./(action)/Sell";
 import Buy from "./(action)/Buy";
-import { ISignature, SignStatusEnum } from "@/types/ISignature";
+import { SignStatusEnum } from "@/types/ISignature";
 import CancelOrder from "./(action)/CancelOrder";
 import Pending from "./(action)/Pending";
-import LoadingData from "./(action)/LoadingData";
 import Action from "../(signature)/SignatureList";
 import { SchemaTypeEnum } from "@/types/INft";
 import { useAccount } from "@starknet-react/core";

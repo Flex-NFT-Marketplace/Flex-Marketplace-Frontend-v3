@@ -17,7 +17,7 @@ const Pending: React.FC<PendingProps> = (props) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onReload();
-    }, 5000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, [nftStaging]);

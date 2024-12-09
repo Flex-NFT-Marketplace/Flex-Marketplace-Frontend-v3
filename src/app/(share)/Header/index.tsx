@@ -1,11 +1,8 @@
 "use client";
 
 import Image from "next/image";
-
 import Search from "../v2Header/Search";
-// import LogoSVG from "@/assets/logo.svg";
 import LogoPNG from "@/assets/logo-flex.svg";
-
 import { usePathname, useRouter } from "next/navigation";
 import ConnectWallet from "./ConnectWallet";
 import Link from "next/link";
@@ -15,7 +12,7 @@ import { LoadingHeaderContext } from "@/services/providers/market/LoadingHeaderP
 import { useAccount } from "@starknet-react/core";
 
 const Header = () => {
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const router = useRouter();
   const onNavigate = (path: string) => {
     router.push(path);
