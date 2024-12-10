@@ -1,19 +1,42 @@
 import CardNFTSkeleton from "@/app/(skeletonLoading)/share/CardNftSkeleton";
 import CardNFT from "@/components/CardNFT";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { INft } from "@/types/INft";
-import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
+import { IStagingNftResponse } from "@/types/IStagingNft";
 import { useAccount } from "@starknet-react/core";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const Inventory = () => {
   const { address } = useParams();
   const { address: accountAddress } = useAccount();
-  const { loading, nftsOwner } = useAccountContext();
+  const { loading, nftsOwner, fetchNextPageInventory } = useAccountContext();
+
+  const handleScroll = useCallback(
+    (e: any) => {
+      const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+      if (scrollTop + clientHeight >= scrollHeight - 10) {
+        if (!loading) {
+          console.log("fetch next page");
+
+          fetchNextPageInventory();
+        }
+      }
+    },
+    [loading, fetchNextPageInventory]
+  );
+
+  useEffect(() => {
+    const scrollContainer = document.getElementById("scroll-container");
+    scrollContainer?.addEventListener("scroll", handleScroll);
+
+    // Clean up event listener on component unmount
+    return () => {
+      scrollContainer?.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
 
   return (
-    <div className="p-4 pb-32">
+    <div id="scroll-container" className="p-4  overflow-auto">
       <div className="flex flex-wrap justify-start">
         {nftsOwner?.length == 0 &&
           loading &&

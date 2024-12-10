@@ -38,7 +38,7 @@ const TableCard = (props: any) => {
               className="p-2 rounded bg-white/15 hover:bg-white/30 flex items-center gap-2"
             >
               <p>
-                {item.trait_type}: {getShortTraits(item.value as string, 5)}
+                {item.trait_type}: {getShortTraits(item.value.toString(), 5)}
               </p>
               <IoClose
                 onClick={() => onRemoveFilter(item)}

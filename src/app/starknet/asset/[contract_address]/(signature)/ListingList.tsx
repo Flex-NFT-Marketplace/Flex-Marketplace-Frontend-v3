@@ -78,7 +78,7 @@ const ListingList = () => {
         onReload={() => onReload()}
       />
 
-      <table className="min-w-[550px] overflow-auto font-normal">
+      <table className="min-w-[550px] overflow-auto font-normal w-full">
         <thead>
           <tr className="h-10 text-left uppercase text-grays">
             <th>Unit Price</th>

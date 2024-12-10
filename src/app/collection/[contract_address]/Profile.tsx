@@ -91,7 +91,10 @@ const Profile = () => {
               {collectionEconomic?.oneDayChange &&
               collectionEconomic?.oneDayChange > 0 ? (
                 <p className="text-shadow-max text-buy">
-                  {collectionEconomic?.oneDayChange?.toFixed(2)}%
+                  {collectionEconomic?.oneDayChange > 100
+                    ? "100"
+                    : collectionEconomic?.oneDayChange?.toFixed(2)}
+                  %
                 </p>
               ) : (
                 <p className="text-shadow-min text-cancel">
@@ -105,7 +108,9 @@ const Profile = () => {
             <p className="text-sm text-grays">7D Change</p>
           </div> */}
             <div>
-              <p className="font-bold">{collectionEconomic?.oneDayVol} ETH</p>
+              <p className="font-bold">
+                {collectionEconomic?.oneDayVol?.toFixed(2)} ETH
+              </p>
               <p className="text-sm text-grays">1D Volume</p>
             </div>
             {/* <div>

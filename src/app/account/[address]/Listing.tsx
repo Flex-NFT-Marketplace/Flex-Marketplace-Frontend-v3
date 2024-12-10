@@ -9,7 +9,7 @@ import { ISignature } from "@/types/ISignature";
 import { IStagingNft } from "@/types/IStagingNft";
 import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Listing = () => {
   const { orders, onReload } = useAccountContext();
@@ -33,6 +33,17 @@ const Listing = () => {
         signature.nft.tokenId
     );
   };
+
+  useEffect(() => {
+    console.log(orders);
+  }, [orders]);
+
+  if (orders?.length == 0)
+    return (
+      <div className="px-8 py-4">
+        <p>No listing found</p>
+      </div>
+    );
 
   return (
     <div>
@@ -63,7 +74,7 @@ const Listing = () => {
                 key={index}
                 className=" cursor-pointer text-right font-normal transition-all hover:bg-grays/20"
               >
-                <td onMouseDown={() => onNavigateDetail(_)}>
+                <td onClick={() => onNavigateDetail(_)}>
                   <div className="relative flex flex-1 cursor-pointer items-center">
                     <ImageKit
                       src={_?.nft?.image}

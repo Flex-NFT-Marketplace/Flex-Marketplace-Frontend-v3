@@ -40,6 +40,7 @@ import { ISignature } from "./ISignature";
     tokenId: string;
     tokenUri: string;
     _id: string;
+    signature4: string,
     orderData: IOrderData;
   }
 

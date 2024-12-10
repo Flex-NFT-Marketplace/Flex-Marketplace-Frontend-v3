@@ -2,19 +2,12 @@ import ActivityItemSkeleton from "@/app/(skeletonLoading)/collectionsSkeleton/Ac
 import ActionNFT from "@/components/ActionNFT";
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
-import Button from "@/lib/@core/Button";
-import Checkbox from "@/lib/@core/Checkbox";
-
-import Input from "@/lib/@core/Input";
 import ImageKit from "@/packages/@ui-kit/Image";
-import { useGetNFTActivity } from "@/services/api/useGetNFTActivity";
 import { useActivityContext } from "@/services/providers/ActivityProvider";
-import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
 import { IStagingNft } from "@/types/IStagingNft";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 interface IActivityProps {
   signature: ISignature;

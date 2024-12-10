@@ -77,10 +77,10 @@ export type PriceSortType =
 
 export enum SortStatusEnum {
   ALL = "ALL",
-  LISTED = "LISTED",
+  LISTING = "LISTING",
 }
 
-export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTED;
+export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTING;
 
 export const CollectionDetailProvider = ({
   children,
@@ -216,8 +216,65 @@ export const CollectionDetailProvider = ({
   };
 
   useEffect(() => {
-    setAttributesFilter(traitsActive);
+    setAttributesFilter(convertAttributeFilter(traitsActive));
   }, [traitsActive]);
+
+  const convertAttributeFilter = (traitsActive: IAttributesCollection[]) => {
+    const map = new Map<string, string[]>();
+
+    traitsActive.forEach((item) => {
+      const trait = item.trait_type;
+
+      if (!map.has(trait.toString())) {
+        map.set(trait.toString(), []);
+      }
+
+      map.get(trait.toString())!.push(item.value.toString());
+    });
+
+    const converted: IAttributesCollection[] = [];
+
+    map.forEach((values, trait) => {
+      converted.push({ trait_type: trait, value: values });
+    });
+    console.log(converted);
+
+    return converted;
+  };
+
+  // const a = [
+  //   {
+  //     trait_type: "abc",
+  //     value: "1",
+  //   },
+  //   {
+  //     trait_type: "abc",
+  //     value: "2",
+  //   },
+  //   {
+  //     trait_type: "abc",
+  //     value: "3",
+  //   },
+  //   {
+  //     trait_type: "xyz",
+  //     value: "1"
+  //   },
+  //   {
+  //     trait_type: "xyz",
+  //     value: "2"
+  //   }
+  // ];
+
+  // const b = [
+  //   {
+  //     trait_type: "abc",
+  //     value: [1, 2, 3]
+  //   },
+  //   {
+  //     trait_type: "xyz",
+  //     value: [1, 2]
+  //   },
+  // ]
 
   useEffect(() => {
     setTraitsActive([]);

@@ -12,7 +12,7 @@ interface NftCollection {
     oneDayVol: number;
     sevenDayVol: number;
     oneDayChange: number;
-    totalOwners: number;
-    totalSupply: number;
+    owners: number;
+    supply: number;
     nftCollection: NftCollection;
   }
