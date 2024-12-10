@@ -38,13 +38,13 @@ const Filter = () => {
   const onSortByPrice = () => {
     setMinPrice(_minPrice);
     setMaxPrice(_maxPrice);
-    setSortStatus(SortStatusEnum.LISTED);
+    setSortStatus(SortStatusEnum.LISTING);
   };
 
   const onStatusChange = (status: SortStatusEnum) => {
     setSortStatus(status);
 
-    if (SortStatusEnum.ALL === status) {
+    if (SortStatusEnum.LISTING === status) {
       setMinPrice(0);
       setMaxPrice(1000);
 
@@ -75,18 +75,18 @@ const Filter = () => {
           <div className="flex items-center justify-between">
             <p className="font-normal text-grays">All</p>
             <Checkbox
-              isChecked={sortStatus == SortStatusEnum.ALL}
-              onChange={() => onStatusChange(SortStatusEnum.ALL)}
+              isChecked={sortStatus == SortStatusEnum.LISTING}
+              onChange={() => onStatusChange(SortStatusEnum.LISTING)}
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <p className="font-normal text-grays">Only Listed</p>
             <Checkbox
-              isChecked={sortStatus == SortStatusEnum.LISTED}
-              onChange={() => onStatusChange(SortStatusEnum.LISTED)}
+              isChecked={sortStatus == SortStatusEnum.LISTING}
+              onChange={() => onStatusChange(SortStatusEnum.LISTING)}
             />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex flex-col gap-3">
@@ -152,42 +152,46 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex cursor-pointer items-center justify-between text-xl transition-all">
-          <p className="font-bold">TRAITS</p>
-          <div className="flex items-center gap-2">
-            {traitsActive.length > 0 && (
-              <p
-                className="text-base hover:text-primary font-bold"
-                onClick={() => setTraitsActive([])}
-              >
-                Clear
-              </p>
-            )}
-            {isShowTraits ? (
-              <IoIosArrowUp onClick={() => setIsShowTraits(!isShowTraits)} />
-            ) : (
-              <IoIosArrowDown onClick={() => setIsShowTraits(!isShowTraits)} />
+      {collectionAttributes.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <div className="flex cursor-pointer items-center justify-between text-xl transition-all">
+            <p className="font-bold">TRAITS</p>
+            <div className="flex items-center gap-2">
+              {traitsActive.length > 0 && (
+                <p
+                  className="text-base hover:text-primary font-bold"
+                  onClick={() => setTraitsActive([])}
+                >
+                  Clear
+                </p>
+              )}
+              {isShowTraits ? (
+                <IoIosArrowUp onClick={() => setIsShowTraits(!isShowTraits)} />
+              ) : (
+                <IoIosArrowDown
+                  onClick={() => setIsShowTraits(!isShowTraits)}
+                />
+              )}
+            </div>
+          </div>
+          <div className={`${!isShowTraits && "hidden"} flex flex-col gap-2`}>
+            {collectionAttributes?.map(
+              (attributes: IAttributesCollectionFilter, index: number) => {
+                return (
+                  attributes.trait_type && (
+                    <Traits
+                      traits={attributes}
+                      key={index}
+                      onChange={changeTraitsActive}
+                      traitsActive={traitsActive}
+                    />
+                  )
+                );
+              }
             )}
           </div>
         </div>
-        <div className={`${!isShowTraits && "hidden"} flex flex-col gap-2`}>
-          {collectionAttributes?.map(
-            (attributes: IAttributesCollectionFilter, index: number) => {
-              return (
-                attributes.trait_type && (
-                  <Traits
-                    traits={attributes}
-                    key={index}
-                    onChange={changeTraitsActive}
-                    traitsActive={traitsActive}
-                  />
-                )
-              );
-            }
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 };

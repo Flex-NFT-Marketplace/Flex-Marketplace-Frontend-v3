@@ -3,7 +3,7 @@ import { ICollection } from "@/types/ICollection";
 import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
 import { IStagingNftResponse } from "@/types/IStagingNft";
-import { useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 export interface INftAccountResponse {
   nft: INft;
@@ -14,21 +14,23 @@ export interface INftAccountResponse {
   };
 }
 
-const useGetNftsByOwner = (address: string) => {
-  return useMutation({
-    mutationKey: ["GET_NFT_BY_ADDRESS", address],
-    mutationFn: async (address: string) => {
-      if (!address) return [] as IStagingNftResponse[];
+const useGetNftsByOwner = (address: string) => {  
+  return useInfiniteQuery({
+    queryKey: ["GET_NFTS", address],
+    queryFn:  async ({ pageParam }) => {
       const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
-        page: 1,
-        size: 20,
-        owner: address,
+        page: pageParam,
+        size: 50,
+        owner: address
       })
-      
-      return data.data.items as IStagingNftResponse[];
+      return data;
     },
-    retry: 1,
-  });
+    enabled: !!address,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, page) => {
+      return lastPage.data.hasNext ? lastPage.data.page + 1 : undefined;
+    },
+  })
 };
 
 export default useGetNftsByOwner;

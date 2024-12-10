@@ -79,8 +79,8 @@ const TrendingTable = () => {
                   className="flex justify-end"
                 />
               </td>
-              <td className="hidden lg:table-cell">{item?.totalOwners}</td>
-              <td className="hidden lg:table-cell">{item?.totalSupply}</td>
+              <td className="hidden lg:table-cell">{item?.owners}</td>
+              <td className="hidden lg:table-cell">{item?.supply}</td>
             </tr>
           ))}
         </tbody>

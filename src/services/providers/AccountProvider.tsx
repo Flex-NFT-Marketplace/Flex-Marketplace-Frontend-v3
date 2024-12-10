@@ -25,6 +25,7 @@ interface AccountContextType {
   profileOwner?: IProfileStaging;
   nftsOwner: IStagingNftResponse[];
   getProfileByAddressOwner: () => void;
+  fetchNextPageInventory: () => void;
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
@@ -48,10 +49,16 @@ export const AccountProvider = ({
   const [bids, setBids] = useState<ISignature[]>([]);
 
   const _getProfile = useGetProfile();
-  const _getNfts = useGetNftsByOwner(address);
+  // const _getNfts = useGetNftsByOwner(address);
   const _getNft = useGetNftByOwner();
   const _getListing = useGetListingsByOwner();
   const _getBid = useGetBidsByOwner();
+
+  const {
+    data: nftsOwnerRepsonse,
+    isLoading,
+    fetchNextPage: fetchNextPageInventory,
+  } = useGetNftsByOwner(accountAddress as string);
 
   const getListingByOwner = async () => {
     if (!address) return;
@@ -106,12 +113,11 @@ export const AccountProvider = ({
 
     if (accountAddress == undefined) return;
     getProfileByAddressOwner();
-  }, [accountAddress, address]);
+  }, [accountAddress, accountAddress]);
 
   useEffect(() => {
     setLoading(true);
     setNfts([]);
-    // getNftOfOwner();
     getListingByOwner();
 
     getProfileByAddress(address);
@@ -160,23 +166,30 @@ export const AccountProvider = ({
     }
   };
 
-  const getNftOfOwner = async () => {
-    try {
-      if (accountAddress === "") return;
-      const res = await _getNfts.mutateAsync(accountAddress as string);
-      setNftsOwner(res);
+  const getNftsOfOwner = () => {
+    if (nftsOwnerRepsonse) {
+      setLoading(true);
+      const nfts: IStagingNftResponse[] = [];
+      nftsOwnerRepsonse.pages.map((page) => {
+        nfts.push(...page?.data?.items);
+      });
+      setNftsOwner(nfts);
       setLoading(false);
-    } catch (error) {}
+    }
   };
 
   useEffect(() => {
-    setLoading(true);
-    getNftOfOwner();
-  }, [accountAddress]);
+    getNftsOfOwner();
+  }, [nftsOwnerRepsonse]);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getNftOfOwner();
+  // }, [accountAddress]);
 
   const onReloadNftOwner = () => {
     setLoading(true);
-    getNftOfOwner();
+    getNftsOfOwner();
   };
 
   const value: AccountContextType = {
@@ -191,6 +204,7 @@ export const AccountProvider = ({
     loading,
     profileOwner,
     nftsOwner,
+    fetchNextPageInventory,
   };
 
   return (

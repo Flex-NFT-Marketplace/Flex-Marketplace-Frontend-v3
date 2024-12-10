@@ -76,11 +76,12 @@ export type PriceSortType =
   | PriceSortEnum.CURRENT;
 
 export enum SortStatusEnum {
-  ALL = "ALL",
-  LISTED = "LISTED",
+  // ALL = "ALL",
+  LISTING = "LISTING",
+  // BUYING = "BUYING",
 }
 
-export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTED;
+export type SortStatusType = SortStatusEnum.LISTING | SortStatusEnum.LISTING;
 
 export const CollectionDetailProvider = ({
   children,
@@ -105,7 +106,7 @@ export const CollectionDetailProvider = ({
   );
 
   const [sortStatus, setSortStatus] = useState<SortStatusType>(
-    SortStatusEnum.ALL
+    SortStatusEnum.LISTING
   );
 
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -185,30 +186,23 @@ export const CollectionDetailProvider = ({
   };
 
   const changeTraitsActive = (traitFilter: IAttributesCollection) => {
-    if (isFiltered(traitFilter)) {
-      const newTraitsActive: IAttributesCollection[] = [];
-      traitsActive.forEach((trait) => {
-        if (
-          !(
-            trait.trait_type == traitFilter.trait_type &&
-            trait.value == traitFilter.value
-          )
-        )
-          newTraitsActive.push(trait);
+    if (isFiltered(traitFilter.trait_type as string)) {
+      const newTraitsActive = traitsActive.map((item) => {
+        if (item.trait_type == traitFilter.trait_type) {
+          return traitFilter;
+        } else return item;
       });
-      setTraitsActive(newTraitsActive);
+
+      setTraitsActive(() => newTraitsActive);
     } else {
       setTraitsActive([...traitsActive, traitFilter]);
     }
   };
 
-  const isFiltered = (traitFilter: IAttributesCollection) => {
+  const isFiltered = (key: string) => {
     let isKeyFiltered = false;
     traitsActive.forEach((traitActive) => {
-      if (
-        traitActive.trait_type == traitFilter.trait_type &&
-        traitActive.value == traitFilter.value
-      ) {
+      if (traitActive.trait_type == key) {
         isKeyFiltered = true;
       }
     });

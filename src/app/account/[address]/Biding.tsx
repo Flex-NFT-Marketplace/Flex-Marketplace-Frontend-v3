@@ -1,14 +1,18 @@
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
+import UnBidPopup from "@/components/Popup/UnBidPopup";
+import useModal from "@/hooks/useModal";
 import Button from "@/lib/@core/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useAccountContext } from "@/services/providers/AccountProvider";
 import { ISignature } from "@/types/ISignature";
-import { formatTimestamp, timeElapsedFromTimestamp } from "@/utils/string";
+import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Biding = () => {
-  const { bids, setAddress, onReload } = useAccountContext();
+  const { bids, onReload } = useAccountContext();
+  const { isOpen: isOpenUnBid, toggleModal: toggleUnBid } = useModal();
 
   const router = useRouter();
 
@@ -25,8 +29,27 @@ const Biding = () => {
     );
   };
 
+  useEffect(() => {
+    console.log(bids);
+  }, [bids]);
+
+  if (bids?.length == 0)
+    return (
+      <div className="px-8 py-4">
+        <p>No listing found</p>
+      </div>
+    );
+
   return (
     <div>
+      {/* <UnBidPopup
+        isOpen={isOpenUnBid}
+        toggleModal={toggleUnBid}
+        nft={nftStaging}
+        signature={signature}
+        onReload={() => onReload(nftStaging)}
+        schema={collection?.standard}
+      /> */}
       <div className="table-container w-full overflow-auto px-8 py-4">
         <table className="w-full min-w-[550px] font-normal">
           <thead>
@@ -71,7 +94,7 @@ const Biding = () => {
                     <Button
                       title="Cancel Bid"
                       mode="outline"
-                      className="border-sell text-sell"
+                      className="border-sell text-sell rounded-md"
                     />
                   </div>
                 </td>

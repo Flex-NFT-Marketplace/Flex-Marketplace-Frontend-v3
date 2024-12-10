@@ -86,7 +86,7 @@ const TableList = () => {
               <FormatAddress address={signature?.signer} />
             </div>
             <div className="hidden min-w-[150px] items-center justify-end lg:flex">
-              <FormatAddress address={signature?.signer} />
+              <FormatAddress address={signature?.buyer_address} />
             </div>
             <div className="flex min-w-[100px] items-center justify-end max-sm:min-w-[75px]">
               <FormatTime2 time={signature?.updatedAt} />
