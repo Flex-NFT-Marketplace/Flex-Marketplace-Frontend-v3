@@ -9,7 +9,7 @@ export interface IBalance {
 
 export interface IAttributesCollection {
   trait_type: string | string[];
-  value: string | string[];
+  value:  string | string[];
 }
 
 export interface IAttributesCollectionFilter {

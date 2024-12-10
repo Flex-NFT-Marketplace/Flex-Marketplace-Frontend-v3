@@ -39,7 +39,7 @@ const UnBidPopup: React.FC<IBuyPopupProps> = (props) => {
 
   return (
     <Modal isShow={isOpen} hide={toggleModal}>
-      <div className="flex  flex-col gap-4 ">
+      <div className="flex flex-col gap-4 ">
         <div className="flex items-center justify-between">
           <p className="text-2xl font-bold">UnBid NFT</p>
           <Button icon={<IoClose />} variant="icon" onClick={toggleModal} />

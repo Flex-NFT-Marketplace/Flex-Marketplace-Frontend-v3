@@ -8,11 +8,11 @@ import { useAccountContext } from "@/services/providers/AccountProvider";
 import { ISignature } from "@/types/ISignature";
 import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const Biding = () => {
   const { bids, onReload } = useAccountContext();
-  const { isOpen: isOpenUnBid, toggleModal: toggleUnBid } = useModal();
+  // const { isOpen: isOpenUnBid, toggleModal: toggleUnBid } = useModal();
+  // const [nftCancelBid, setNftCancelBid] = useState<IStagingNft>();
 
   const router = useRouter();
 
@@ -29,9 +29,10 @@ const Biding = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(bids);
-  }, [bids]);
+  // const showUnBid = (nft: IStagingNft) => {
+  //   setNftCancelBid(nft);
+  //   toggleUnBid();
+  // };
 
   if (bids?.length == 0)
     return (
@@ -42,14 +43,17 @@ const Biding = () => {
 
   return (
     <div>
-      {/* <UnBidPopup
-        isOpen={isOpenUnBid}
-        toggleModal={toggleUnBid}
-        nft={nftStaging}
-        signature={signature}
-        onReload={() => onReload(nftStaging)}
-        schema={collection?.standard}
-      /> */}
+      {/* {nftCancelBid && (
+        <UnBidPopup
+          isOpen={isOpenUnBid}
+          toggleModal={toggleUnBid}
+          nft={nftCancelBid}
+          signature={nftCancelBid.signature4}
+          onReload={() => onReload(nftCancelBid)}
+          schema={nftCancelBid?.nftCollection.standard}
+        />
+      )} */}
+
       <div className="table-container w-full overflow-auto px-8 py-4">
         <table className="w-full min-w-[550px] font-normal">
           <thead>
@@ -92,6 +96,7 @@ const Biding = () => {
                 <td>
                   <div className="flex justify-end">
                     <Button
+                      onClick={() => onNavigateDetail(_)}
                       title="Cancel Bid"
                       mode="outline"
                       className="border-sell text-sell rounded-md"
