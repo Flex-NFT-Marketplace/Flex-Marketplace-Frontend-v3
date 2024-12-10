@@ -4,7 +4,7 @@ import {
   IAttributesCollectionOption,
 } from "@/types/INft";
 import { getShortTraits } from "@/utils/string";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 interface TraitsProps {
@@ -17,32 +17,29 @@ const Traits: React.FC<TraitsProps> = ({ traits, traitsActive, onChange }) => {
   const [isShowTraits, setIsShowTraits] = useState(false);
 
   const isContain = (traits: IAttributesCollectionFilter) => {
-    let contain = false;
-    traitsActive.map((item) => {
-      if (item.trait_type == traits.trait_type) contain = true;
-    });
-    return contain;
+    return traitsActive.some((item) => item.trait_type === traits.trait_type);
   };
 
   const isSelected = (
     traits: IAttributesCollectionFilter,
     traitValue: string
   ) => {
-    let selected = false;
-    traitsActive.map((item) => {
-      if (item.trait_type == traits.trait_type && item.value == traitValue)
-        selected = true;
-    });
-
-    return selected;
+    return traitsActive.some(
+      (item) =>
+        item.trait_type === traits.trait_type && item.value === traitValue
+    );
   };
 
   const countFiltered = (traitType: string): number => {
-    let counter = 0;
-    traitsActive.forEach((trait) => {
-      if (trait.trait_type == traitType) counter++;
+    return traitsActive.filter((trait) => trait.trait_type === traitType)
+      .length;
+  };
+
+  const handleCheckboxChange = (option: IAttributesCollectionOption) => {
+    onChange({
+      trait_type: traits.trait_type,
+      value: option.value,
     });
-    return counter;
   };
 
   return (
@@ -53,7 +50,7 @@ const Traits: React.FC<TraitsProps> = ({ traits, traitsActive, onChange }) => {
       >
         <div className="flex items-center gap-2">
           <p
-            className={`font-bold ${isContain(traits) && "text-primary"} text-base`}
+            className={`font-bold ${isContain(traits) ? "text-primary" : ""} text-base`}
           >
             {traits?.trait_type}
           </p>
@@ -74,12 +71,6 @@ const Traits: React.FC<TraitsProps> = ({ traits, traitsActive, onChange }) => {
             <label
               htmlFor={`input-${option.value}`}
               key={index}
-              onMouseUp={() => {
-                onChange({
-                  trait_type: traits.trait_type,
-                  value: option.value,
-                });
-              }}
               className="flex justify-between items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer"
             >
               <div className="flex items-center gap-2 text-grays">
@@ -87,6 +78,7 @@ const Traits: React.FC<TraitsProps> = ({ traits, traitsActive, onChange }) => {
                   <input
                     id={`input-${option.value}`}
                     checked={isSelected(traits, option.value)}
+                    onChange={() => handleCheckboxChange(option)}
                     type="checkbox"
                   />
                   <span className="checkmark"></span>

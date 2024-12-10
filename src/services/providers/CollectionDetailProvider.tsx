@@ -76,12 +76,11 @@ export type PriceSortType =
   | PriceSortEnum.CURRENT;
 
 export enum SortStatusEnum {
-  // ALL = "ALL",
+  ALL = "ALL",
   LISTING = "LISTING",
-  // BUYING = "BUYING",
 }
 
-export type SortStatusType = SortStatusEnum.LISTING | SortStatusEnum.LISTING;
+export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTING;
 
 export const CollectionDetailProvider = ({
   children,
@@ -106,7 +105,7 @@ export const CollectionDetailProvider = ({
   );
 
   const [sortStatus, setSortStatus] = useState<SortStatusType>(
-    SortStatusEnum.LISTING
+    SortStatusEnum.ALL
   );
 
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -186,23 +185,30 @@ export const CollectionDetailProvider = ({
   };
 
   const changeTraitsActive = (traitFilter: IAttributesCollection) => {
-    if (isFiltered(traitFilter.trait_type as string)) {
-      const newTraitsActive = traitsActive.map((item) => {
-        if (item.trait_type == traitFilter.trait_type) {
-          return traitFilter;
-        } else return item;
+    if (isFiltered(traitFilter)) {
+      const newTraitsActive: IAttributesCollection[] = [];
+      traitsActive.forEach((trait) => {
+        if (
+          !(
+            trait.trait_type == traitFilter.trait_type &&
+            trait.value == traitFilter.value
+          )
+        )
+          newTraitsActive.push(trait);
       });
-
-      setTraitsActive(() => newTraitsActive);
+      setTraitsActive(newTraitsActive);
     } else {
       setTraitsActive([...traitsActive, traitFilter]);
     }
   };
 
-  const isFiltered = (key: string) => {
+  const isFiltered = (traitFilter: IAttributesCollection) => {
     let isKeyFiltered = false;
     traitsActive.forEach((traitActive) => {
-      if (traitActive.trait_type == key) {
+      if (
+        traitActive.trait_type == traitFilter.trait_type &&
+        traitActive.value == traitFilter.value
+      ) {
         isKeyFiltered = true;
       }
     });
@@ -210,8 +216,65 @@ export const CollectionDetailProvider = ({
   };
 
   useEffect(() => {
-    setAttributesFilter(traitsActive);
+    setAttributesFilter(convertAttributeFilter(traitsActive));
   }, [traitsActive]);
+
+  const convertAttributeFilter = (traitsActive: IAttributesCollection[]) => {
+    const map = new Map<string, string[]>();
+
+    traitsActive.forEach((item) => {
+      const trait = item.trait_type;
+
+      if (!map.has(trait.toString())) {
+        map.set(trait.toString(), []);
+      }
+
+      map.get(trait.toString())!.push(item.value.toString());
+    });
+
+    const converted: IAttributesCollection[] = [];
+
+    map.forEach((values, trait) => {
+      converted.push({ trait_type: trait, value: values });
+    });
+    console.log(converted);
+
+    return converted;
+  };
+
+  // const a = [
+  //   {
+  //     trait_type: "abc",
+  //     value: "1",
+  //   },
+  //   {
+  //     trait_type: "abc",
+  //     value: "2",
+  //   },
+  //   {
+  //     trait_type: "abc",
+  //     value: "3",
+  //   },
+  //   {
+  //     trait_type: "xyz",
+  //     value: "1"
+  //   },
+  //   {
+  //     trait_type: "xyz",
+  //     value: "2"
+  //   }
+  // ];
+
+  // const b = [
+  //   {
+  //     trait_type: "abc",
+  //     value: [1, 2, 3]
+  //   },
+  //   {
+  //     trait_type: "xyz",
+  //     value: [1, 2]
+  //   },
+  // ]
 
   useEffect(() => {
     setTraitsActive([]);
