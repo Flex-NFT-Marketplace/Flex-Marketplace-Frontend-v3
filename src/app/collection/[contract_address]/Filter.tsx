@@ -152,42 +152,46 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex cursor-pointer items-center justify-between text-xl transition-all">
-          <p className="font-bold">TRAITS</p>
-          <div className="flex items-center gap-2">
-            {traitsActive.length > 0 && (
-              <p
-                className="text-base hover:text-primary font-bold"
-                onClick={() => setTraitsActive([])}
-              >
-                Clear
-              </p>
-            )}
-            {isShowTraits ? (
-              <IoIosArrowUp onClick={() => setIsShowTraits(!isShowTraits)} />
-            ) : (
-              <IoIosArrowDown onClick={() => setIsShowTraits(!isShowTraits)} />
+      {collectionAttributes.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <div className="flex cursor-pointer items-center justify-between text-xl transition-all">
+            <p className="font-bold">TRAITS</p>
+            <div className="flex items-center gap-2">
+              {traitsActive.length > 0 && (
+                <p
+                  className="text-base hover:text-primary font-bold"
+                  onClick={() => setTraitsActive([])}
+                >
+                  Clear
+                </p>
+              )}
+              {isShowTraits ? (
+                <IoIosArrowUp onClick={() => setIsShowTraits(!isShowTraits)} />
+              ) : (
+                <IoIosArrowDown
+                  onClick={() => setIsShowTraits(!isShowTraits)}
+                />
+              )}
+            </div>
+          </div>
+          <div className={`${!isShowTraits && "hidden"} flex flex-col gap-2`}>
+            {collectionAttributes?.map(
+              (attributes: IAttributesCollectionFilter, index: number) => {
+                return (
+                  attributes.trait_type && (
+                    <Traits
+                      traits={attributes}
+                      key={index}
+                      onChange={changeTraitsActive}
+                      traitsActive={traitsActive}
+                    />
+                  )
+                );
+              }
             )}
           </div>
         </div>
-        <div className={`${!isShowTraits && "hidden"} flex flex-col gap-2`}>
-          {collectionAttributes?.map(
-            (attributes: IAttributesCollectionFilter, index: number) => {
-              return (
-                attributes.trait_type && (
-                  <Traits
-                    traits={attributes}
-                    key={index}
-                    onChange={changeTraitsActive}
-                    traitsActive={traitsActive}
-                  />
-                )
-              );
-            }
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 };

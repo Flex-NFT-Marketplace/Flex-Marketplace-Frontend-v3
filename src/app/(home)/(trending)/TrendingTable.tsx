@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import FormatPrice from "@/components/FormatPrice";
 import ImageKit from "@/packages/@ui-kit/Image";
 import useGetTrendingCollections from "@/services/api/collection/useGetTrendingCollections";
+import { IoMdStar, IoMdStarOutline } from "react-icons/io";
 
 const TrendingTable = () => {
   // const { collectionTrending } = useCollectionContext();
@@ -17,7 +18,7 @@ const TrendingTable = () => {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto font-bold">
       <table className="w-full">
         <thead>
           <tr className="h-10 text-right uppercase text-grays">
@@ -40,14 +41,20 @@ const TrendingTable = () => {
                 onNavigate("/collection/" + item.nftCollection.nftContract)
               }
             >
-              <td className="hidden text-center lg:table-cell">{index + 1}</td>
+              <td className="hidden text-center lg:table-cell">
+                <div className="flex items-center justify-evenly">
+                  {/* <IoMdStarOutline /> */}
+                  <IoMdStar className="text-bid" />
+                  {index + 1}
+                </div>
+              </td>
               <td className="flex items-center text-left">
                 <ImageKit
                   src={item?.nftCollection?.avatar}
                   alt=""
                   className="h-12 w-12 object-cover"
                 />
-                <p className="ml-4 font-normal">{item?.nftCollection?.name}</p>
+                <p className="ml-4">{item?.nftCollection?.name}</p>
               </td>
               {/* <td className="hidden lg:table-cell">
                 <FormatPrice price={0} className="flex justify-end" />
@@ -67,14 +74,14 @@ const TrendingTable = () => {
               </td>
               <td className="hidden sm:table-cell">
                 <FormatPrice
-                  price={item?.oneDayVol || 0}
+                  price={item?.oneDayVol / 1e18 || 0}
                   className="flex justify-end"
                 />
               </td>
               <td>
                 {/* {item?.totalVol} */}
                 <FormatPrice
-                  price={Number(item?.totalVol)}
+                  price={Number(item?.totalVol) / 1e18}
                   decimal={2}
                   className="flex justify-end"
                 />

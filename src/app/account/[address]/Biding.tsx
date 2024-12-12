@@ -42,7 +42,7 @@ const Biding = () => {
     );
 
   return (
-    <div>
+    <div className="overflow-auto">
       {/* {nftCancelBid && (
         <UnBidPopup
           isOpen={isOpenUnBid}

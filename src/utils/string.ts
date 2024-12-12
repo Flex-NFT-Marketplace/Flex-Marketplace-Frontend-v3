@@ -186,10 +186,18 @@ export const formattedContractAddress = (contractAddress: string) => {
 };
 
 export function calculateDaysElapsed(timestamp: number): string {
-  const currentTime: number = Date.now(); // Lấy thời gian hiện tại
-  const timeElapsed: number = currentTime - timestamp; // Tính thời gian đã trôi qua
-  const daysElapsed: number = Math.floor(timeElapsed / (1000 * 60 * 60 * 24)); // Chuyển đổi mili giây thành ngày
-  return daysElapsed + " day ago";
+  const currentTime: number = Date.now();
+  const timeElapsed: number = currentTime - timestamp;
+
+  const millisecondsInADay = 1000 * 60 * 60 * 24;
+  const daysElapsed: number = Math.floor(timeElapsed / millisecondsInADay);
+
+  if (daysElapsed < 30) {
+    return daysElapsed === 1 ? "1 day ago" : `${daysElapsed} days ago`;
+  } else {
+    const monthsElapsed: number = Math.floor(daysElapsed / 30);
+    return monthsElapsed === 1 ? "1 month ago" : `${monthsElapsed} months ago`;
+  }
 }
 
 export const copyToClipboard = (text: string) => {
@@ -212,3 +220,15 @@ export const getShortTraits = (trait_value: string, maxLength: number) => {
   if (trait_value.toString().length < maxLength) return trait_value;
   return trait_value.toString().slice(0, maxLength) + "...";
 };
+
+export const ipfsPrefix = "ipfs://";
+
+export const convertIpfsUrl = (imageUrl: string): string => {
+  const httpPrefix = 'https://ipfs.io/ipfs/';
+
+  if (imageUrl.startsWith(ipfsPrefix)) {
+      return httpPrefix + imageUrl.slice(ipfsPrefix.length);
+  }
+  return imageUrl;
+}
+

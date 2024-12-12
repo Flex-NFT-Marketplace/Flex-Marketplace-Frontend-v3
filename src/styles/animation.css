@@ -60,11 +60,11 @@
     opacity: 1;
   }
   100% {
-    scale: 1;
+    scale: 2;
     opacity: 0;
   }
 }
 
 .animate-show-loading {
-  animation: show-loading 1.5s linear;
+  animation: show-loading 6s linear;
 }

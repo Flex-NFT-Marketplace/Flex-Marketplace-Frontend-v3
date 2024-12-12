@@ -183,7 +183,7 @@ const Search = () => {
         />
       )}
       <Input
-        className={`max-sm:aspect-square max-sm:h-full max-sm:w-11 max-sm:gap-0 max-sm:!p-0`}
+        className={`max-sm:aspect-square max-sm:h-full max-sm:w-11 max-sm:gap-0 max-sm:!p-0 sm:max-w-[300px] sm:w-[300px]`}
         icon={
           <ImageKit
             src={SearchImg.src}
