@@ -37,9 +37,7 @@ const Trending = () => {
           <div className="flex gap-6">
             {/* <p className="uppercase text-shadow text-primary">Trendings</p> */}
             <div className="flex items-center gap-4">
-              <p className="text-2xl uppercase text-shadow-white">
-                Recent Activities
-              </p>
+              <p className="text-2xl uppercase text-shadow-white">Trendings</p>
             </div>
             {/* <div className="flex gap-2">
               <p
