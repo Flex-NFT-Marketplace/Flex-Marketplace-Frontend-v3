@@ -9,7 +9,7 @@ import { ISignature } from "@/types/ISignature";
 import { IStagingNft } from "@/types/IStagingNft";
 import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Listing = () => {
   const { orders, onReload } = useAccountContext();
@@ -34,10 +34,6 @@ const Listing = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(orders);
-  }, [orders]);
-
   if (orders?.length == 0)
     return (
       <div className="px-8 py-4">
@@ -46,7 +42,7 @@ const Listing = () => {
     );
 
   return (
-    <div>
+    <div className="overflow-auto">
       <UnListPopup
         isOpen={isOpenUnListModal}
         toggleModal={() => {

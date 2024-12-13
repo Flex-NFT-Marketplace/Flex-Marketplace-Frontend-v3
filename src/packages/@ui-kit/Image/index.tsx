@@ -1,18 +1,23 @@
+// components/ImageKit.tsx
 "use client";
 
 import Image, { StaticImageData } from "next/image";
 import ImageDefault from "./default.webp";
 import { HTMLProps, useEffect, useState } from "react";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
+import { convertIpfsUrl, ipfsPrefix } from "@/utils/string";
 
 export interface ImageProps {
   width?: number;
   height?: number;
-  src?: string; // Đánh dấu là optional
+  src?: string;
   alt?: string;
-  className?: HTMLProps<HTMLImageElement>["className"]; // Sửa type cho đúng
+  className?: HTMLProps<HTMLImageElement>["className"];
   unLoading?: boolean;
 }
+
+const ModelViewer = dynamic(() => import("./ModelViewer"), { ssr: false });
 
 const ImageKit: React.FC<ImageProps> = ({
   width = 1000,
@@ -22,15 +27,23 @@ const ImageKit: React.FC<ImageProps> = ({
   className,
   unLoading = false,
 }) => {
-  // Khởi tạo imageSrc với src từ props hoặc ImageDefault
+  const convertIPFSLink = (src: string): string => {
+    if (typeof src == "string" && src.startsWith(ipfsPrefix)) {
+      return convertIpfsUrl(src);
+    }
+    return src;
+  };
+
   const [imageSrc, setImageSrc] = useState<string | StaticImageData>(
-    src || ImageDefault
+    convertIPFSLink(src || "") || ImageDefault
   );
-  const [isLoading, setIsLoading] = useState<boolean>(!src); // Nếu src không có, đã không còn loading
+  const [isLoading, setIsLoading] = useState<boolean>(!src);
+  const [is3D, setIs3D] = useState<boolean>(false);
 
   const handleError = () => {
     setImageSrc(ImageDefault);
     setIsLoading(false);
+    setIs3D(false);
   };
 
   const handleLoad = () => {
@@ -39,11 +52,15 @@ const ImageKit: React.FC<ImageProps> = ({
 
   useEffect(() => {
     if (src) {
-      setImageSrc(src);
-      setIsLoading(true); // Bắt đầu lại trạng thái loading khi src thay đổi
+      setImageSrc(convertIPFSLink(src));
+      setIsLoading(true);
+      const is3DModel = /\.(glb|gltf)$/i.test(src);
+
+      setIs3D(is3DModel);
     } else {
       setImageSrc(ImageDefault);
       setIsLoading(false);
+      setIs3D(false);
     }
   }, [src]);
 
@@ -51,18 +68,20 @@ const ImageKit: React.FC<ImageProps> = ({
 
   return (
     <>
-      <Image
-        width={width}
-        height={height}
-        src={imageSrc}
-        alt={alt}
-        className={classes}
-        onError={handleError}
-        onLoad={handleLoad}
-      />
-      {isLoading && !unLoading && (
-        <div className="loading-spinner"></div> // Tùy chọn hiển thị loader
+      {is3D && typeof imageSrc === "string" ? (
+        <ModelViewer modelUrl={imageSrc} width={width} height={height} />
+      ) : (
+        <Image
+          width={width}
+          height={height}
+          src={imageSrc}
+          alt={alt}
+          className={classes}
+          onError={handleError}
+          onLoad={handleLoad}
+        />
       )}
+      {isLoading && !unLoading && <div className="loading-spinner"></div>}
     </>
   );
 };

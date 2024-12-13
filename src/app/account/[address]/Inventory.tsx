@@ -16,8 +16,6 @@ const Inventory = () => {
       const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
       if (scrollTop + clientHeight >= scrollHeight - 10) {
         if (!loading) {
-          console.log("fetch next page");
-
           fetchNextPageInventory();
         }
       }

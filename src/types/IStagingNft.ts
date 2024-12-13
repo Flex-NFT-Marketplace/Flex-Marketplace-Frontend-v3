@@ -22,6 +22,7 @@ import { ISignature } from "./ISignature";
   // Define the main NFT item type.
   export interface IStagingNft {
     amount: number;
+    animationUrl?: string,
     attributes: IAttributesCollection[];
     blockTime: number;
     burnedAt: string | null;

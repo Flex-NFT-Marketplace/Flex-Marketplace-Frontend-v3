@@ -48,10 +48,16 @@ export type PriceSortType =
 
 export enum SortStatusEnum {
   ALL = "",
-  LISTED = "LISTING",
+  LISTING = "LISTING",
+  BID = "BID",
+  SOLD = "SOLD",
 }
 
-export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTED;
+export type SortStatusType =
+  | SortStatusEnum.ALL
+  | SortStatusEnum.LISTING
+  | SortStatusEnum.BID
+  | SortStatusEnum.SOLD;
 
 export const ActivityProvider = ({
   children,

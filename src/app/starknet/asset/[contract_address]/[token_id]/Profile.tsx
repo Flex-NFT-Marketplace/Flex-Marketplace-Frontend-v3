@@ -52,10 +52,12 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="mt-4 w-[445px] max-lg:h-auto max-lg:w-full">
+      <div className="mt-4 w-[445px] h-[445px] max-lg:h-auto max-lg:w-full">
         <ImageKit
+          width={445}
+          height={445}
           alt=""
-          src={nftStaging?.image}
+          src={nftStaging?.animationUrl || nftStaging?.image}
           className="h-full w-full rounded-md object-cover"
         />
       </div>

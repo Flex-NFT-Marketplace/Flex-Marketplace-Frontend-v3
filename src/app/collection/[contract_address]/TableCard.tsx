@@ -28,6 +28,10 @@ const TableCard = (props: any) => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    console.log(nfts);
+  }, [nfts]);
+
   return (
     <div className="w-full">
       <div className="flex gap-2 pt-4 px-[0.5rem] flex-wrap">

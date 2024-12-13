@@ -32,8 +32,12 @@ const TableList = () => {
     );
   };
 
+  const onNavigateCollection = (contractAddress: string) => {
+    onNavigate("/collection/" + contractAddress);
+  };
+
   return (
-    <div className="relative h-full w-full flex-1 overflow-auto">
+    <div className="relative h-full w-full flex-1 overflow-auto font-bold">
       <div className="sticky left-0 right-0 top-0 z-10 flex h-10 items-center border-stroke  font-bold uppercase text-grays">
         <div className="flex min-w-[120px] items-center justify-start max-md:min-w-[32px]">
           <p className="max-md:hidden">Action</p>
@@ -60,7 +64,7 @@ const TableList = () => {
           <div
             onClick={() => onNavigateDetail(signature)}
             key={i}
-            className="flex cursor-pointer items-center py-1 font-normal hover:bg-dark-black"
+            className="flex cursor-pointer items-center py-1 hover:bg-dark-black"
           >
             <div className="flex min-w-[120px] items-center justify-start max-md:min-w-[32px]">
               <ActionNFT status={signature?.status} isShowStatus={false} />
@@ -71,9 +75,20 @@ const TableList = () => {
                 alt=""
                 className="h-[48px] w-[48px] sm:h-[52px] sm:w-[52px]"
               />
-              <p className="ml-4 truncate font-normal max-xl:max-w-64 max-sm:max-w-32">
-                {signature?.nft?.name}
-              </p>
+              <div>
+                <p className="ml-4 truncate max-xl:max-w-64 max-sm:max-w-32">
+                  {signature?.nft?.name}
+                </p>
+                <p
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNavigateCollection(signature.nft.nftContract);
+                  }}
+                  className="ml-4 font-normal text-sm text-grays hover:text-white truncate max-xl:max-w-64 max-sm:max-w-32"
+                >
+                  {signature?.nft?.nftCollection?.name}
+                </p>
+              </div>
             </div>
 
             <div className="flex min-w-[150px] items-center justify-end max-sm:min-w-[75px]">
