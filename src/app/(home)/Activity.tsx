@@ -57,7 +57,7 @@ const Activity = () => {
           </p>
         </div>
         <div className="flex items-center gap-6 max-md:hidden">
-          {filter.map((item: IFilterType, index: number) => {
+          {/* {filter.map((item: IFilterType, index: number) => {
             return (
               <p
                 key={index}
@@ -67,7 +67,7 @@ const Activity = () => {
                 {item.name}
               </p>
             );
-          })}
+          })} */}
         </div>
       </div>
       <TableList />
