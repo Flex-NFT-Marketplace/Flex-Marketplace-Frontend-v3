@@ -482,7 +482,8 @@ const Staking = () => {
                 nftsReadyToUnStake.length == 0)) && (
               <Button
                 title="Stake"
-                className={`min-w-[106px] ${nftsReadyToStake.length == 0 && "!bg-grays"} `}
+                className={`min-w-[106px]`}
+                disabled={nftsReadyToStake.length == 0}
                 onClick={onStake}
               />
             )}

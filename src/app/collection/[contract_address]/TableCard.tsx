@@ -2,6 +2,7 @@ import NftItemSkeleton from "@/app/(skeletonLoading)/share/CardNftSkeleton";
 import CardNFT from "@/components/CardNFT";
 import { useCollectionDetailContext } from "@/services/providers/CollectionDetailProvider";
 import { IAttributesCollection } from "@/types/INft";
+import { ISignature } from "@/types/ISignature";
 import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
 import { getShortTraits } from "@/utils/string";
 import { useEffect } from "react";
@@ -28,9 +29,14 @@ const TableCard = (props: any) => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    console.log(nfts);
-  }, [nfts]);
+  const getBestBid = (nft: IStagingNftResponse): ISignature | undefined => {
+    if (nft.orderData.listBid.length > 0) {
+      return nft.orderData.listBid.reduce((maxBid, currentBid) => {
+        return currentBid.price > maxBid.price ? currentBid : maxBid;
+      }, nft.orderData.listBid[0]);
+    }
+    return undefined;
+  };
 
   return (
     <div className="w-full">
@@ -73,6 +79,7 @@ const TableCard = (props: any) => {
             key={index}
             nft={_.nftData}
             bestAsk={_?.orderData?.bestAsk}
+            bestBid={getBestBid(_)}
             onReload={() => {}}
             isShowFilter={isShowFilter}
             isShowActivity={isShowActivity}

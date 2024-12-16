@@ -35,7 +35,7 @@ const Button: React.FC<ButtonProps> = (props) => {
     switch (variant) {
       case "primary": {
         const variantPrimaryCSS =
-          "bg-primary text-background hover:bg-primary/80";
+          "bg-primary/15 text-background hover:bg-primary/80 hover:text-black text-primary border-primary";
         return variantPrimaryCSS;
       }
 
@@ -52,12 +52,13 @@ const Button: React.FC<ButtonProps> = (props) => {
 
       case "icon": {
         const variantIconCSS =
-          "bg-transparent text-text border-none hover:bg-hover hover:text-primary p-4";
+          "bg-transparent text-text border-none hover:bg-hover hover:text-primary p-4 text-primary border-primary";
         return variantIconCSS;
       }
 
       case "secondary": {
-        const variantNoAnniCSS = "bg-bid text-background hover:bg-bid/80";
+        const variantNoAnniCSS =
+          "bg-bid/15 hover:bg-bid/80 text-bid border-secondary hover:text-black";
         return variantNoAnniCSS;
       }
 

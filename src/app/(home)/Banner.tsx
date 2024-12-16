@@ -156,7 +156,7 @@ const Banner = () => {
                 {collectionsBanner?.map((banner, index) => {
                   return (
                     <div
-                      onClick={() => onSetActiveCollection(index)}
+                      onMouseEnter={() => onSetActiveCollection(index)}
                       key={index}
                       className={`rounded w-6 h-1 transition-all cursor-pointer ${activeIndex == index ? "bg-white" : "bg-white/50"}`}
                     ></div>

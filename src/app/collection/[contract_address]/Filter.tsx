@@ -67,7 +67,7 @@ const Filter = () => {
       className="sticky top-[52px] flex h-full  overflow-auto min-w-[260px] select-none flex-col gap-10 border-stroke py-4 pl-8 pr-4 max-sm:w-[100vw]"
     >
       <div className="flex flex-col">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 p-2">
           <div>
             <p className="text-xl font-bold">STATUS</p>
           </div>
@@ -89,7 +89,7 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 p-2">
         <div>
           <p className="text-xl font-bold">SORT BY</p>
         </div>
@@ -118,7 +118,7 @@ const Filter = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 p-2">
         <div
           className="flex cursor-pointer items-center justify-between text-xl transition-all"
           onClick={() => setIsShowPrice(!isShowPrice)}
@@ -154,7 +154,7 @@ const Filter = () => {
       </div>
       {collectionAttributes.length > 0 && (
         <div className="flex flex-col gap-3">
-          <div className="flex cursor-pointer items-center justify-between text-xl transition-all">
+          <div className="flex cursor-pointer items-center justify-between text-xl transition-all p-2">
             <p className="font-bold">TRAITS</p>
             <div className="flex items-center gap-2">
               {traitsActive.length > 0 && (
