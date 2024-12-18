@@ -44,7 +44,7 @@ const TrendingTable = () => {
               <td className="hidden text-center lg:table-cell">
                 <div className="flex items-center justify-evenly">
                   {/* <IoMdStarOutline /> */}
-                  <IoMdStar className="text-bid" />
+                  {/* <IoMdStar className="text-bid" /> */}
                   {index + 1}
                 </div>
               </td>
