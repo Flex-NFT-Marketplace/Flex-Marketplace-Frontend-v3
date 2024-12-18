@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import Step1 from "./step1";
 import Step2 from "./step2";
 import Steps from "./Steps";
+import { IGroupMultiple } from "@/types/ICollection";
 
 export enum DropTypeEnum {
   FREE = "Free",
@@ -13,6 +14,7 @@ export enum SetsTypeEnum {
   GROUP = "Group",
   INDIVIDUAL = "Individual",
 }
+
 type DropType = DropTypeEnum.FREE | DropTypeEnum.PROTECTED;
 
 type SetsType = SetsTypeEnum.GROUP | SetsTypeEnum.INDIVIDUAL;
@@ -33,13 +35,14 @@ interface AllStateProps {
   dropType: DropType;
   amountDrop: number;
   sets: SetsType;
-  multipleDrops: string;
+  multipleDrops: IGroupMultiple[];
+  multipleDropsSelected: IGroupMultiple | undefined;
   individualDrops: string;
 }
 
 const initialState: AllStateProps = {
   // Common
-  activeStep: 1,
+  activeStep: 2,
 
   // Step 1
   tokenName: "",
@@ -58,7 +61,8 @@ const initialState: AllStateProps = {
   dropType: DropTypeEnum.FREE,
   amountDrop: 0,
   sets: SetsTypeEnum.GROUP,
-  multipleDrops: "",
+  multipleDrops: [],
+  multipleDropsSelected: undefined,
   individualDrops: "",
 };
 

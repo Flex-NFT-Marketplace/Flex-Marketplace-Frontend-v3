@@ -56,3 +56,14 @@ export interface ICollection {
 
   status: IStatusCollection;
 }
+
+
+export interface IDrop {
+  name: string;
+}
+
+export interface IGroupMultiple {
+  _id: string;
+  dateTime: string;
+  drops: IDrop[];
+}

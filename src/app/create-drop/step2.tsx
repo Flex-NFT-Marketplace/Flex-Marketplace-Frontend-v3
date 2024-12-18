@@ -2,14 +2,20 @@ import ImageKit from "@/packages/@ui-kit/Image";
 import Input from "@/packages/@ui-kit/Input";
 import { FaCalendarAlt, FaCheck } from "react-icons/fa";
 import { DropTypeEnum, SetsTypeEnum, useCreateDrop } from "./page";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react";
 import Button from "@/packages/@ui-kit/Button";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { IoIosArrowDown } from "react-icons/io";
+import { IDrop, IGroupMultiple } from "@/types/ICollection";
 
 const Step2 = () => {
   const { allState, setAllState } = useCreateDrop();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { onShowToast } = useToast();
+
+  // interal state
+  const [isShowMultiple, setIsShowMultiple] = useState(false);
+  //
   const handleCreate = () => {
     const missingFields: string[] = [];
 
@@ -35,12 +41,12 @@ const Step2 = () => {
     if (!allState.sets) {
       missingFields.push("sets");
     }
-    if (
-      allState.sets === SetsTypeEnum.GROUP &&
-      !allState.multipleDrops.trim()
-    ) {
-      missingFields.push("multipleDrops");
-    }
+    // if (
+    //   allState.sets === SetsTypeEnum.GROUP &&
+    //   !allState.multipleDrops.trim()
+    // ) {
+    //   missingFields.push("multipleDrops");
+    // }
     if (
       allState.sets === SetsTypeEnum.INDIVIDUAL &&
       !allState.individualDrops.trim()
@@ -69,9 +75,48 @@ const Step2 = () => {
     }
   }, [invalidFields]);
 
-  useEffect(() => {
-    console.log("Current State:", allState);
-  }, [allState]);
+  const MultipleDropdown: React.FC<{ groups: IGroupMultiple[] }> = ({
+    groups,
+  }) => {
+    return (
+      <div className="select-none absolute flex flex-col mt-2 left-0 top-full border border-border rounded-md p-4 w-full bg-black z-10 gap-8">
+        {groups.length > 0 ? (
+          groups?.map((group) => {
+            return (
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-4 w-4 bg-white rounded-full"></div>
+                  <p>{group.dateTime}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <p>{group.drops.length} Drops</p>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <p>There are no drop!</p>
+        )}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2.5">
+            <div className="h-4 w-4 bg-white rounded-full"></div>
+            <p>qưd</p>
+          </div>
+          <div className="flex items-center gap-1">
+            <p>qưdqwd</p>
+          </div>
+        </div>
+        <div className="group">
+          <Button
+            title="Create New"
+            variant="primary"
+            className="w-full pointer-events-none group-hover:bg-primary group-hover:text-black"
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="mx-auto flex max-w-[1200px] animate-fade justify-between gap-10 px-2 max-md:flex-col max-md:items-center">
       <div className="flex flex-col gap-8">
@@ -164,7 +209,7 @@ const Step2 = () => {
                     dropType: DropTypeEnum.FREE,
                   }))
                 }
-                className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px]"
+                className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px] cursor-pointer"
               >
                 {allState.dropType == DropTypeEnum.FREE && (
                   <div className="h-full w-full rounded-full bg-buy"></div>
@@ -181,7 +226,7 @@ const Step2 = () => {
                       dropType: DropTypeEnum.PROTECTED,
                     }))
                   }
-                  className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px]"
+                  className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px] cursor-pointer"
                 >
                   {allState.dropType == DropTypeEnum.PROTECTED && (
                     <div className="h-full w-full rounded-full bg-buy"></div>
@@ -223,50 +268,59 @@ const Step2 = () => {
             </p>
 
             <div className="flex gap-3 max-sm:flex-col sm:h-8 sm:items-center">
-              <div className="flex w-[233px] items-center gap-3">
-                <div
-                  onClick={() =>
-                    setAllState((prevState) => ({
-                      ...prevState,
-                      sets: SetsTypeEnum.GROUP,
-                    }))
-                  }
-                  className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px]"
-                >
+              <div
+                onClick={() =>
+                  setAllState((prevState) => ({
+                    ...prevState,
+                    sets: SetsTypeEnum.GROUP,
+                  }))
+                }
+                className="flex w-[233px] items-center gap-3 cursor-pointer"
+              >
+                <div className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px]">
                   {allState.sets == SetsTypeEnum.GROUP && (
                     <div className="h-full w-full rounded-full bg-buy"></div>
                   )}
                 </div>
                 <p className="font-bold">Group multiple drops:</p>
               </div>
-              <select
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                  setAllState((prevState) => ({
-                    ...prevState,
-                    multipleDrops: e.target.value,
-                  }));
-                }}
-                className={`flex-1 cursor-pointer rounded-md border border-line bg-transparent px-3 py-2 focus:border-primary focus:outline-none ${allState.sets != SetsTypeEnum.GROUP && "pointer-events-none opacity-50"}`}
+              <div
+                tabIndex={0}
+                onBlur={() => setIsShowMultiple(false)}
+                className={`${allState.sets == SetsTypeEnum.INDIVIDUAL && "opacity-50 pointer-events-none"} flex border border-border flex-1 rounded-md items-center justify-between cursor-pointer relative`}
               >
-                <option value="">Choose</option>
-                <option value="Common">Common</option>
-                <option value="Uncommon">Uncommon</option>
-                <option value="Rare">Rare</option>
-                <option value="Epic">Epic</option>
-                <option value="Legendary">Legendary</option>
-              </select>
+                <div
+                  onClick={() => setIsShowMultiple((prev) => !prev)}
+                  className="flex items-center justify-between flex-1 px-3 py-2"
+                >
+                  <p>
+                    {allState.multipleDropsSelected
+                      ? allState.multipleDropsSelected.dateTime
+                      : "Choose"}
+                  </p>
+                  <IoIosArrowDown
+                    className={`${isShowMultiple ? "rotate-180" : ""} transition-transform duration-200`}
+                  />
+                </div>
+                {/* DropDown */}
+                {isShowMultiple && (
+                  <div className="absolute left-0 top-full w-full z-10">
+                    <MultipleDropdown groups={allState.multipleDrops} />
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex gap-3 max-sm:flex-col sm:h-8 sm:items-center">
-              <div className="flex w-[233px] items-center gap-3">
-                <div
-                  onClick={() =>
-                    setAllState((prevState) => ({
-                      ...prevState,
-                      sets: SetsTypeEnum.INDIVIDUAL,
-                    }))
-                  }
-                  className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px]"
-                >
+              <div
+                onClick={() =>
+                  setAllState((prevState) => ({
+                    ...prevState,
+                    sets: SetsTypeEnum.INDIVIDUAL,
+                  }))
+                }
+                className="flex w-[233px] items-center gap-3 cursor-pointer"
+              >
+                <div className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px]">
                   {allState.sets == SetsTypeEnum.INDIVIDUAL && (
                     <div className="h-full w-full rounded-full bg-buy"></div>
                   )}
@@ -274,7 +328,7 @@ const Step2 = () => {
                 <p className="font-bold">Individually distribute:</p>
               </div>
               <div
-                className={`flex h-9 flex-1 cursor-pointer items-center justify-between rounded-md border border-line px-3 py-2 hover:border-primary ${allState.sets != SetsTypeEnum.INDIVIDUAL && "pointer-events-none opacity-50"}`}
+                className={`flex h-9 flex-1 cursor-pointer items-center justify-between rounded-md border border-border px-3 py-2 hover:border-primary ${allState.sets != SetsTypeEnum.INDIVIDUAL && "pointer-events-none opacity-50"}`}
               >
                 <p className="font-normal text-white/50">Choose</p>
                 <FaCalendarAlt className="text-grays" />

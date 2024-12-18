@@ -4,8 +4,29 @@ import Step1 from "./step1";
 import Step2 from "./step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
-import TraitManagement from "./TraitManagement";
-import ViewNFT from "./ViewNFT";
+import { IAttributesCollection } from "@/types/INft";
+
+interface AllStateProps {
+  activeStep: number;
+  tokenName: string;
+  tokenSymbol: string;
+  fileNftImage: File | null;
+  imagePreview: string | null;
+  projectName: string;
+  website: string | null;
+  xAccount: string | null;
+  discord: string | null;
+  warpcastProfile: string | null;
+  description: string;
+  listStraits: NftTrait[];
+  traitManager: TraitManager[];
+  phases: Phase[];
+}
+
+export interface NftTrait {
+  image: File;
+  traits: IAttributesCollection[];
+}
 
 export interface Phase {
   phaseId: number;
@@ -20,9 +41,14 @@ export interface Phase {
   isSelf: boolean;
 }
 
+export interface TraitManager {
+  type: string;
+  subType: string[];
+}
+
 const initialState: AllStateProps = {
   // Common
-  activeStep: 1,
+  activeStep: 3,
 
   // Step 1
   tokenName: "",
@@ -40,6 +66,7 @@ const initialState: AllStateProps = {
 
   // step 3
   listStraits: [],
+  traitManager: [],
 
   // step 4
   phases: [
@@ -57,21 +84,7 @@ const initialState: AllStateProps = {
     },
   ],
 };
-interface AllStateProps {
-  activeStep: number;
-  tokenName: string;
-  tokenSymbol: string;
-  fileNftImage: File | null;
-  imagePreview: string | null;
-  projectName: string;
-  website: string | null;
-  xAccount: string | null;
-  discord: string | null;
-  warpcastProfile: string | null;
-  description: string;
-  listStraits: File[];
-  phases: Phase[];
-}
+
 const CreateCollectionContext = createContext<{
   allState: AllStateProps;
   setAllState: React.Dispatch<React.SetStateAction<AllStateProps>>;

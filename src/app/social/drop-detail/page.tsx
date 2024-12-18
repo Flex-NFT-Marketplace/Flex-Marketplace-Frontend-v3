@@ -213,7 +213,7 @@ const Drop = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button className="h-fit !rounded-none bg-white px-4 py-[2px] text-base font-bold leading-5 text-black">
+                <Button className="h-fit !rounded-none px-4 py-[2px] text-base font-bold leading-5 text-black">
                   Support
                 </Button>
                 <Button
