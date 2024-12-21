@@ -48,7 +48,6 @@ const Inventory = () => {
           <CardNFT
             key={index}
             nft={nft.nftData}
-            isOwner={address == accountAddress}
             onReload={() => {}}
             bestAsk={nft?.orderData?.bestAsk}
           />

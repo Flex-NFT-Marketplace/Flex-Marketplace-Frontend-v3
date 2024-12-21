@@ -88,7 +88,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   }, [bestAsk, address]);
 
   const baseClasses =
-    "border border-stroke hover:border-white select-none overflow-hidden rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem] group";
+    "border border-stroke hover:border-white select-none  rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem] group";
 
   // Define width classes with improved granularity and consistency
   const widthClasses =
@@ -169,13 +169,13 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
       )}
 
       <div
-        className="cursor-pointer overflow-hidden"
+        className="cursor-pointer overflow-hidden rounded"
         onClick={onNavigateDetail}
       >
         <ImageKit
           src={nft?.image || "https://via.placeholder.com/272"}
           alt=""
-          className={`aspect-square w-full rounded-t ${isHover == true ? "scale-110 rounded" : "scale-[1.01]"} transition-all`}
+          className={`aspect-square w-full min-w-[150px] rounded-t ${isHover == true ? "scale-110 rounded" : "scale-[1.01]"} transition-all`}
         />
       </div>
 
