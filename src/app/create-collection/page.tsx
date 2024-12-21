@@ -33,12 +33,13 @@ export interface Phase {
   phaseName: string;
   startDate: string;
   endDate: string;
-  earningsPercentage: number;
+  maxMintPerWallet: string;
   isFreeEarnings: boolean;
   mintPrice: string;
   isFreeMint: boolean;
   receiverWallet: string;
   isSelf: boolean;
+  whiteListArray: string[];
 }
 
 export interface TraitManager {
@@ -48,7 +49,7 @@ export interface TraitManager {
 
 const initialState: AllStateProps = {
   // Common
-  activeStep: 3,
+  activeStep: 4,
 
   // Step 1
   tokenName: "",
@@ -75,12 +76,13 @@ const initialState: AllStateProps = {
       phaseName: "",
       startDate: "",
       endDate: "",
-      earningsPercentage: 0,
+      maxMintPerWallet: "1",
       isFreeEarnings: false,
       mintPrice: "",
       isFreeMint: false,
       receiverWallet: "",
       isSelf: false,
+      whiteListArray: [],
     },
   ],
 };

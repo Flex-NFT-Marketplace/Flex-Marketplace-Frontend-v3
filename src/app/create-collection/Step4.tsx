@@ -3,7 +3,7 @@ import Input from "@/packages/@ui-kit/Input";
 import { FaCalendarDays, FaCheck } from "react-icons/fa6";
 import { PiWarningCircle } from "react-icons/pi";
 import { Phase, useCreateCollection } from "./page";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 
@@ -17,22 +17,13 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
     handleChange();
   };
 
-  const handleChangeEarningsPercentage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeMaxMintPerWallet = (e: ChangeEvent<HTMLInputElement>) => {
     if (isNaN(Number(e.target.value))) {
       return;
     }
-    if (Number(e.target.value) < 0) {
-      phase.earningsPercentage = 0;
-    } else if (Number(e.target.value) > 100) {
-      phase.earningsPercentage = 100;
-    } else {
-      phase.earningsPercentage = Number(e.target.value);
-    }
-    handleChange();
-  };
-
-  const handleToggleFreeEarnings = () => {
-    phase.isFreeEarnings = !phase.isFreeEarnings;
+    const value = Number(e.target.value);
+    if (value < 1) phase.maxMintPerWallet = "";
+    else phase.maxMintPerWallet = value.toString();
     handleChange();
   };
 
@@ -55,6 +46,55 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
     const value = e.target.value;
     phase.receiverWallet = value;
     handleChange();
+  };
+
+  const validateHexStrings = (jsonContent: any) => {
+    const hexRegex = /^[0-9A-Fa-f]+$/;
+    for (const key in jsonContent) {
+      if (jsonContent.hasOwnProperty(key)) {
+        const value = jsonContent[key];
+        if (
+          typeof value !== "string" ||
+          !hexRegex.test(value.replace("0x", ""))
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  const isWhitelistValid = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files?.length) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e: any) {
+          try {
+            const jsonContent = JSON.parse(e.target.result);
+            const isValidHex = validateHexStrings(jsonContent);
+            if (isValidHex) {
+              phase.whiteListArray = jsonContent.map((i: string) =>
+                i.toLowerCase().trim()
+              );
+              // setWhitelistArray(
+              //   jsonContent.map((i: string) => i.toLowerCase().trim()),
+              // );
+            } else {
+              alert(
+                "Some values in the JSON are not valid hex strings. hex strings: (0-9)(a-f)"
+              );
+              event.target.value = "";
+            }
+          } catch (error) {
+            console.error("Invalid JSON:", error);
+            alert("The file content is not valid JSON");
+            event.target.value = ""; // Reset the input
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
   };
 
   const handleToggleReceiverWallet = () => {
@@ -80,6 +120,10 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
       phases: newPhases,
     }));
   };
+
+  useEffect(() => {
+    console.log(phase);
+  }, [phase]);
 
   return (
     <div className="flex gap-5 pb-10 md:h-[280px]">
@@ -133,36 +177,6 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <p>
-                % Creator earnings <span className="text-cancel">*</span>{" "}
-                <PiWarningCircle className="inline-block" />
-              </p>
-              <div className="flex items-center gap-3">
-                <div
-                  onClick={handleToggleFreeEarnings}
-                  className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 border-primary p-[1px]`}
-                >
-                  {phase.isFreeEarnings && (
-                    <FaCheck className="h-full w-full border-primary text-primary" />
-                  )}
-                </div>
-                <p className="font-bold text-grays">Free</p>
-              </div>
-            </div>
-            <div className="mt-2 flex items-center justify-between rounded-md border border-line bg-background px-3">
-              <Input
-                value={phase?.earningsPercentage || ""}
-                placeholder="0"
-                className="border-none !p-0"
-                classContainer={`!max-w-full w-full ${phase.isFreeEarnings && "pointer-events-none opacity-50"}`}
-                onChange={handleChangeEarningsPercentage}
-              />
-              {/* <p className="py-2">{phase?.earningsPercentage || "0"}</p> */}
-              <p className="text-grays">%</p>
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <p>
                 Mint price <span className="text-cancel">*</span>{" "}
                 <PiWarningCircle className="inline-block" />
               </p>
@@ -190,6 +204,36 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
               <p className="whitespace-nowrap text-grays">| ETH</p>
             </div>
           </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <p>
+                Max mint per wallet <span className="text-cancel">*</span>{" "}
+                <PiWarningCircle className="inline-block" />
+              </p>
+              {/* <div className="flex items-center gap-3">
+                <div
+                  onClick={handleToggleFreeEarnings}
+                  className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 border-primary p-[1px]`}
+                >
+                  {phase.isFreeEarnings && (
+                    <FaCheck className="h-full w-full border-primary text-primary" />
+                  )}
+                </div>
+                <p className="font-bold text-grays">Free</p>
+              </div> */}
+            </div>
+            <div className="mt-2 flex items-center justify-between rounded-md border border-line bg-background px-3">
+              <Input
+                value={phase?.maxMintPerWallet || ""}
+                placeholder="0"
+                className="border-none !p-0"
+                classContainer={`!max-w-full w-full ${phase.isFreeEarnings && "pointer-events-none opacity-50"}`}
+                onChange={handleChangeMaxMintPerWallet}
+              />
+              {/* <p className="py-2">{phase?.earningsPercentage || "0"}</p> */}
+              {/* <p className="text-grays">%</p> */}
+            </div>
+          </div>
         </div>
         <div className="flex-1">
           <div className="flex items-center justify-between">
@@ -197,16 +241,18 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
               Receiver wallet <span className="text-cancel">*</span>{" "}
               <PiWarningCircle className="inline-block" />
             </p>
-            <div className="flex items-center gap-3">
-              <div
-                onClick={handleToggleReceiverWallet}
-                className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 border-primary p-[1px]`}
-              >
-                {phase.isSelf && (
-                  <FaCheck className="h-full w-full border-primary text-primary" />
-                )}
-              </div>
-              <p className="font-bold text-grays">Self</p>
+            <div
+              className={`mt-2 w-full border border-line hover:border-gray-400`}
+            >
+              <input
+                type="file"
+                className="w-full bg-transparent px-5 py-2"
+                accept=".json"
+                onChange={(e) => {
+                  e.preventDefault();
+                  isWhitelistValid(e);
+                }}
+              />
             </div>
           </div>
           <Input
@@ -233,14 +279,19 @@ const Step4 = () => {
     }
     // dont't forget check startDate and endDate
 
-    if (!phase.isFreeEarnings && !phase.earningsPercentage) {
+    if (!phase.isFreeEarnings && !phase.maxMintPerWallet) {
       onShowToast("Please fill in earnings percentage");
       isValid = false;
     }
 
-    if (phase.earningsPercentage < 0 || phase.earningsPercentage > 100) {
-      onShowToast("Earnings percentage must be between 0 and 100");
+    if (
+      !isNaN(Number(phase.maxMintPerWallet)) ||
+      Number(phase.maxMintPerWallet) % 1 != 0 ||
+      Number(phase.maxMintPerWallet) < 0
+    ) {
       isValid = false;
+      onShowToast("Max mint per wallet must be grater 0");
+      return;
     }
 
     if (!phase.isFreeMint && !phase.mintPrice) {
@@ -283,12 +334,13 @@ const Step4 = () => {
             phaseName: "",
             startDate: "",
             endDate: "",
-            earningsPercentage: 0,
+            maxMintPerWallet: "",
             isFreeEarnings: false,
             mintPrice: "",
             isFreeMint: false,
             receiverWallet: "",
             isSelf: false,
+            whiteListArray: [],
           },
         ],
       }));
