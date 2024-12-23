@@ -6,13 +6,17 @@ import { useCreateCollection } from "./page";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { FiUpload } from "react-icons/fi";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { PiWarningCircle } from "react-icons/pi";
+import { FaCheck } from "react-icons/fa";
+import { useAccount } from "@starknet-react/core";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateCollection();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
+  const { address } = useAccount();
   const { onShowToast } = useToast();
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const target = e.target;
 
@@ -58,12 +62,66 @@ const Step1 = () => {
     }
   };
 
+  const handleToggleFreeEarnings = () => {
+    setAllState((prev) => ({
+      ...prev,
+      isFreeEarnings: !prev.isFreeEarnings,
+    }));
+  };
+
+  const handleChangeCreatorEarnings = (e: ChangeEvent<HTMLInputElement>) => {
+    if (isNaN(Number(e.target.value))) {
+      return;
+    }
+    if (Number(e.target.value) < 0) {
+      allState.creatorEarnings = 0;
+    } else if (Number(e.target.value) > 100) {
+      allState.creatorEarnings = 100;
+    } else {
+      allState.creatorEarnings = Number(e.target.value);
+    }
+
+    setAllState((prev) => ({
+      ...prev,
+      creatorEarnings: allState.creatorEarnings,
+    }));
+  };
+
+  const handleToggleReciverWallet = () => {
+    if (!address) return;
+
+    if (!allState.isSelfReceiverWallet) {
+      setAllState((prev) => ({
+        ...prev,
+        isSelfReceiverWallet: !prev.isSelfReceiverWallet,
+        receiverWallet: address,
+      }));
+      return;
+    }
+    setAllState((prev) => ({
+      ...prev,
+      isSelfReceiverWallet: !prev.isSelfReceiverWallet,
+    }));
+  };
+
+  const handleReciverWallet = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAllState((prev) => ({
+      ...prev,
+      receiverWallet: value,
+    }));
+  };
+
   const handleDeploy = () => {
     const missingFields: string[] = [];
 
     if (!allState.tokenName.trim()) missingFields.push("tokenName");
     if (!allState.tokenSymbol.trim()) missingFields.push("tokenSymbol");
     if (!allState.fileNftImage) missingFields.push("fileNftImage");
+    if (!allState.receiverWallet && !allState.isSelfReceiverWallet)
+      missingFields.push("receiverWallet");
+    if (!allState.creatorEarnings && !allState.isFreeEarnings)
+      missingFields.push("creatorEarnings");
 
     if (missingFields.length > 0) {
       setInvalidFields(missingFields);
@@ -85,10 +143,6 @@ const Step1 = () => {
       return () => clearTimeout(timer);
     }
   }, [invalidFields]);
-
-  useEffect(() => {
-    console.log(allState);
-  }, [allState]);
 
   return (
     <div className="mx-auto flex h-full max-w-[1200px] flex-1 animate-fade flex-col justify-between gap-8 px-2 py-10">
@@ -171,13 +225,79 @@ const Step1 = () => {
               </div>
             </div>
           </div>
+          <div className="flex gap-5 items-center">
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p>
+                  % Creator earnings <span className="text-cancel">*</span>{" "}
+                  <PiWarningCircle className="inline-block" />
+                </p>
+                <div className="flex items-center gap-3">
+                  <div
+                    onClick={handleToggleFreeEarnings}
+                    className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 border-primary p-[1px]`}
+                  >
+                    {allState.isFreeEarnings && (
+                      <FaCheck className="h-full w-full border-primary text-primary" />
+                    )}
+                  </div>
+                  <p className="font-bold text-grays">Free-mint</p>
+                </div>
+              </div>
+              <div
+                className={`mt-2 flex items-center justify-between rounded-md border border-line bg-background px-3  ${invalidFields.includes("creatorEarnings") && !allState.creatorEarnings && "animate-shake"}`}
+              >
+                <Input
+                  value={allState.creatorEarnings}
+                  placeholder="0"
+                  className="border-none !p-0"
+                  classContainer={`!max-w-full w-full ${allState.isFreeEarnings && "pointer-events-none opacity-50"}`}
+                  onChange={(e: any) => handleChangeCreatorEarnings(e)}
+                />
+                <p className="whitespace-nowrap text-grays">| ETH</p>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p>
+                  Receiver wallet <span className="text-cancel">*</span>{" "}
+                  <PiWarningCircle className="inline-block" />
+                </p>
+                <div className="flex items-center gap-3">
+                  <div
+                    onClick={handleToggleReciverWallet}
+                    className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 border-primary p-[1px]`}
+                  >
+                    {allState.isSelfReceiverWallet && (
+                      <FaCheck className="h-full w-full border-primary text-primary" />
+                    )}
+                  </div>
+                  <p className="font-bold text-grays">Self</p>
+                </div>
+              </div>
+              <div
+                className={`mt-2 flex items-center justify-between rounded-md border border-line bg-background px-3  ${invalidFields.includes("receiverWallet") && !allState.isSelfReceiverWallet && "animate-shake"}`}
+              >
+                <Input
+                  value={allState.receiverWallet || ""}
+                  placeholder="0"
+                  className="border-none !p-0"
+                  classContainer={`!max-w-full w-full ${allState.isSelfReceiverWallet && "pointer-events-none opacity-50"}`}
+                  onChange={handleReciverWallet}
+                />
+                <p className="whitespace-nowrap text-grays">| ETH</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div className="flex gap-5"></div>
       </div>
 
       <div className="sticky bottom-0 flex justify-end">
         <Button
           id="btnStep1"
-          className="rounded-none border-primary !px-20 py-1.5 !font-bold capitalize"
+          className="border-primary !px-20 py-1.5 !font-bold capitalize"
           title="Deploy"
           onClick={handleDeploy}
         />

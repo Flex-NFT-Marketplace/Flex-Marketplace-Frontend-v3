@@ -1,18 +1,16 @@
-// Step1.tsx
 import React, { useEffect, ChangeEvent, useState } from "react";
 import Input from "@/packages/@ui-kit/Input";
 import Button from "@/packages/@ui-kit/Button";
 import { useCreateCollection } from "./page";
-import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
-import { isValidLink } from "@/utils/string";
+import { isValidURL } from "@/utils/string";
 
 const Step2 = () => {
   const { allState, setAllState } = useCreateCollection();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { onShowToast } = useToast();
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const target = e.target;
 
@@ -61,21 +59,21 @@ const Step2 = () => {
   const handleDeploy = () => {
     const missingFields: string[] = [];
 
-    if (allState.website?.trim() && !isValidLink(allState.website?.trim())) {
+    if (allState.website?.trim() && !isValidURL(allState.website?.trim())) {
       onShowToast("Website link is invalid");
       return;
     }
-    if (allState.xAccount?.trim() && !isValidLink(allState.xAccount?.trim())) {
+    if (allState.xAccount?.trim() && !isValidURL(allState.xAccount?.trim())) {
       onShowToast("X account is invalid");
       return;
     }
-    if (allState.discord?.trim() && !isValidLink(allState.discord?.trim())) {
+    if (allState.discord?.trim() && !isValidURL(allState.discord?.trim())) {
       onShowToast("Discord is invalid");
       return;
     }
     if (
       allState.warpcastProfile?.trim() &&
-      !isValidLink(allState.warpcastProfile?.trim())
+      !isValidURL(allState.warpcastProfile?.trim())
     ) {
       onShowToast("Warpcast profile is invalid");
       return;
@@ -119,7 +117,7 @@ const Step2 = () => {
               Project name<span className="ml-1 text-cancel">*</span>
             </p>
             <Input
-              className="rounded-none"
+              className=""
               name="projectName"
               value={allState.projectName || ""}
               placeholder="Shark is here"
@@ -131,7 +129,7 @@ const Step2 = () => {
             <div className="flex w-full flex-col gap-2">
               <p className="font-bold">Website</p>
               <Input
-                className="rounded-none"
+                className=""
                 placeholder="Input link"
                 name="website"
                 value={allState.website || ""}
@@ -142,7 +140,7 @@ const Step2 = () => {
             <div className="flex w-full flex-col gap-2">
               <p className="font-bold">X account</p>
               <Input
-                className="rounded-none"
+                className=""
                 name="xAccount"
                 value={allState.xAccount || ""}
                 placeholder="Input link"
@@ -153,7 +151,7 @@ const Step2 = () => {
             <div className="flex w-full flex-col gap-2">
               <p className="font-bold">Discord</p>
               <Input
-                className="rounded-none"
+                className=""
                 name="discord"
                 value={allState.discord || ""}
                 placeholder="Input link"
@@ -164,7 +162,7 @@ const Step2 = () => {
             <div className="flex w-full flex-col gap-2">
               <p className="font-bold">Warpcast profile</p>
               <Input
-                className="rounded-none"
+                className=""
                 name="warpcastProfile"
                 value={allState.warpcastProfile || ""}
                 onChange={handleChange}
@@ -178,7 +176,7 @@ const Step2 = () => {
               Project description<span className="ml-1 text-cancel">*</span>
             </p>
             <Input
-              className="rounded-none"
+              className=""
               name="description"
               value={allState.description}
               onChange={handleChange}
@@ -191,7 +189,7 @@ const Step2 = () => {
       <div className="sticky bottom-0 flex w-full justify-end gap-2">
         <Button
           title="Back"
-          className="rounded-none border-primary px-8 py-1.5 capitalize"
+          className=" border-primary px-8 py-1.5 capitalize"
           variant="outline"
           onClick={() =>
             setAllState((prev) => ({
@@ -202,7 +200,7 @@ const Step2 = () => {
         />
         <Button
           title="Next"
-          className="rounded-none border-primary px-8 py-1.5 capitalize"
+          className=" border-primary px-8 py-1.5 capitalize"
           onClick={handleDeploy}
         />
       </div>

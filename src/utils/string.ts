@@ -232,3 +232,11 @@ export const convertIpfsUrl = (imageUrl: string): string => {
   return imageUrl;
 }
 
+export const isValidURL = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}

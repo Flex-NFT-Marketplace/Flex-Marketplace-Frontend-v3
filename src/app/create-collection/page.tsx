@@ -5,6 +5,7 @@ import Step2 from "./step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
 import { IAttributesCollection } from "@/types/INft";
+import dayjs, { Dayjs } from "dayjs";
 
 interface AllStateProps {
   activeStep: number;
@@ -12,6 +13,10 @@ interface AllStateProps {
   tokenSymbol: string;
   fileNftImage: File | null;
   imagePreview: string | null;
+  creatorEarnings: number;
+  isFreeEarnings: boolean;
+  receiverWallet: string | null;
+  isSelfReceiverWallet: boolean;
   projectName: string;
   website: string | null;
   xAccount: string | null;
@@ -31,8 +36,8 @@ export interface NftTrait {
 export interface Phase {
   phaseId: number;
   phaseName: string;
-  startDate: string;
-  endDate: string;
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
   maxMintPerWallet: string;
   isFreeEarnings: boolean;
   mintPrice: string;
@@ -49,13 +54,17 @@ export interface TraitManager {
 
 const initialState: AllStateProps = {
   // Common
-  activeStep: 4,
+  activeStep: 1,
 
   // Step 1
   tokenName: "",
   tokenSymbol: "",
   fileNftImage: null,
   imagePreview: null,
+  creatorEarnings: 0,
+  isFreeEarnings: false,
+  receiverWallet: null,
+  isSelfReceiverWallet: false,
 
   // Step 2
   projectName: "",
@@ -74,8 +83,8 @@ const initialState: AllStateProps = {
     {
       phaseId: 0,
       phaseName: "",
-      startDate: "",
-      endDate: "",
+      startDate: dayjs(),
+      endDate: dayjs(),
       maxMintPerWallet: "1",
       isFreeEarnings: false,
       mintPrice: "",

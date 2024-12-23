@@ -1,19 +1,49 @@
 import Button from "@/packages/@ui-kit/Button";
 import Input from "@/packages/@ui-kit/Input";
-import { FaCalendarDays, FaCheck } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa6";
 import { PiWarningCircle } from "react-icons/pi";
 import { Phase, useCreateCollection } from "./page";
 import { ChangeEvent, useEffect } from "react";
 import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import DatePickup from "@/packages/@ui-kit/DatePickup";
+import dayjs, { Dayjs } from "dayjs";
 
 const PhaseItem = ({ phase }: { phase: Phase }) => {
   const { allState, setAllState } = useCreateCollection();
   const { address } = useAccount();
 
+  const handleDownloadTemplate = () => {
+    const data = ["0x0...1234abc", "0x0...1234xyz"];
+    const json = JSON.stringify(data, null, 2); // Định dạng đẹp hơn với khoảng trắng
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "whitelist.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleChangePhaseName = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     phase.phaseName = value;
+    handleChange();
+  };
+
+  const handleStartDateChange = (
+    date: Dayjs | null,
+    dateString: string | string[]
+  ) => {
+    phase.startDate = date;
+    handleChange();
+  };
+
+  const handleEndDateChange = (
+    date: Dayjs | null,
+    dateString: string | string[]
+  ) => {
+    phase.endDate = date;
     handleChange();
   };
 
@@ -39,12 +69,6 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
 
   const handleToggleFreeMint = () => {
     phase.isFreeMint = !phase.isFreeMint;
-    handleChange();
-  };
-
-  const handleChangeReceiverWallet = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    phase.receiverWallet = value;
     handleChange();
   };
 
@@ -77,9 +101,7 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
               phase.whiteListArray = jsonContent.map((i: string) =>
                 i.toLowerCase().trim()
               );
-              // setWhitelistArray(
-              //   jsonContent.map((i: string) => i.toLowerCase().trim()),
-              // );
+              handleChange();
             } else {
               alert(
                 "Some values in the JSON are not valid hex strings. hex strings: (0-9)(a-f)"
@@ -95,15 +117,6 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
         reader.readAsText(file);
       }
     }
-  };
-
-  const handleToggleReceiverWallet = () => {
-    phase.isSelf = !phase.isSelf;
-    if (address) {
-      phase.receiverWallet = address;
-    }
-
-    handleChange();
   };
 
   const handleChange = () => {
@@ -122,8 +135,8 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
   };
 
   useEffect(() => {
-    console.log(phase);
-  }, [phase]);
+    console.log(allState);
+  }, [allState]);
 
   return (
     <div className="flex gap-5 pb-10 md:h-[280px]">
@@ -158,18 +171,24 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
             <p>
               Start date <span className="text-cancel">*</span>
             </p>
-            <div className="mt-2 flex items-center justify-between rounded-md border border-line bg-background px-3">
-              <p className="py-2">{phase?.startDate || "01/01/2023"}</p>
-              <FaCalendarDays />
+            <div className="mt-2">
+              <DatePickup
+                timeEnd={phase.startDate}
+                handleDateChange={handleStartDateChange}
+                showTime={false}
+              />
             </div>
           </div>
           <div className="flex-1">
             <p>
               End date <span className="text-cancel">*</span>
             </p>
-            <div className="mt-2 flex items-center justify-between rounded-md border border-line bg-background px-3">
-              <p className="py-2">{phase?.endDate || "01/01/2023"}</p>
-              <FaCalendarDays />
+            <div className="mt-2">
+              <DatePickup
+                timeEnd={phase.endDate}
+                handleDateChange={handleEndDateChange}
+                showTime={false}
+              />
             </div>
           </div>
         </div>
@@ -230,23 +249,37 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
                 classContainer={`!max-w-full w-full ${phase.isFreeEarnings && "pointer-events-none opacity-50"}`}
                 onChange={handleChangeMaxMintPerWallet}
               />
-              {/* <p className="py-2">{phase?.earningsPercentage || "0"}</p> */}
-              {/* <p className="text-grays">%</p> */}
             </div>
           </div>
         </div>
         <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <p>
-              Receiver wallet <span className="text-cancel">*</span>{" "}
-              <PiWarningCircle className="inline-block" />
-            </p>
+          <div className="flex justify-between flex-col">
+            <div className="flex justify-between items-center">
+              <p>
+                Whitelist address <PiWarningCircle className="inline-block" />
+              </p>
+              <p
+                onClick={handleDownloadTemplate}
+                className="text-blue underline cursor-pointer"
+              >
+                Download template
+              </p>
+            </div>
             <div
-              className={`mt-2 w-full border border-line hover:border-gray-400`}
+              className={`mt-2 w-full rounded-md border border-line hover:border-gray-400 h-9 items-center flex px-3`}
             >
+              <label
+                className="text-grays underline hover:text-white cursor-pointer"
+                htmlFor={`input-whitelist${phase.phaseId}`}
+              >
+                {phase.whiteListArray.length > 0
+                  ? `${phase.whiteListArray.length == 1 ? "1 address uploaded" : phase.whiteListArray.length + " addresses uploaded"} `
+                  : "Upload file .json"}
+              </label>
               <input
+                id={`input-whitelist${phase.phaseId}`}
                 type="file"
-                className="w-full bg-transparent px-5 py-2"
+                className="w-full bg-transparent px-5 py-2 hidden"
                 accept=".json"
                 onChange={(e) => {
                   e.preventDefault();
@@ -255,12 +288,6 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
               />
             </div>
           </div>
-          <Input
-            value={phase?.receiverWallet || ""}
-            classContainer={`w-full !max-w-full mt-2 ${phase.isSelf && "pointer-events-none opacity-50"}`}
-            placeholder="0x00..."
-            onChange={handleChangeReceiverWallet}
-          />
         </div>
       </div>
     </div>
@@ -277,7 +304,30 @@ const Step4 = () => {
       onShowToast("Please fill in phase name");
       isValid = false;
     }
-    // dont't forget check startDate and endDate
+    // Kiểm tra startDate và endDate
+    if (!phase.startDate || !phase.endDate) {
+      onShowToast("Please select both start date and end date");
+      isValid = false;
+    } else {
+      // Kiểm tra tính hợp lệ của ngày
+      if (!phase.startDate.isValid()) {
+        onShowToast("Start date is invalid");
+        isValid = false;
+      }
+
+      if (!phase.endDate.isValid()) {
+        onShowToast("End date is invalid");
+        isValid = false;
+      }
+
+      // Nếu cả hai ngày đều hợp lệ, kiểm tra endDate không nhỏ hơn startDate
+      if (phase.startDate.isValid() && phase.endDate.isValid()) {
+        if (!phase.endDate.isAfter(phase.startDate, "day")) {
+          onShowToast("End date must be at least 1 day after start date");
+          isValid = false;
+        }
+      }
+    }
 
     if (!phase.isFreeEarnings && !phase.maxMintPerWallet) {
       onShowToast("Please fill in earnings percentage");
@@ -285,12 +335,20 @@ const Step4 = () => {
     }
 
     if (
-      !isNaN(Number(phase.maxMintPerWallet)) ||
+      !phase.isFreeMint &&
+      (isNaN(Number(phase.mintPrice)) || Number(phase.mintPrice) < 0)
+    ) {
+      onShowToast("Enter your mint price");
+      isValid = false;
+    }
+
+    if (
+      isNaN(Number(phase.maxMintPerWallet)) ||
       Number(phase.maxMintPerWallet) % 1 != 0 ||
       Number(phase.maxMintPerWallet) < 0
     ) {
       isValid = false;
-      onShowToast("Max mint per wallet must be grater 0");
+      onShowToast("Max mint per wallet must be grater than 0");
       return;
     }
 
@@ -306,11 +364,6 @@ const Step4 = () => {
 
     if (Number(phase.mintPrice) < 0) {
       onShowToast("Mint price must be greater than 0");
-      isValid = false;
-    }
-
-    if (!phase.isSelf && !phase.receiverWallet.trim()) {
-      onShowToast("Please fill in receiver wallet");
       isValid = false;
     }
 
@@ -332,9 +385,9 @@ const Step4 = () => {
           {
             phaseId: prev.phases[prev.phases.length - 1].phaseId + 1,
             phaseName: "",
-            startDate: "",
-            endDate: "",
-            maxMintPerWallet: "",
+            startDate: null,
+            endDate: null,
+            maxMintPerWallet: "1",
             isFreeEarnings: false,
             mintPrice: "",
             isFreeMint: false,
@@ -367,7 +420,7 @@ const Step4 = () => {
           />
 
           <div className="relative mt-4 max-md:hidden">
-            <div className="absolute left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border border-border bg-black"></div>
+            <div className="absolute ju left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border border-border bg-black"></div>
           </div>
         </div>
       </div>
