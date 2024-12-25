@@ -44,6 +44,8 @@ const Spinner = () => {
     const rows = 12; // don't change this
     const card = cardWidth + margin * 2;
     let landingPosition = rows * order.length * card + position * card;
+    console.log(landingPosition);
+
     const randomize = Math.floor(Math.random() * cardWidth) - cardWidth / 2;
     landingPosition = landingPosition + randomize;
     const object = {
@@ -69,6 +71,13 @@ const Spinner = () => {
           //  setShowReward(true);
         }
       }, spinDuration * 1000);
+    }
+  };
+
+  const scollTo = () => {
+    if (wheelRef.current) {
+      wheelRef.current.style.transform = `translate3d(-${17000}px, 0px, 0px)`;
+      console.log(wheelRef.current.clientWidth);
     }
   };
 
@@ -193,7 +202,8 @@ const Spinner = () => {
           <p>0</p>
         </div>
         <Button
-          onClick={() => spinWheel(target)}
+          // onClick={() => spinWheel(target)}
+          onClick={() => scollTo()}
           className="w-[220px] border-primary text-primary"
           variant="outline"
           title="Spin"

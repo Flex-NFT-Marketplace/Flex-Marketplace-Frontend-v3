@@ -15,9 +15,13 @@ import CardNFT from "@/components/CardNFT";
 import { useRouter } from "next/navigation";
 import PackCard from "@/components/AtemuCard/PackCard";
 import Spinner from "./Spinner";
+import HorizontalSpinner from "@/app/rewards/HorizontalSpinner";
+import { useEffect, useRef, useState } from "react";
 
 const OnChain = () => {
   const router = useRouter();
+  const spinContainer = useRef<HTMLDivElement>(null);
+  const [heightSpin, setHeightSpin] = useState(0);
 
   const nftMockup: any = {
     amount: 1,
@@ -73,6 +77,13 @@ const OnChain = () => {
   const onNavigateDetail = () => {
     onNavigate("on-chain/pack-detail");
   };
+
+  useEffect(() => {
+    if (spinContainer.current) {
+      setHeightSpin(spinContainer.current.clientHeight);
+    }
+  }, []);
+
   return (
     <div className="fixed-height-under-header w-full gap-9 bg-opacity-85 flex flex-col min-h-[100vh]">
       <div className="flex-1">
@@ -138,9 +149,11 @@ const OnChain = () => {
             </div>
           </div>
         </div>
-        <div className="w-full">
-          <Spinner />
+
+        <div className="relative border-b border-line" ref={spinContainer}>
+          <HorizontalSpinner />
         </div>
+
         <div className="max-sm:px-4 mt-9 mb-[72px] px-8 max-w-[1440px] mx-auto w-full flex flex-col gap-[84px] max-md:gap-[40px] max-md:mb-[112px]">
           <div className="flex flex-col gap-8 w-full">
             <div className="w-full flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
