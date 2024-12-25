@@ -14,6 +14,7 @@ import { SiFarcaster } from "react-icons/si";
 import CardNFT from "@/components/CardNFT";
 import { useRouter } from "next/navigation";
 import PackCard from "@/components/AtemuCard/PackCard";
+import Spinner from "./Spinner";
 
 const OnChain = () => {
   const router = useRouter();
@@ -136,6 +137,9 @@ const OnChain = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="w-full">
+          <Spinner />
         </div>
         <div className="max-sm:px-4 mt-9 mb-[72px] px-8 max-w-[1440px] mx-auto w-full flex flex-col gap-[84px] max-md:gap-[40px] max-md:mb-[112px]">
           <div className="flex flex-col gap-8 w-full">
