@@ -56,7 +56,7 @@ const PackCard: React.FC<PackCardProps> = (props) => {
             />
           </div>
           <div
-            className={`absolute z-50 -bottom-3 right-2 text-black border border-dark-black uppercase font-bold text-sm leading-4 py-1 px-3 ${status === PackCardStatus.CHAOTIC ? " bg-[#FF2D55]" : status === PackCardStatus.COMMON ? "bg-green" : status === PackCardStatus.HERO ? "bg-[#63B1FF]" : status === PackCardStatus.LEGENDARY ? "bg-secondary" : "bg-[#BF5AF2]"}`}
+            className={`absolute z-1 -bottom-3 right-2 text-black border border-dark-black uppercase font-bold text-sm leading-4 py-1 px-3 ${status === PackCardStatus.CHAOTIC ? " bg-[#FF2D55]" : status === PackCardStatus.COMMON ? "bg-green" : status === PackCardStatus.HERO ? "bg-[#63B1FF]" : status === PackCardStatus.LEGENDARY ? "bg-secondary" : "bg-[#BF5AF2]"}`}
           >
             {status}
           </div>

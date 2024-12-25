@@ -160,7 +160,7 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
   return (
     <>
       <Modal isShow={isOpen} hide={toggleModal}>
-        <div className="flex flex-col bg-black bg-opacity-85 gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center justify-center flex-col">
             <p className="text-2xl uppercase font-bold">buy pack</p>
             <p className="text-gray text-base leading-5">
@@ -196,7 +196,7 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
           <div className="flex items-center justify-between">
             <p className="text-bold mb-1 font-bold">Quantity</p>
             <div className="flex flex-col items-end justify-end gap-1">
-              <div className="flex items-center border px-3 py-[2px] border-border gap-[88px]">
+              <div className="flex items-center border px-3 py-[2px] border-border gap-[50px]">
                 <Button
                   className="w-fit h-fit !p-1"
                   variant="icon"
