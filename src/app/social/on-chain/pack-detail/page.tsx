@@ -17,6 +17,7 @@ import { useState } from "react";
 import BuyPackPopup from "./BuyPackPopup";
 import RecentActivities from "./RecentActivities";
 import PackCard from "@/components/AtemuCard/PackCard";
+import Activity from "@/app/(home)/Activity";
 
 const PackDetail = () => {
   const recentActivities = ["All", "Sales", "Bids", "listings", "Opens"];
@@ -249,30 +250,8 @@ const PackDetail = () => {
                 </div>
               </div> */}
             </div>
-            <div className="w-full flex flex-col gap-8">
-              <div className="flex justify-between w-full max-sm:flex-col max-sm:gap-2">
-                <p className="font-bold text-[24px] text-shadow leading-7 uppercase">
-                  Recent activities
-                </p>
-                <div className="flex gap-6 items-center uppercase font-bold text-[20px] leading-6">
-                  {recentActivities.map((item) => {
-                    return (
-                      <p
-                        key={item}
-                        onClick={() => setActiveActivity(item)}
-                        className={`cursor-pointer max-md:text-[18px] text-gray transition-all hover:text-white ${activeActivity === item ? "text-white text-shadow " : ""}`}
-                      >
-                        {item}
-                      </p>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="w-full  overflow-x-auto">
-                <RecentActivities />
-              </div>
-            </div>
           </div>
+          <Activity />
         </div>
 
         <div className="w-full fixed z-10 bg-black bottom-0 left-0 border-t border-gray">

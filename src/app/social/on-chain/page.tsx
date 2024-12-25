@@ -8,7 +8,7 @@ import { FaInfoCircle, FaTelegram } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoLogoDiscord } from "react-icons/io5";
 import Button from "@/packages/@ui-kit/Button";
-import { MdOutlineContentCopy } from "react-icons/md";
+import { MdContentCopy, MdOutlineContentCopy } from "react-icons/md";
 import Link from "next/link";
 import { SiFarcaster } from "react-icons/si";
 import CardNFT from "@/components/CardNFT";
@@ -22,6 +22,13 @@ const OnChain = () => {
   const router = useRouter();
   const spinContainer = useRef<HTMLDivElement>(null);
   const [heightSpin, setHeightSpin] = useState(0);
+import { useState } from "react";
+import { useAccount } from "@starknet-react/core";
+
+const OnChain = () => {
+  const router = useRouter();
+  const { address } = useAccount();
+  const [copied, setCopied] = useState(false);
 
   const nftMockup: any = {
     amount: 1,
@@ -84,6 +91,17 @@ const OnChain = () => {
     }
   }, []);
 
+  const copyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText((address as string) || "");
+      setCopied(true); // Update copied state for feedback
+    } catch (err) {
+      console.error("Failed to copy address:", err);
+      // Handle error gracefully (optional: display error message)
+    } finally {
+      setTimeout(() => setCopied(false), 2000); // Reset copied state after delay
+    }
+  };
   return (
     <div className="fixed-height-under-header w-full gap-9 bg-opacity-85 flex flex-col min-h-[100vh]">
       <div className="flex-1">
@@ -204,7 +222,13 @@ const OnChain = () => {
                   <div className="divide-gray flex items-center gap-4 divide-x max-sm:flex-col max-sm:items-start max-sm:divide-none max-sm:gap-1">
                     <div className="flex items-center gap-2">
                       <p className="">0x00dCE...DCGH</p>
-                      <MdOutlineContentCopy className="text-gray cursor-pointer text-base leading-4" />
+                      <div className="flex gap-1">
+                        <MdContentCopy
+                          className=" cursor-pointer text-base leading-4 text-grays"
+                          onClick={copyAddress}
+                        />
+                        <p className=" text-xs">{copied ? "Copied!" : ""}</p>
+                      </div>
                     </div>
                     <div className="flex gap-5">
                       <div className="flex items-center gap-2 pl-4 font-bold leading-4 max-sm:p-0">
@@ -324,7 +348,13 @@ const OnChain = () => {
                     <div className="divide-gray flex items-center gap-4 divide-x max-sm:flex-col max-sm:items-start max-sm:divide-none max-sm:gap-1">
                       <div className="flex items-center gap-2">
                         <p className="">0x00dCE...DCGH</p>
-                        <MdOutlineContentCopy className="text-gray cursor-pointer text-base leading-4" />
+                        <div className="flex gap-1">
+                          <MdContentCopy
+                            className=" cursor-pointer text-base leading-4 text-grays"
+                            onClick={copyAddress}
+                          />
+                          <p className=" text-xs">{copied ? "Copied!" : ""}</p>
+                        </div>
                       </div>
                       <div className="flex gap-5">
                         <div className="flex items-center gap-2 pl-4 font-bold leading-4 max-sm:p-0">
