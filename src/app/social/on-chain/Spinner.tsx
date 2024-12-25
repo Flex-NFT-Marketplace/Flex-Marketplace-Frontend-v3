@@ -9,7 +9,7 @@ import Lottie from "lottie-react";
 import { RiArrowUpSFill } from "react-icons/ri";
 import question_mark from "@/assets/question_mark.svg";
 
-interface SpinnerItemProps {
+interface SpinerItemProps {
   reward: number;
   isSpecial?: boolean;
 }
@@ -44,8 +44,6 @@ const Spinner = () => {
     const rows = 12; // don't change this
     const card = cardWidth + margin * 2;
     let landingPosition = rows * order.length * card + position * card;
-    console.log(landingPosition);
-
     const randomize = Math.floor(Math.random() * cardWidth) - cardWidth / 2;
     landingPosition = landingPosition + randomize;
     const object = {
@@ -60,29 +58,19 @@ const Spinner = () => {
 
       setTimeout(() => {
         if (wheelRef.current) {
-          // Loại bỏ animation trước khi reset vị trí
           wheelRef.current.style.transitionTimingFunction = "";
           wheelRef.current.style.transitionDuration = "";
 
-          // Tính lại vị trí chính xác (reset chính xác vào thẻ Special)
-          const resetTo = -((position * card) % (order.length * card)); // Vị trí chuẩn xác
+          const resetTo = -(position * card + randomize);
           wheelRef.current.style.transform = `translate3d(${resetTo}px, 0px, 0px)`;
-
-          //  setShowReward(true);
+          setShowReward(true);
         }
       }, spinDuration * 1000);
     }
   };
 
-  const scollTo = () => {
-    if (wheelRef.current) {
-      wheelRef.current.style.transform = `translate3d(-${17000}px, 0px, 0px)`;
-      console.log(wheelRef.current.clientWidth);
-    }
-  };
-
   const SpinItems = () => {
-    const SpinerItem: React.FC<SpinnerItemProps> = ({
+    const SpinerItem: React.FC<SpinerItemProps> = ({
       reward,
       isSpecial = false,
     }) => {
@@ -187,8 +175,9 @@ const Spinner = () => {
 
       <div className="relative mx-auto flex w-full justify-center overflow-hidden py-[60px]">
         <RiArrowUpSFill className="absolute bottom-5 left-1/2 z-[1] -translate-x-1/2 text-[50px]" />
+
         <div ref={wheelRef} className="flex">
-          <div className="flex gap-3">
+          <div className="flex">
             {/* don't change this */}
             {[...Array(29)].map((_, index) => {
               return <SpinItems key={index} />;
@@ -202,9 +191,8 @@ const Spinner = () => {
           <p>0</p>
         </div>
         <Button
-          // onClick={() => spinWheel(target)}
-          onClick={() => scollTo()}
-          className="w-[220px] border-primary text-primary"
+          onClick={() => spinWheel(target)}
+          className="!w-[220px] border-primary text-primary"
           variant="outline"
           title="Spin"
         />

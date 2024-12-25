@@ -1,10 +1,10 @@
 "use client";
 import avt from "@/assets/social/avatar.png";
 import live from "@/assets/social/live.svg";
-import background from "@/assets/social/bg-onchain.png";
+import background from "@/assets/social/atemu.png";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { TbRosetteDiscountCheckFilled, TbWorld } from "react-icons/tb";
-import { FaInfoCircle, FaTelegram } from "react-icons/fa";
+import { FaTelegram } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoLogoDiscord } from "react-icons/io5";
 import Button from "@/packages/@ui-kit/Button";
@@ -15,21 +15,15 @@ import CardNFT from "@/components/CardNFT";
 import { useRouter } from "next/navigation";
 import PackCard from "@/components/AtemuCard/PackCard";
 import Spinner from "./Spinner";
-import HorizontalSpinner from "@/app/rewards/HorizontalSpinner";
 import { useEffect, useRef, useState } from "react";
-
-const OnChain = () => {
-  const router = useRouter();
-  const spinContainer = useRef<HTMLDivElement>(null);
-  const [heightSpin, setHeightSpin] = useState(0);
-import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
 
 const OnChain = () => {
   const router = useRouter();
   const { address } = useAccount();
   const [copied, setCopied] = useState(false);
-
+  const spinContainer = useRef<HTMLDivElement>(null);
+  const [heightSpin, setHeightSpin] = useState(0);
   const nftMockup: any = {
     amount: 1,
     attributes: [],
@@ -167,10 +161,7 @@ const OnChain = () => {
             </div>
           </div>
         </div>
-
-        <div className="relative border-b border-line" ref={spinContainer}>
-          <HorizontalSpinner />
-        </div>
+        <Spinner />
 
         <div className="max-sm:px-4 mt-9 mb-[72px] px-8 max-w-[1440px] mx-auto w-full flex flex-col gap-[84px] max-md:gap-[40px] max-md:mb-[112px]">
           <div className="flex flex-col gap-8 w-full">

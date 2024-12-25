@@ -1,8 +1,8 @@
 "use client";
-import background from "@/assets/social/bg-onchain.png";
 import avt from "@/assets/social/avatar.png";
 import live from "@/assets/social/live.svg";
 import background_atemu_lite from "@/assets/social/bg-atemu-lite.png";
+import background from "@/assets/social/atemu.png";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { TbRosetteDiscountCheckFilled, TbWorld } from "react-icons/tb";
 import { FaTelegram } from "react-icons/fa";
@@ -15,7 +15,6 @@ import CardNFT from "@/components/CardNFT";
 import useModal from "@/hooks/useModal";
 import { useState } from "react";
 import BuyPackPopup from "./BuyPackPopup";
-import RecentActivities from "./RecentActivities";
 import PackCard from "@/components/AtemuCard/PackCard";
 import Activity from "@/app/(home)/Activity";
 
