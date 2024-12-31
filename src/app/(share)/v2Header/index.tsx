@@ -17,7 +17,7 @@ const pages = {
   "/activity": "Activity",
   "/staking": "Staking",
   "/mint": "Mint",
-  "/open-editions": "Open-Edition",
+  // "/open-editions": "Open-Edition",
 };
 
 const Header = () => {

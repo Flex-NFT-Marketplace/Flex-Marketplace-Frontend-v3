@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const useGetOpenEditions = (state: string) => {
   // try {
-  //     const url = process.env.NEXT_PUBLIC_API_STAGING + "open-edition/drop-phases";
+  //     const url = process.env.NEXT_PUBLIC_API + "open-edition/drop-phases";
   //     const { data } = await axios.post(url, {
   //         "page": 1,
   //         "size": 100,
@@ -19,7 +19,7 @@ export const useGetOpenEditions = (state: string) => {
     queryKey: ["GET_OPEN_EDITIONS", state],
     queryFn: async () => {
       const url =
-        process.env.NEXT_PUBLIC_API_STAGING + "open-edition/drop-phases";
+        process.env.NEXT_PUBLIC_API + "open-edition/drop-phases";
       const { data } = await axios.post(url, {
         page: 1,
         size: 100,

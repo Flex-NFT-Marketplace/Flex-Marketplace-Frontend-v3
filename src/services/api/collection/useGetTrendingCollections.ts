@@ -8,7 +8,7 @@ const useGetBannerCollections = () => {
     queryKey: ["trending_collections"],
     queryFn: async () => {
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_STAGING}nft-collection/tredingNftCollection`,
+            `${process.env.NEXT_PUBLIC_API}nft-collection/tredingNftCollection`,
             {
                 "page": 1,
                 "size": 10,

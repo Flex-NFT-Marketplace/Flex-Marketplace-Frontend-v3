@@ -17,7 +17,7 @@ export default function Home() {
       {/* <TrendingCollection /> */}
       {/* <TrendingCollection /> */}
       {/* <Activity /> */}
-      <Social />
+      {/* <Social /> */}
       <Activity />
       <Footer />
 
