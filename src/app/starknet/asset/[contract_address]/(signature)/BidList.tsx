@@ -6,12 +6,16 @@ import useModal from "@/hooks/useModal";
 import Button from "@/packages/@ui-kit/Button";
 import { useNftContext } from "@/services/providers/NFTProvider";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
-import { formatTimestamp, timeElapsedFromTimestamp } from "@/utils/string";
+import {
+  formattedContractAddress,
+  formatTimestamp,
+  timeElapsedFromTimestamp,
+} from "@/utils/string";
 import { useAccount } from "@starknet-react/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const BidList = () => {
-  const { nft, onReload, collection, listBid } = useNftContext();
+  const { onReload, collection, listBid, nftStaging } = useNftContext();
   const { address } = useAccount();
   const { isOpen, toggleModal } = useModal();
   const { isOpen: isOpenUnBid, toggleModal: toggleUnBid } = useModal();
@@ -19,11 +23,16 @@ const BidList = () => {
   const [signature, setSignature] = useState<ISignature>();
 
   const renderAction = (signature: ISignature) => {
+    if (!address || !signature.buyer) return <></>;
+
     if (signature.status == SignStatusEnum.BIDDING) {
       return <p className="text-buy">Processing...</p>;
     }
 
-    if (signature.buyer_address === address) {
+    if (
+      formattedContractAddress(signature.buyer) ==
+      formattedContractAddress(address)
+    ) {
       return (
         <Button
           title="Accept"
@@ -35,7 +44,10 @@ const BidList = () => {
           }}
         />
       );
-    } else if (address === signature.signer) {
+    } else if (
+      formattedContractAddress(address) ===
+      formattedContractAddress(signature.signer)
+    ) {
       return (
         <Button
           title="Cancel"
@@ -52,24 +64,28 @@ const BidList = () => {
     return <></>;
   };
 
+  useEffect(() => {
+    console.log(listBid);
+  }, [listBid]);
+
   return (
     <div className="table-container w-full overflow-auto">
       <AcceptBidPopup
         isOpen={isOpen}
         toggleModal={toggleModal}
-        nft={nft}
+        nft={nftStaging}
         signature={signature}
         onReload={() => onReload()}
-        schema={collection?.schema}
+        schema={collection?.standard}
       />
 
       <UnBidPopup
         isOpen={isOpenUnBid}
         toggleModal={toggleUnBid}
-        nft={nft}
+        nft={nftStaging}
         signature={signature}
         onReload={() => onReload()}
-        schema={collection?.schema}
+        schema={collection?.standard}
       />
 
       <table className="w-full min-w-[550px] font-normal">
@@ -89,7 +105,7 @@ const BidList = () => {
                 <FormatPrice price={_.price} currency={_.currency} />
               </td>
               <td>{_.amount}</td>
-              <td>{timeElapsedFromTimestamp(_.sell_end)}</td>
+              <td>{timeElapsedFromTimestamp(_.sellEnd)}</td>
               <td>
                 <FormatAddress address={_.signer} />
               </td>
@@ -110,7 +126,7 @@ const BidList = () => {
           ))}
         </tbody>
       </table>
-      {listBid?.length === 0 && (
+      {nftStaging?.orderData?.listBid?.length === 0 && (
         <p className="text-center">No data available</p>
       )}
     </div>

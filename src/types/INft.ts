@@ -9,7 +9,18 @@ export interface IBalance {
 
 export interface IAttributesCollection {
   trait_type: string | string[];
-  value: string | string[];
+  value:  string | string[];
+}
+
+export interface IAttributesCollectionFilter {
+  trait_type: string;
+  options: IAttributesCollectionOption[];
+}
+
+export interface IAttributesCollectionOption {
+  rarity: number;
+  total: number;
+  value: string;
 }
 
 export interface INft {
@@ -33,10 +44,11 @@ export interface INft {
 }
 
 export enum SchemaTypeEnum {
-  ERC721 = "ERC721",
-  ERC1155 = "ERC1155",
+  ERC721 = "ERC-721",
+  ERC1155 = "ERC-1155",
 }
 
 export interface INftCollection extends INft {
   signatures: ISignature;
 }
+

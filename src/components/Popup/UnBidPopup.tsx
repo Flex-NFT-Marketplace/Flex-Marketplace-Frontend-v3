@@ -12,13 +12,14 @@ import { IoClose } from "react-icons/io5";
 import Button from "@/packages/@ui-kit/Button";
 import Modal from "@/packages/@ui-kit/Modal";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
 
 dayjs.extend(utc);
 
 interface IBuyPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  nft?: INft;
+  nft?: IStagingNft;
   signature?: ISignature;
   schema?: string;
   onReload: () => void;
@@ -33,14 +34,12 @@ const UnBidPopup: React.FC<IBuyPopupProps> = (props) => {
       await onCancelOrder(signature?._id as string);
       toggleModal();
       onReload();
-    } catch (error) {
-   
-    }
+    } catch (error) {}
   };
 
   return (
     <Modal isShow={isOpen} hide={toggleModal}>
-      <div className="flex  flex-col gap-4 ">
+      <div className="flex flex-col gap-4 ">
         <div className="flex items-center justify-between">
           <p className="text-2xl font-bold">UnBid NFT</p>
           <Button icon={<IoClose />} variant="icon" onClick={toggleModal} />
@@ -51,7 +50,7 @@ const UnBidPopup: React.FC<IBuyPopupProps> = (props) => {
             width={100}
             height={100}
             alt=""
-            src={nft?.image_url}
+            src={nft?.image}
             className="aspect-square w-[75px] rounded-md"
           />
           <div className="flex flex-1 flex-col">

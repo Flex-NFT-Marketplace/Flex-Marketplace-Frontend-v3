@@ -6,29 +6,20 @@ import { useCollectionContext } from "@/services/providers/CollectionProvider";
 import ImageDemo from "@/assets/banner.webp";
 import TrendingTable from "./TrendingTable";
 import clsx from "clsx";
+import Input from "@/packages/@ui-kit/Input";
+import { IoMdSearch } from "react-icons/io";
 
 enum TabEnum {
-  TRENDING = "TRENDING",
-  NEW_MINT = "NEW MINTS",
   _24H = "24H",
   _7D = "7D",
   _30D = "30D",
   FAVORITE = "FAVORITES",
-  INVENTORY = "INVENTORY",
 }
 
-type TabType =
-  | TabEnum.TRENDING
-  | TabEnum.NEW_MINT
-  | TabEnum._24H
-  | TabEnum._7D
-  | TabEnum._30D
-  | TabEnum.FAVORITE
-  | TabEnum.INVENTORY;
+type TabType = TabEnum._24H | TabEnum._7D | TabEnum._30D | TabEnum.FAVORITE;
 
 const Trending = () => {
-  const { collectionTrending } = useCollectionContext();
-  const [tabActive, setTabActive] = useState<TabType>(TabEnum.TRENDING);
+  const [tabActive, setTabActive] = useState<TabType>(TabEnum._24H);
 
   const styleTab = (tab: TabType) => {
     let active = false;
@@ -40,62 +31,52 @@ const Trending = () => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] overflow-hidden px-20 max-xl:px-5">
+    <div className="mx-auto w-full max-w-[1440px] overflow-hidden px-20 max-xl:px-5 font-bold">
       <div className="w-full min-w-[320px] lg:min-w-[950px] pb-4">
-        <div className="flex flex-col lg:flex-row items-center justify-around text-3xl lg:text-5xl font-normal text-grays py-4 lg:py-12">
-          <div className="flex gap-6 font-bold">
-            <div>
-              <p
-                className={`${styleTab(TabEnum.TRENDING)} hover:text-white transition-all duration-500 ease-in-out select-none`}
-                onClick={() => setTabActive(TabEnum.TRENDING)}
-              >
-                Trending Collections
-              </p>
+        <div className="flex items-center gap-10 mb-7">
+          <div className="flex gap-6">
+            {/* <p className="uppercase text-shadow text-primary">Trendings</p> */}
+            <div className="flex items-center gap-4">
+              <p className="text-2xl uppercase text-shadow-white">Trendings</p>
             </div>
-            {/* <div>
-              <p
-                className={styleTab(TabEnum.NEW_MINT)}
-                onClick={() => setTabActive(TabEnum.NEW_MINT)}
-              >
-                NEW MINTS
-              </p>
-            </div> */}
             {/* <div className="flex gap-2">
               <p
-                className={styleTab(TabEnum._24H)}
+                className={`cursor-pointer ${tabActive == TabEnum._24H ? "text-primary text-shadow" : "text-grays hover:text-white"}`}
                 onClick={() => setTabActive(TabEnum._24H)}
               >
                 24H
               </p>
               <p
-                className={styleTab(TabEnum._7D)}
+                className={`cursor-pointer ${tabActive == TabEnum._7D ? "text-primary text-shadow" : "text-grays hover:text-white"}`}
                 onClick={() => setTabActive(TabEnum._7D)}
               >
                 7D
               </p>
               <p
-                className={styleTab(TabEnum._30D)}
+                className={`cursor-pointer ${tabActive == TabEnum._30D ? "text-primary text-shadow" : "text-grays hover:text-white"}`}
                 onClick={() => setTabActive(TabEnum._30D)}
               >
                 30D
               </p>
             </div> */}
           </div>
-
-          {/* <div className="flex items-center gap-6">
-            <div>
-              <p>FAVORITES</p>
-            </div>
-            <div>
-              <p>INVENTORY</p>
-            </div>
+          {/* <div className="flex-1 max-md:hidden">
+            <Input
+              icon={<IoMdSearch />}
+              placeholder="Search by Collection"
+              classContainer="!max-w-full w-full"
+            />
+          </div> */}
+          {/* <div className="max-lg:hidden">
+            <p
+              className={`cursor-pointer uppercase ${tabActive == TabEnum.FAVORITE ? "text-primary text-shadow" : "text-grays hover:text-white"}`}
+              onClick={() => setTabActive(TabEnum.FAVORITE)}
+            >
+              favorites
+            </p>
           </div> */}
         </div>
-        {tabActive == TabEnum.TRENDING && <TrendingTable />}
-
-        {/* <div className="mt-4 flex justify-end">
-          <Pagination />
-        </div> */}
+        {tabActive == TabEnum._24H && <TrendingTable />}
       </div>
     </div>
   );

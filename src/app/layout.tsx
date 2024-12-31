@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import FooterImage from "../assets/footer.svg";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 import BottomBar from "@/app/(share)/ButtonBar";
 import AppProvider from "@/services/providers/AppProvider";
-import useGetCollections from "@/services/api/useGetCollections";
-import Head from "next/head";
 import Header from "./(share)/v2Header";
+import LoadingReload from "@/components/LoadingReload/LoadingReload";
 
 type TwitterPlayerDescriptor = {
   playerUrl: string | URL;
@@ -45,9 +42,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AppProvider>
+          <LoadingReload />
           <Header />
           {children}
-          <BottomBar />
+          {/* <BottomBar /> */}
         </AppProvider>
       </body>
 

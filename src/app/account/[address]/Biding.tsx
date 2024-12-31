@@ -1,14 +1,18 @@
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
+import UnBidPopup from "@/components/Popup/UnBidPopup";
+import useModal from "@/hooks/useModal";
 import Button from "@/lib/@core/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useAccountContext } from "@/services/providers/AccountProvider";
 import { ISignature } from "@/types/ISignature";
-import { formatTimestamp, timeElapsedFromTimestamp } from "@/utils/string";
+import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
 
 const Biding = () => {
-  const { bids, setAddress, onReload } = useAccountContext();
+  const { bids, onReload } = useAccountContext();
+  // const { isOpen: isOpenUnBid, toggleModal: toggleUnBid } = useModal();
+  // const [nftCancelBid, setNftCancelBid] = useState<IStagingNft>();
 
   const router = useRouter();
 
@@ -19,14 +23,37 @@ const Biding = () => {
   const onNavigateDetail = (signature: ISignature) => {
     onNavigate(
       "/starknet/asset/" +
-        signature.nft.contract_address +
+        signature.nft.nftContract +
         "/" +
-        signature.nft.token_id,
+        signature.nft.tokenId
     );
   };
 
+  // const showUnBid = (nft: IStagingNft) => {
+  //   setNftCancelBid(nft);
+  //   toggleUnBid();
+  // };
+
+  if (bids?.length == 0)
+    return (
+      <div className="px-8 py-4">
+        <p>No bidding found</p>
+      </div>
+    );
+
   return (
-    <div>
+    <div className="overflow-auto">
+      {/* {nftCancelBid && (
+        <UnBidPopup
+          isOpen={isOpenUnBid}
+          toggleModal={toggleUnBid}
+          nft={nftCancelBid}
+          signature={nftCancelBid.signature4}
+          onReload={() => onReload(nftCancelBid)}
+          schema={nftCancelBid?.nftCollection.standard}
+        />
+      )} */}
+
       <div className="table-container w-full overflow-auto px-8 py-4">
         <table className="w-full min-w-[550px] font-normal">
           <thead>
@@ -48,7 +75,7 @@ const Biding = () => {
                 <td onMouseDown={() => onNavigateDetail(_)}>
                   <div className="relative flex flex-1 items-center">
                     <ImageKit
-                      src={_.nft.image_url}
+                      src={_.nft.image}
                       alt=""
                       className=" h-[52px] w-[52px]"
                     />
@@ -61,7 +88,7 @@ const Biding = () => {
                 </td>
                 <td className="text-start">{_?.amount}</td>
                 <td className="text-start">
-                  {timeElapsedFromTimestamp(_?.sell_end)}
+                  {timeElapsedFromTimestamp(_?.sellEnd)}
                 </td>
                 <td className="text-start">
                   <FormatAddress address={_?.signer} />
@@ -69,9 +96,10 @@ const Biding = () => {
                 <td>
                   <div className="flex justify-end">
                     <Button
+                      onClick={() => onNavigateDetail(_)}
                       title="Cancel Bid"
                       mode="outline"
-                      className="border-sell text-sell"
+                      className="border-sell text-sell rounded-md"
                     />
                   </div>
                 </td>

@@ -1,8 +1,4 @@
 "use client";
-import CardCollection from "@/components/CardCollection";
-import useGetCollections from "@/services/api/useGetCollections";
-import { ICollection } from "@/types/ICollection";
-import { Pagination } from "antd";
 
 const TrendingCollection = () => {
   // const { data, isSuccess } = useGetCollections();

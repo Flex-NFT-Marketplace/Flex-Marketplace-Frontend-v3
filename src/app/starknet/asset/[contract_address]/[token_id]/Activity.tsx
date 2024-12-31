@@ -32,6 +32,17 @@ interface ActivityType {
   to: From;
   type: string;
   updatedAt: Date;
+  paymentToken: ICurrency;
+}
+
+interface ICurrency {
+  contractAddress: string;
+  decimals: number;
+  enabled: boolean;
+  isNative: boolean;
+  name: string;
+  symbol: string;
+  _id: string;
 }
 
 interface From {
@@ -52,6 +63,8 @@ const Activity = () => {
         contractAddress: contract_address as string,
         tokenId: token_id as string,
       });
+      console.log(res);
+
       setActivitys(res);
     } catch (error) {
       console.log(error);
@@ -96,7 +109,10 @@ const Activity = () => {
               </div>
 
               <div className="flex w-[100px] items-center justify-center">
-                <FormatPrice price={convertWeiToEther(_.price.toString())} />
+                <FormatPrice
+                  price={convertWeiToEther(_.price.toString())}
+                  currency={_?.paymentToken?.contractAddress}
+                />
               </div>
               <div className="flex w-[150px] items-center justify-center">
                 <FormatAddress address={_.from.address || ""} />

@@ -7,7 +7,7 @@ const usePostMetadata = () => {
     mutationFn: async (formData: any) => {
       try {
         const { data } = await axios.post(
-          process.env.NEXT_PUBLIC_API_HOST_METADATA + "metadata/single/",
+          process.env.NEXT_PUBLIC_API + "metadata/single/",
           formData,
         );
 

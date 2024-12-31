@@ -15,8 +15,12 @@ import { MdArrowBackIos } from "react-icons/md";
 import React from "react";
 import { Divider } from "antd";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
+import { IStagingCollection } from "@/types/IStagingCollection";
 
-const SearchCollectionItem: React.FC<{ collection: ICollection }> = (props) => {
+const SearchCollectionItem: React.FC<{ collection: IStagingCollection }> = (
+  props
+) => {
   const { collection } = props;
   const router = useRouter();
 
@@ -25,7 +29,7 @@ const SearchCollectionItem: React.FC<{ collection: ICollection }> = (props) => {
   };
 
   const onNavigateDetail = () => {
-    onNavigate("/collection/" + collection.contract_address);
+    onNavigate("/collection/" + collection.nftContract);
   };
 
   return (
@@ -34,14 +38,14 @@ const SearchCollectionItem: React.FC<{ collection: ICollection }> = (props) => {
         className="flex cursor-pointer items-center px-4 py-2 hover:bg-dark-black"
         onMouseDown={onNavigateDetail}
       >
-        <ImageKit src={collection.image_url} alt="" className="h-8 w-8" />
-        <p className="ml-4 font-normal">{collection.name}</p>
+        <ImageKit src={collection?.avatar} alt="" className="h-8 w-8" />
+        <p className="ml-4 font-normal line-clamp-1">{collection?.name}</p>
       </div>
     </>
   );
 };
 
-const SearchNFTItem: React.FC<{ nft: INft }> = (props) => {
+const SearchNFTItem: React.FC<{ nft: IStagingNft }> = (props) => {
   const { nft } = props;
 
   const router = useRouter();
@@ -51,7 +55,7 @@ const SearchNFTItem: React.FC<{ nft: INft }> = (props) => {
   };
 
   const onNavigateDetail = () => {
-    onNavigate("/starknet/asset/" + nft.contract_address + "/" + nft.token_id);
+    onNavigate("/starknet/asset/" + nft.nftContract + "/" + nft.tokenId);
   };
 
   return (
@@ -60,8 +64,8 @@ const SearchNFTItem: React.FC<{ nft: INft }> = (props) => {
         className="flex cursor-pointer items-center px-4 py-2 hover:bg-dark-black"
         onMouseDown={onNavigateDetail}
       >
-        <ImageKit src={nft.image_url} alt="" className="h-8 w-8" />
-        <p className="ml-4 font-normal">{nft.name}</p>
+        <ImageKit src={nft?.image} alt="" className="h-8 w-8" />
+        <p className="ml-4 font-normal line-clamp-1">{nft?.name}</p>
       </div>
     </>
   );
@@ -85,12 +89,12 @@ const SearchProfileItem: React.FC<{ account: IProfile }> = (props) => {
         className="flex cursor-pointer items-center px-4 py-2 hover:bg-dark-black"
         onMouseDown={onNavigateDetail}
       >
-        <ImageKit src={account.image} alt="" className="h-8 w-8" />
+        <ImageKit src={account?.image} alt="" className="h-8 w-8" />
         {account.name ? (
-          <p className="ml-4 font-normal">{account.name}</p>
+          <p className="ml-4 font-normal">{account?.name}</p>
         ) : (
           <div className="ml-4 ">
-            <FormatAddress address={account.address} />
+            <FormatAddress address={account?.address} />
           </div>
         )}
       </div>
@@ -106,8 +110,8 @@ const Search = () => {
 
   const { data: searchRes } = useGetSearch(value);
 
-  const [nfts, setNfts] = useState<INft[]>([]);
-  const [collections, setCollections] = useState<ICollection[]>([]);
+  const [nfts, setNfts] = useState<IStagingNft[]>([]);
+  const [collections, setCollections] = useState<IStagingCollection[]>([]);
   const [creators, setCreators] = useState<IProfile[]>([]);
 
   useEffect(() => {
@@ -125,8 +129,8 @@ const Search = () => {
   useEffect(() => {
     if (searchRes) {
       setNfts(searchRes.nfts);
-      setCollections(searchRes.collections);
-      setCreators(searchRes.accounts);
+      setCollections(searchRes.nftCollections);
+      setCreators(searchRes.users);
     }
   }, [searchRes]);
 
@@ -179,7 +183,7 @@ const Search = () => {
         />
       )}
       <Input
-        className={`max-sm:aspect-square max-sm:h-full max-sm:w-11 max-sm:gap-0 max-sm:!p-0`}
+        className={`max-sm:aspect-square max-sm:h-full max-sm:w-11 max-sm:gap-0 max-sm:!p-0 sm:max-w-[300px] sm:w-[300px]`}
         icon={
           <ImageKit
             src={SearchImg.src}
@@ -197,7 +201,7 @@ const Search = () => {
 
       {isFocus && (
         <div className="absolute left-0 right-0 top-10 flex h-[200px] w-full flex-col overflow-y-auto border border-stroke bg-black max-sm:fixed max-sm:h-[400px] max-sm:w-screen">
-          {collections.length > 0 && (
+          {collections?.length > 0 && (
             <p className="mb-2 ml-4 mt-2 font-normal text-primary">
               Collection
             </p>

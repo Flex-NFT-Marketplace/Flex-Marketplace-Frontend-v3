@@ -26,11 +26,13 @@ const TableList = () => {
       const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
       if (scrollTop + clientHeight >= scrollHeight) {
         if (!isLoading) {
+          console.log("fetch next page");
+
           fetchNextPage();
         }
       }
     },
-    [isLoading, fetchNextPage],
+    [isLoading, fetchNextPage]
   );
 
   useEffect(() => {
@@ -52,9 +54,9 @@ const TableList = () => {
   const onNavigateDetail = (signature: ISignature) => {
     onNavigate(
       "/starknet/asset/" +
-        signature.nft.contract_address +
+        signature.nft.nftContract +
         "/" +
-        signature.nft.token_id,
+        signature.nft.tokenId
     );
   };
 
@@ -97,7 +99,7 @@ const TableList = () => {
             </div>
             <div className="relative flex flex-1 items-center">
               <ImageKit
-                src={_?.nft?.image_url}
+                src={_?.nft?.image}
                 alt=""
                 className="ml-2 h-[52px] w-[52px] rounded"
               />
@@ -119,7 +121,7 @@ const TableList = () => {
               <FormatAddress address={_?.signer} />
             </div>
             <div className="flex min-w-[150px] items-center justify-end">
-              <FormatAddress address={_?.buyer_address} />
+              <FormatAddress address={_?.buyer} />
             </div>
             <div className="flex min-w-[150px] items-center justify-end">
               <FormatTime2 time={_?.updatedAt} />

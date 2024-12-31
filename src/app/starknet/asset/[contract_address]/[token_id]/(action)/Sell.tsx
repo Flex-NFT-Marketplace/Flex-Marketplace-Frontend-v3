@@ -7,9 +7,10 @@ import { useNftContext } from "@/services/providers/NFTProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/packages/@ui-kit/Button";
+import { IStagingNft } from "@/types/IStagingNft";
 
 type SellProps = {
-  nftData: INft | undefined;
+  nftData: IStagingNft | undefined;
   schema?: string;
 };
 
@@ -24,7 +25,7 @@ const Sell: React.FC<SellProps> = (props) => {
         isOpen={isOpen}
         toggleModal={toggleModal}
         nftData={nftData}
-        onReload={onReload}
+        onReload={() => onReload()}
         schema={schema}
       />
       <p className="text-2xl font-bold uppercase">Not listed</p>

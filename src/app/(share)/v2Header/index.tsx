@@ -6,10 +6,8 @@ import Button from "@/packages/@ui-kit/Button";
 import Link from "next/link";
 import Modal from "@/packages/@ui-kit/Modal";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import ConnectWallet from "./ConnectWallet";
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
 import Search from "./Search";
 import { IoMenu } from "react-icons/io5";
 import { useRouter } from "next/navigation";
@@ -19,23 +17,16 @@ const pages = {
   "/activity": "Activity",
   "/staking": "Staking",
   "/mint": "Mint",
-  "/open-editions": "Open-Edition",
+  // "/open-editions": "Open-Edition",
 };
 
 const Header = () => {
   const { isShow, toggle } = useModal();
   const { isShow: isShowDropDown, toggle: toggleDropDown } = useModal();
-  const { onShowToast } = useToast();
-  const pathName = usePathname();
   const router = useRouter();
 
-  const isHome = pathName === "/";
-
   const classes = clsx(
-    "fixed left-0 right-0 top-0 z-20 bg-background flex h-[64px] items-center justify-between border-b border-line px-8 max-sm:px-4 backdrop-blur-[6px]",
-    {
-      "": isHome,
-    },
+    "fixed left-0 right-0 top-0 z-20 bg-background flex h-[64px] items-center justify-between border-b border-line px-8 max-sm:px-4 backdrop-blur-[6px]"
   );
 
   const handleNavigate = (path: string) => {

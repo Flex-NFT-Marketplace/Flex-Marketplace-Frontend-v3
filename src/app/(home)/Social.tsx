@@ -1,3 +1,4 @@
+"use client";
 import SocialCardCollection from "@/components/SocialCardCollection";
 import { useGetOpenEditions } from "@/services/api/useGetOpenEditions";
 import { useRouter } from "next/navigation";
@@ -26,11 +27,17 @@ const Social = () => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] py-12 max-xl:px-5 max-md:py-4 md:px-20">
-      <div className="flex items-center justify-around pb-12">
-        <div className="flex items-center gap-6" onClick={onNavigateDetail}>
-          <p className="text-shadow-white hover:text-shadow-primary cursor-pointer select-none text-3xl font-bold transition-all duration-500 ease-in-out hover:text-primary lg:text-5xl">
-            Popular Open-Editions
+    <div className="mx-auto w-full max-w-[1440px] py-12 px-20 max-xl:px-5 max-md:py-4  font-bold">
+      <div className="flex items-center justify-between mb-7">
+        <div className="flex items-center gap-4">
+          <p className="text-2xl uppercase text-shadow-white">
+            popular on social
+          </p>
+          <p
+            onClick={onNavigateDetail}
+            className="font-normal text-grays underline cursor-pointer hover:text-white"
+          >
+            (View all)
           </p>
         </div>
       </div>

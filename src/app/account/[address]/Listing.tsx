@@ -5,18 +5,18 @@ import useModal from "@/hooks/useModal";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
-import { formatTimestamp, timeElapsedFromTimestamp } from "@/utils/string";
+import { IStagingNft } from "@/types/IStagingNft";
+import { timeElapsedFromTimestamp } from "@/utils/string";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Listing = () => {
-  const { orders, setAddress, onReload } = useAccountContext();
+  const { orders, onReload } = useAccountContext();
   const { isOpen: isOpenUnListModal, toggleModal: toggleUnListModal } =
     useModal();
 
-  const [nft, setNft] = useState<INft>();
+  const [nft, setNft] = useState<IStagingNft>();
   const [signature, setSignature] = useState<ISignature>();
 
   const router = useRouter();
@@ -28,14 +28,21 @@ const Listing = () => {
   const onNavigateDetail = (signature: ISignature) => {
     onNavigate(
       "/starknet/asset/" +
-        signature.nft.contract_address +
+        signature.nft.nftContract +
         "/" +
-        signature.nft.token_id,
+        signature.nft.tokenId
     );
   };
 
+  if (orders?.length == 0)
+    return (
+      <div className="px-8 py-4">
+        <p>No listing found</p>
+      </div>
+    );
+
   return (
-    <div>
+    <div className="overflow-auto">
       <UnListPopup
         isOpen={isOpenUnListModal}
         toggleModal={() => {
@@ -43,7 +50,7 @@ const Listing = () => {
         }}
         nft={nft}
         signature={signature as ISignature}
-        onReload={() => onReload(nft as INft)}
+        onReload={() => onReload(nft as IStagingNft)}
       />
       <div className="table-container w-full overflow-auto px-8 py-4">
         <table className="w-full min-w-[550px] font-normal">
@@ -63,10 +70,10 @@ const Listing = () => {
                 key={index}
                 className=" cursor-pointer text-right font-normal transition-all hover:bg-grays/20"
               >
-                <td onMouseDown={() => onNavigateDetail(_)}>
+                <td onClick={() => onNavigateDetail(_)}>
                   <div className="relative flex flex-1 cursor-pointer items-center">
                     <ImageKit
-                      src={_?.nft?.image_url}
+                      src={_?.nft?.image}
                       alt=""
                       className=" h-[52px] w-[52px]"
                     />
@@ -79,7 +86,7 @@ const Listing = () => {
                 </td>
                 <td className="text-start">{_?.amount}</td>
                 <td className="text-start">
-                  {timeElapsedFromTimestamp(_?.sell_end)}
+                  {timeElapsedFromTimestamp(_?.sellEnd)}
                 </td>
                 <td className="text-start">
                   <FormatAddress address={_?.signer} />

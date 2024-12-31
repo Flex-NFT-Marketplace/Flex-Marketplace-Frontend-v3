@@ -1,8 +1,6 @@
-import { ICollection } from "@/types/ICollection";
-import { INft } from "@/types/INft";
-import { ISignature } from "@/types/ISignature";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
+import { IStagingNftResponse } from "@/types/IStagingNft";
+import { useMutation } from "@tanstack/react-query";
 
 export const useGetNft = () => {
   return useMutation({
@@ -11,23 +9,14 @@ export const useGetNft = () => {
       contract_address: string;
       token_id: string;
     }) => {
-      const { data } = await axios.get(
-        process.env.NEXT_PUBLIC_API_HOST +
-          "nfts/" +
-          bodyData.contract_address +
-          "/" +
-          bodyData.token_id,
-      );
-
-      return data.data as {
-        nft: INft;
-        collection: ICollection;
-        orderData: {
-          bestAsk: ISignature;
-          listAsk: ISignature[];
-          listBid: ISignature[];
-        };
-      };
+      const { data } = await axiosWithoutAccessToken.get("nft/get-nft", {
+        params: {
+          nftContract: bodyData.contract_address,
+          tokenId: bodyData.token_id,
+        }
+      })
+        
+      return data.data as IStagingNftResponse;
     },
   });
 };

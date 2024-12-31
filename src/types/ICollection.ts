@@ -14,15 +14,25 @@ export interface IStatsDetail {
   avg_price: number;
 }
 
+export interface IStagingCStatsDetail {
+  saleCount: number;
+  volume: number;
+  avgPrice: number;
+  volChange: number;
+}
+
 export interface IStatsCollection {
-  collection_best_offer: number;
-  nft_count: number;
-  owner_count: number;
-  asset_count: number;
-  total_volume: number;
-  total_listing_count: number;
-  collection_floor_price: number;
-  stats1D: IStatsDetail;
+  _id: string;
+  nftContract: string;
+  bestOffer: number;
+  floorPrice: number;
+  lastUpdated: number;
+  nftCount: number;
+  ownerCount: number;
+  totalListingCount: number;
+  totalVolume: number;
+  stats1D: IStagingCStatsDetail;
+  stats7D: IStagingCStatsDetail;
 }
 
 export interface ICollection {

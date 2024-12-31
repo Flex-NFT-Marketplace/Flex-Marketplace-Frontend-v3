@@ -1,3 +1,4 @@
+"use client";
 import { useGetProfile } from "@/services/api/useGetProfile";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,7 +20,7 @@ const FormatAddress: React.FC<IAddressShortProps> = (props) => {
     try {
       if (address && convertName && address!.length > 3) {
         _getProfile.mutateAsync(address as string).then((res) => {
-          const newName = res.name;
+          const newName = res?.username;
 
           if (newName) {
             setName(newName.substring(0, 11));

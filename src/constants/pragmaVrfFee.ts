@@ -1,0 +1,1 @@
+export const PRAGMA_VRF_FEE = 0.001;

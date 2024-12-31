@@ -39,7 +39,7 @@
 
 .loader div {
   animation: slide 1.5s linear infinite;
-  background: linear-gradient(to left, #FFE720, #ffffff00);
+  background: linear-gradient(to left, #ffe720, #ffffff00);
 }
 
 .loader div:nth-child(1) {
@@ -52,4 +52,41 @@
 
 .loader div:nth-child(3) {
   animation-delay: 1s;
+}
+
+@keyframes show-loading {
+  0% {
+    scale: 0.75;
+    opacity: 1;
+  }
+  100% {
+    scale: 2;
+    opacity: 0;
+  }
+}
+
+.animate-show-loading {
+  animation: show-loading 6s linear;
+}
+
+.rotating-card {
+  perspective: 1000px;
+}
+
+.rotating-card-inner {
+  transform-style: preserve-3d;
+  width: 100%;
+  height: 100%;
+}
+
+.rotating-card-front,
+.rotating-card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.rotating-card-back {
+  transform: rotateY(180deg);
 }

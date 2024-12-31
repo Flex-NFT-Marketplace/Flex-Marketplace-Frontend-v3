@@ -2,9 +2,8 @@ import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import { ICollection } from "@/types/ICollection";
 import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
-import { convertStagingNftTypeToINft } from "@/utils/convertType";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { IStagingNftResponse } from "@/types/IStagingNft";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 export interface INftAccountResponse {
   nft: INft;
@@ -15,46 +14,23 @@ export interface INftAccountResponse {
   };
 }
 
-const useGetNftsByOwner = (address: string) => {
-  return useMutation({
-    mutationKey: ["GET_NFT_BY_ADDRESS", address],
-    mutationFn: async (address: string) => {
-      if (!address) return [] as INftAccountResponse[];
-      const { data } = await axios.get(
-        process.env.NEXT_PUBLIC_API_HOST + "nfts/account/" + address,
-      );
-
-      return data.data as INftAccountResponse[];
+const useGetNftsByOwner = (address: string) => {  
+  return useInfiniteQuery({
+    queryKey: ["GET_NFTS", address],
+    queryFn:  async ({ pageParam }) => {
+      const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
+        page: pageParam,
+        size: 50,
+        owner: address
+      })
+      return data;
     },
-    retry: 1,
-  });
-};
-
-export const useGetNftsByOwner1 = (address: string) => {
-  let initialPageParam = 1;
-  let hasNextPage = true;
-  let allData: INft[] = [];
-  return useMutation({
-    mutationKey: ["GET_All_NFTS_BY_OWNER", address],
-    mutationFn: async (address: string) => {
-      if(!address) return allData;
-      while (hasNextPage) {
-        const data = await axiosWithoutAccessToken.post("nft/get-nfts", {
-          page: initialPageParam,
-          size: 10,
-          owner: address,
-        })
-        for (let i = 0; i < data.data.data.items.length; i++) {
-          allData.push(convertStagingNftTypeToINft(data.data.data.items[i]));
-        }
-      
-        data.data.data.hasNext ? initialPageParam++ : hasNextPage = false;
-        
-      }
-      return allData;
+    enabled: !!address,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, page) => {
+      return lastPage.data.hasNext ? lastPage.data.page + 1 : undefined;
     },
-    retry: 1,
   })
-}
+};
 
 export default useGetNftsByOwner;

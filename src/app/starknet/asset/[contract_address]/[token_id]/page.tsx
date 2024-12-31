@@ -1,11 +1,8 @@
 "use client";
 
-import { useGetNft } from "@/services/api/nft/useGetNft";
-import Activity from "./Activity";
 import Infor from "./Infor";
 import Profile from "./Profile";
 import Traits from "./Traits";
-import { useParams, usePathname } from "next/navigation";
 import {
   NftLoadActionEnum,
   useNftContext,
@@ -13,10 +10,9 @@ import {
 import { useEffect } from "react";
 import Sell from "./(action)/Sell";
 import Buy from "./(action)/Buy";
-import { ISignature, SignStatusEnum } from "@/types/ISignature";
+import { SignStatusEnum } from "@/types/ISignature";
 import CancelOrder from "./(action)/CancelOrder";
 import Pending from "./(action)/Pending";
-import LoadingData from "./(action)/LoadingData";
 import Action from "../(signature)/SignatureList";
 import { SchemaTypeEnum } from "@/types/INft";
 import { useAccount } from "@starknet-react/core";
@@ -24,79 +20,83 @@ import Bid from "./(action)/Bid";
 
 const NFTDetail = () => {
   const { address, status } = useAccount();
-  const pathName = usePathname();
-  const { contract_address, token_id } = useParams();
 
-  const { nft, getData, isOwner, loadingStatus, bestAsk, collection } =
+  const { nftStaging, getNft, isOwner, loadingStatus, bestAsk, collection } =
     useNftContext();
 
   useEffect(() => {
-    getData(contract_address as string, token_id as string, address as string);
+    getNft();
   }, [address]);
 
   const renderAction = () => {
     if (loadingStatus === NftLoadActionEnum.LOADED_IS_OWNER) {
-      if (collection?.schema == SchemaTypeEnum.ERC721) {
+      if (collection?.standard == SchemaTypeEnum.ERC721) {
         if (bestAsk && bestAsk.status === SignStatusEnum.BUYING)
           return <Pending signature={bestAsk} />;
 
         if (isOwner) {
           if (!bestAsk)
-            return <Sell nftData={nft} schema={collection?.schema} />;
+            return <Sell nftData={nftStaging} schema={collection?.standard} />;
           return (
             <CancelOrder
-              nftData={nft}
+              nftData={nftStaging}
               signature={bestAsk}
-              schema={collection?.schema}
+              schema={collection?.standard}
             />
           );
         } else {
           if (bestAsk)
             return (
               <Buy
-                nftData={nft}
+                nftData={nftStaging}
                 signature={bestAsk}
-                schema={collection?.schema}
+                schema={collection?.standard}
               />
             );
-          else return <Bid nftData={nft} schema={collection?.schema} />;
+          else
+            return <Bid nftData={nftStaging} schema={collection?.standard} />;
         }
-      } else if (collection?.schema == SchemaTypeEnum.ERC1155) {
+      } else if (collection?.standard == SchemaTypeEnum.ERC1155) {
         if (bestAsk?.signer == address) {
           if (bestAsk && bestAsk.status === SignStatusEnum.BUYING)
             return <Pending signature={bestAsk} />;
 
           if (!bestAsk)
-            return <Sell nftData={nft} schema={collection?.schema} />;
+            return <Sell nftData={nftStaging} schema={collection?.standard} />;
           return (
             <CancelOrder
-              nftData={nft}
+              nftData={nftStaging}
               signature={bestAsk}
-              schema={collection?.schema}
+              schema={collection?.standard}
             />
           );
         } else {
           if (bestAsk)
             return (
               <Buy
-                nftData={nft}
+                nftData={nftStaging}
                 signature={bestAsk}
-                schema={collection?.schema}
+                schema={collection?.standard}
               />
             );
           else if (isOwner)
-            return <Sell nftData={nft} schema={collection?.schema} />;
-          else return <Bid nftData={nft} schema={collection?.schema} />;
+            return <Sell nftData={nftStaging} schema={collection?.standard} />;
+          else
+            return <Bid nftData={nftStaging} schema={collection?.standard} />;
         }
       } else return <></>;
     } else {
       if (status == "disconnected" && bestAsk)
         return (
-          <Buy nftData={nft} signature={bestAsk} schema={collection?.schema} />
+          <Buy
+            nftData={nftStaging}
+            signature={bestAsk}
+            schema={collection?.standard}
+          />
         );
       else if (isOwner)
-        return <Sell nftData={nft} schema={collection?.schema} />;
-      else return <Bid nftData={nft} schema={collection?.schema} />;
+        return <Sell nftData={nftStaging} schema={collection?.standard} />;
+      else return <Bid nftData={nftStaging} schema={collection?.standard} />;
     }
   };
 
@@ -110,7 +110,7 @@ const NFTDetail = () => {
 
         {/* <Action /> */}
         <Traits />
-        <Action schema={collection?.schema} />
+        <Action schema={collection?.standard} />
 
         {/* <div className="w-full">
           <div className="flex items-center gap-4 border-b border-stroke pb-2">

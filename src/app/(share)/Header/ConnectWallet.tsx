@@ -51,9 +51,12 @@ const ConnectWallet = () => {
             className="select-none truncate transition-all duration-150 ease-in-out max-sm:w-[64px]"
             onClick={() => onNavigate("/account/" + address)}
           >
-            {profileOwner != undefined && profileOwner.name != ""
-              ? profileOwner?.name
-              : strShortPrefixAddress(address as string)}
+            {
+              // profileOwner != undefined && profileOwner.name != ""
+              //   ? profileOwner?.name
+              //   :
+              strShortPrefixAddress(address as string)
+            }
           </p>
           <Menu isShowing={isOpenMenu} hide={toggleMenu} />
         </div>

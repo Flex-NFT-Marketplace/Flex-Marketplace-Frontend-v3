@@ -4,12 +4,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetNFTActivity } from "../api/useGetNFTActivity";
 import { ISignature } from "@/types/ISignature";
+import { useParams } from "next/navigation";
 
 interface ActivityContextType {
   signatures: ISignature[];
 
   fetchNextPage: () => void;
   isLoading: boolean;
+  hasNextPage: boolean;
 
   priceSortType: PriceSortType;
   setPriceSortType: (type: PriceSortType) => void;
@@ -30,7 +32,7 @@ interface ActivityContextType {
 }
 
 export const ActivityContext = createContext<ActivityContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export enum PriceSortEnum {
@@ -45,11 +47,17 @@ export type PriceSortType =
   | PriceSortEnum.CURRENT;
 
 export enum SortStatusEnum {
-  ALL = "ALL",
-  LISTED = "LISTED",
+  ALL = "",
+  LISTING = "LISTING",
+  BID = "BID",
+  SOLD = "SOLD",
 }
 
-export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTED;
+export type SortStatusType =
+  | SortStatusEnum.ALL
+  | SortStatusEnum.LISTING
+  | SortStatusEnum.BID
+  | SortStatusEnum.SOLD;
 
 export const ActivityProvider = ({
   children,
@@ -59,13 +67,14 @@ export const ActivityProvider = ({
   const queryClient = useQueryClient();
   const [signatures, setSignatures] = useState<ISignature[]>([]);
   const [signatures10, setSignatures10] = useState<ISignature[]>([]);
+  const { contract_address } = useParams();
 
   const [priceSortType, setPriceSortType] = useState<PriceSortType>(
-    PriceSortEnum.CURRENT,
+    PriceSortEnum.CURRENT
   );
 
   const [sortStatus, setSortStatus] = useState<SortStatusType>(
-    SortStatusEnum.ALL,
+    SortStatusEnum.ALL
   );
 
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -77,24 +86,32 @@ export const ActivityProvider = ({
     data: signatureRes,
     isLoading,
     isFetching,
+    hasNextPage,
   } = useGetNFTActivity(
-    "",
+    contract_address as string,
+    priceSortType,
+    sortStatus,
+    minPrice,
+    maxPrice,
+    searchValue
+  );
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["NFT_ACTIVITY"] });
+  }, [
     priceSortType,
     sortStatus,
     minPrice,
     maxPrice,
     searchValue,
-  );
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["NFT_ACTIVITY"] });
-  }, [priceSortType, sortStatus, minPrice, maxPrice, searchValue]);
+    contract_address,
+  ]);
 
   useEffect(() => {
     let nftsArr: ISignature[] = [];
 
-    signatureRes?.pages.map((page) => {
-      nftsArr = [...nftsArr, ...page.data];
+    signatureRes?.pages?.map((page) => {
+      nftsArr = [...nftsArr, ...page?.data?.items];
     });
 
     setSignatures(nftsArr);
@@ -108,6 +125,7 @@ export const ActivityProvider = ({
     signatures,
     fetchNextPage,
     isLoading: isFetching,
+    hasNextPage,
 
     priceSortType,
     setPriceSortType,
@@ -138,7 +156,7 @@ export const useActivityContext = () => {
   const context = useContext(ActivityContext);
   if (!context) {
     throw new Error(
-      "useActivityContext must be used within a CollectionProvider",
+      "useActivityContext must be used within a CollectionProvider"
     );
   }
   return context;

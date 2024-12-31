@@ -1,13 +1,8 @@
-"use client";
 import Banner from "./(home)/Banner";
 import FooterImage from "../assets/footer.svg";
 import Trending from "./(home)/(trending)/Trending";
 import Footer from "./(share)/Footer";
-import { useContext, useEffect } from "react";
-import { LoadingHeaderContext } from "@/services/providers/market/LoadingHeaderProvider";
-import Image from "next/image";
 import Activity from "./(home)/Activity";
-import NewMint from "./(home)/(trending)/NewMint";
 import Social from "./(home)/Social";
 import ImageKit from "@/packages/@ui-kit/Image";
 import LaunchpadBanner from "./(home)/LaunchpadBanner";
@@ -22,7 +17,7 @@ export default function Home() {
       {/* <TrendingCollection /> */}
       {/* <TrendingCollection /> */}
       {/* <Activity /> */}
-      <Social />
+      {/* <Social /> */}
       <Activity />
       <Footer />
 

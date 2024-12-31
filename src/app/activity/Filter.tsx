@@ -2,11 +2,11 @@ import Checkbox from "@/lib/@core/Checkbox";
 import Button from "@/packages/@ui-kit/Button";
 import Input from "@/packages/@ui-kit/Input";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { useActivityContext } from "@/services/providers/ActivityProvider";
 import {
-  PriceSortEnum,
   SortStatusEnum,
-} from "@/services/providers/CollectionDetailProvider";
+  useActivityContext,
+} from "@/services/providers/ActivityProvider";
+import { PriceSortEnum } from "@/services/providers/CollectionDetailProvider";
 
 import { useState } from "react";
 import {
@@ -36,7 +36,7 @@ const Filter = () => {
   const onSortByPrice = () => {
     setMinPrice(_minPrice);
     setMaxPrice(_maxPrice);
-    setSortStatus(SortStatusEnum.LISTED);
+    setSortStatus(SortStatusEnum.LISTING);
   };
 
   const onStatusChange = (status: SortStatusEnum) => {
@@ -90,8 +90,8 @@ const Filter = () => {
             <div className="flex items-center justify-between">
               <p className="font-normal text-grays">Only Listed</p>
               <Checkbox
-                isChecked={sortStatus == SortStatusEnum.LISTED}
-                onChange={() => onStatusChange(SortStatusEnum.LISTED)}
+                isChecked={sortStatus == SortStatusEnum.LISTING}
+                onChange={() => onStatusChange(SortStatusEnum.LISTING)}
               />
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { INft } from "./INft";
+import { IStagingNft } from "./IStagingNft";
 
 export enum SignStatusEnum {
   LISTING = "LISTING",
@@ -19,21 +20,25 @@ export type SignStatus =
 
 export interface ISignature {
   _id?: string;
-  contract_address: string;
-  token_id: string;
+  nftContract: string;
+  tokenId: string;
   signature4: string;
   currency: string;
   nonce: number;
   price: number;
   amount: number;
-  amount_sig: number;
+  amountSig: number;
+  amount_sig?: number;
   status: SignStatus;
-  transaction_hash: string;
-  transaction_status: string;
-  sell_end: number;
+  transactionHash: string;
+  transactionStatus: string;
+  sellEnd: number;
+  sell_end?: number;
   signer: string;
-  buyer_address: string;
-  nft: INft;
+  buyer?: string;
+  nft: IStagingNft;
   createdAt?: string;
   updatedAt?: string;
+  buyerAddress?: string;
+  
 }

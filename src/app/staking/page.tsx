@@ -1,40 +1,49 @@
 "use client";
-
 import React, { useContext, useEffect, useState } from "react";
-
 import Banner from "@/assets/Staking-banner.svg";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { INft } from "@/types/INft";
-import useGetStakingList from "@/services/api/useGetStakingList";
 import { useAccount } from "@starknet-react/core";
-import {
-  STAKECOLLECTION,
-  StakingStatus,
-  StakingStatusEnum,
-} from "@/types/IStaking";
 import Checkbox from "@/lib/@core/Checkbox";
 import useModal from "@/hooks/useModal";
 import StakingPopup from "@/components/Popup/StakingPopup";
 import UnStakingPopup from "@/components/Popup/UnstakingPopup";
-import {
-  calculatePointsStaking,
-  formatTimestamp,
-  formattedContractAddress,
-  timeElapsed,
-} from "@/utils/string";
+import { formattedContractAddress, timeElapsed } from "@/utils/string";
 import { LoadingHeaderContext } from "@/services/providers/market/LoadingHeaderProvider";
 import StakingSVG from "@/assets/staking.svg";
-import { Contract, RpcProvider, num } from "starknet";
+import { Contract, RpcProvider } from "starknet";
 import { stakingABI } from "@/types/abi/stakingABI";
-import { useGetNftDetail } from "@/services/api/nft/useGetNftDetail";
 import { getStaked } from "@/services/api/staking/getStaked";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { useGetNft } from "@/services/api/nft/useGetNft";
+import { IStagingNftResponse } from "@/types/IStagingNft";
+import { getNftsAbleToStake } from "@/services/api/staking/getAbleToStake";
+
+enum NFTContractToStake {
+  DREAMY_BOTTY = "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd",
+  FLEX_EVO = "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd",
+}
+
+interface PointKeeper {
+  contractAddress: string;
+  tokenId: string;
+  point: number;
+}
+
+interface TimeKeeper {
+  contractAddress: string;
+  tokenId: string;
+  time: number;
+}
+
+enum NFTState {
+  NOT_STAKE = 0,
+  STAKED = 1,
+}
 
 const Staking = () => {
   const { address } = useAccount();
-  const { nftsOwner, setAddress, loading, onReloadNftOwner } =
-    useAccountContext();
+  const { loading } = useAccountContext();
 
   const provider = new RpcProvider({
     nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
@@ -45,47 +54,243 @@ const Staking = () => {
     setIsLoadingHeader(loading);
   }, [loading]);
 
-  const [nfts, setNfts] = useState<any[]>([]);
-  // const { data: stakings, refetch: refetchStakingList } = useGetStakingList(
-  //   address || "",
-  // );
-
   const { isOpen: isOpenStake, toggleModal: toggleModalStake } = useModal();
   const { isOpen: isOpenUnStake, toggleModal: toggleModalUnStake } = useModal();
 
-  const [nftsStake, setNftsStake] = useState<any[]>([]);
-  const [stakings, setStakings] = useState<any[]>([]);
-  const [nftsUnStake, setNftsUnStake] = useState<any[]>([]);
-
-  const [numNftStaked, setNumNftStaked] = useState(0);
   const [numTotalPoint, setNumTotalPoint] = useState(0);
+  const _getNftDetail = useGetNft();
 
-  const [actionStaked, setActionStaked] = useState(true);
-  const _getNftDetail = useGetNftDetail();
+  const [nftsStaked, setNftsStaked] = useState<IStagingNftResponse[]>([]);
+  const [nftsAbleToStake, setNftsAbleToStake] = useState<IStagingNftResponse[]>(
+    []
+  );
+  const [pointKeeper, setPointKeeper] = useState<PointKeeper[]>([]);
+  const [timeKeeper, setTimeKeeper] = useState<TimeKeeper[]>([]);
 
-  useEffect(() => {
-    getNFTStaked();
-  }, [address]);
+  const [nftsReadyToStake, setNftsReadyToStake] = useState<
+    IStagingNftResponse[]
+  >([]);
+  const [nftsReadyToUnStake, setNftsReadyToUnStake] = useState<
+    IStagingNftResponse[]
+  >([]);
 
   const getNFTStaked = async () => {
     if (!address) return [];
 
-    const nftsStaked = await getStaked(address);
-
     let nfts = [];
+    let points: PointKeeper[] = [];
+    let timeStakeds: TimeKeeper[] = [];
 
-    for (let i = 0; i < nftsStaked?.length; i++) {
+    const nftsStakedRes = await getStaked(address);
+
+    for (let i = 0; i < nftsStakedRes?.length; i++) {
       let res = await _getNftDetail.mutateAsync({
         contract_address: formattedContractAddress(
-          nftsStaked[i].contract_address,
+          nftsStakedRes[i].contract_address
         ),
-        token_id: nftsStaked[i].token_id,
+        token_id: nftsStakedRes[i].token_id,
       });
+      let point = await getTotalPointItem(
+        formattedContractAddress(nftsStakedRes[i].contract_address),
+        nftsStakedRes[i].token_id
+      );
+      let timeStaked = await getTotalTimeStakedItem(
+        nftsStakedRes[i].contract_address,
+        nftsStakedRes[i].token_id
+      );
 
+      timeKeeper.push({
+        contractAddress: formattedContractAddress(
+          nftsStakedRes[i].contract_address
+        ),
+        tokenId: nftsStakedRes[i].token_id,
+        time: timeStaked,
+      });
+      points.push({
+        contractAddress: formattedContractAddress(
+          nftsStakedRes[i].contract_address
+        ),
+        tokenId: nftsStakedRes[i].token_id,
+        point,
+      });
       nfts.push(res);
     }
 
-    setStakings(nfts);
+    setTimeKeeper(timeStakeds);
+    setPointKeeper(points);
+    setNftsStaked(nfts);
+  };
+
+  const getNftsToStake = async () => {
+    if (!address) return;
+    const DreammyNfts = await getNftsAbleToStake(
+      address,
+      NFTContractToStake.DREAMY_BOTTY
+    );
+    const FlexEvo = await getNftsAbleToStake(
+      address,
+      NFTContractToStake.FLEX_EVO
+    );
+
+    let nftsStakedTemp = [];
+    const nftsStaked = await getStaked(address);
+    for (let i = 0; i < nftsStaked?.length; i++) {
+      let res = await _getNftDetail.mutateAsync({
+        contract_address: formattedContractAddress(
+          nftsStaked[i].contract_address
+        ),
+        token_id: nftsStaked[i].token_id,
+      });
+      nftsStakedTemp.push(res);
+    }
+    const removedDuplicate = removeNftDuplicate(nftsStakedTemp, [
+      ...DreammyNfts,
+      ...FlexEvo,
+    ]);
+    setNftsAbleToStake(removedDuplicate);
+  };
+
+  const getTotalPointItem = async (
+    contract_address: string,
+    token_id: string
+  ) => {
+    try {
+      const nftContract = new Contract(
+        stakingABI,
+        process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
+        provider
+      );
+
+      const totalPoint = await nftContract.getUserPointByItem(
+        address,
+        contract_address,
+        token_id,
+        {
+          parseResponse: true,
+        }
+      );
+
+      return Number(totalPoint);
+    } catch (error) {
+      return 0;
+    }
+  };
+
+  const getTotalTimeStakedItem = async (
+    contract_address: string,
+    token_id: string
+  ) => {
+    try {
+      const nftContract = new Contract(
+        stakingABI,
+        process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
+        provider
+      );
+
+      const timeStaked = await nftContract.getStakedStatus(
+        contract_address,
+        token_id,
+        {
+          parseResponse: true,
+        }
+      );
+
+      return Number(timeStaked.stakedAt);
+    } catch (error) {
+      return 0;
+    }
+  };
+
+  const pointOfNft = (contractAddress: string, tokenId: string) => {
+    let pointStaked = 0;
+    pointKeeper.map((point) => {
+      if (point.contractAddress == contractAddress && point.tokenId == tokenId)
+        pointStaked = point.point;
+    });
+    return pointStaked;
+  };
+
+  const timeStakedOfNft = (contractAddress: string, tokenId: string) => {
+    let timeStaked = 0;
+    timeKeeper.map((time) => {
+      if (time.contractAddress == contractAddress && time.tokenId == tokenId)
+        timeStaked = time.time;
+    });
+    return timeStaked.toString();
+  };
+
+  const addNftToStake = (nft: IStagingNftResponse) => {
+    setNftsReadyToStake([...nftsReadyToStake, nft]);
+  };
+
+  const removeNftToStake = (nftRemove: IStagingNftResponse) => {
+    const newNftsToStake: IStagingNftResponse[] = [];
+    nftsReadyToStake.map((nft) => {
+      if (
+        !(
+          formattedContractAddress(nft.nftData.nftContract) ==
+            formattedContractAddress(nftRemove.nftData.nftContract) &&
+          nft.nftData.tokenId == nftRemove.nftData.tokenId
+        )
+      ) {
+        newNftsToStake.push(nft);
+      }
+    });
+    setNftsReadyToStake(newNftsToStake);
+  };
+
+  const addNftToUnStake = (nft: IStagingNftResponse) => {
+    setNftsReadyToUnStake([...nftsReadyToUnStake, nft]);
+  };
+
+  const removeNftToUnStake = (nftRemove: IStagingNftResponse) => {
+    const newNftsToUnStake: IStagingNftResponse[] = [];
+    nftsReadyToUnStake.map((nft) => {
+      if (
+        !(
+          formattedContractAddress(nft.nftData.nftContract) ==
+            formattedContractAddress(nftRemove.nftData.nftContract) &&
+          nft.nftData.tokenId == nftRemove.nftData.tokenId
+        )
+      ) {
+        newNftsToUnStake.push(nft);
+      }
+    });
+    setNftsReadyToUnStake(newNftsToUnStake);
+  };
+
+  const isSelected = (nftCheck: IStagingNftResponse, type: NFTState) => {
+    let selected = false;
+    if (type == NFTState.NOT_STAKE) {
+      nftsReadyToStake.map((nft) => {
+        if (
+          formattedContractAddress(nft.nftData.nftContract) ==
+            nftCheck.nftData.nftContract &&
+          nft.nftData.tokenId == nftCheck.nftData.tokenId
+        )
+          selected = true;
+      });
+    } else {
+      nftsReadyToUnStake.map((nft) => {
+        if (
+          formattedContractAddress(nft.nftData.nftContract) ==
+            nftCheck.nftData.nftContract &&
+          nft.nftData.tokenId == nftCheck.nftData.tokenId
+        )
+          selected = true;
+      });
+    }
+    return selected;
+  };
+
+  const toggleAction = (nftCheck: IStagingNftResponse, type: NFTState) => {
+    if (type == NFTState.NOT_STAKE) {
+      if (isSelected(nftCheck, type)) removeNftToStake(nftCheck);
+      else addNftToStake(nftCheck);
+    } else {
+      if (isSelected(nftCheck, type)) removeNftToUnStake(nftCheck);
+      else addNftToUnStake(nftCheck);
+    }
   };
 
   const [statsNFTEvo, setStatsNFTEvo] = useState({
@@ -100,164 +305,22 @@ const Staking = () => {
     staking: 0,
   });
 
-  useEffect(() => {
-    if (!nftsOwner || nftsOwner.length < 0) return;
-
-    const arr = nftsOwner.filter((nft) => {
-      if (STAKECOLLECTION.includes(nft.collection.contract_address))
-        return true;
-      return false;
-    });
-
-    let nfts = arr.map((nft) => {
-      return {
-        ...nft.nft,
-        staking: {
-          status: StakingStatusEnum.UNSTAKED,
-        },
-        checked: false,
-      };
-    });
-
-    let nftStaked = stakings.map((stake) => {
-      return {
-        ...stake,
-        staking: {
-          status: StakingStatusEnum.STAKED,
-        },
-        checked: false,
-        point: 0,
-      };
-    });
-
-    setNumNftStaked(nftStaked.length);
-
-    const nftStakedIds = new Set(nftStaked.map((nft) => nft._id));
-    nfts = nfts.filter((nft) => !nftStakedIds.has(nft._id));
-
-    nfts = [...nfts, ...nftStaked];
-
-    nfts = nfts.sort((a, b) => {
-      if (a.staking.status == StakingStatusEnum.STAKED) return -1;
-      if (a.staking.status == StakingStatusEnum.UNSTAKED) return 1;
-      return 0;
-    });
-
-    let numEvo = nfts.filter(
-      (item) =>
-        item.contract_address ==
-        "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd",
-    ).length;
-
-    let numStakeEvo = nfts.filter(
-      (item) =>
-        item.contract_address ==
-          "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd" &&
-        item.staking.status == StakingStatusEnum.STAKED,
-    ).length;
-
-    let numDreamy = nfts.filter(
-      (item) =>
-        item.contract_address ==
-        "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd",
-    ).length;
-
-    let numStakeDreamy = nfts.filter(
-      (item) =>
-        item.contract_address ==
-          "0x03859bf9178b48a4ba330d6872ab5a6d3895b64d6631197beefde6293bc172cd" &&
-        item.staking.status == StakingStatusEnum.STAKED,
-    ).length;
-
-    setStatsNFTDreamy({
-      ...statsNFTDreamy,
-      holding: numDreamy,
-      staking: numStakeDreamy,
-    });
-
-    setStatsNFTEvo({
-      ...statsNFTEvo,
-      holding: numEvo,
-      staking: numStakeEvo,
-    });
-
-    calculatePointsItem(nfts);
-  }, [nftsOwner, stakings]);
-
-  const renderAction = (status: StakingStatus) => {
-    switch (status) {
-      case StakingStatusEnum.STAKED:
-        return (
-          <div>
-            <p className="font-bold text-[#92F7CB]">Staked</p>
-          </div>
-        );
-
-      case StakingStatusEnum.UNSTAKED:
-        return (
-          <div>
-            <p>N/A</p>
-          </div>
-        );
-
-      default:
-        return <Button title="No Action"></Button>;
-    }
-  };
-
   const onStake = () => {
-    const arr = nfts.filter((item) => {
-      return item.staking.status == StakingStatusEnum.UNSTAKED;
-    });
-
-    setNftsStake(arr);
     toggleModalStake();
   };
 
   const onUnstake = () => {
-    const arr = nfts.filter((item) => {
-      return item.staking.status == StakingStatusEnum.STAKED;
-    });
-
-    setNftsUnStake(arr);
     toggleModalUnStake();
   };
 
-  const onChecked = (nft: any, status: boolean) => {
-    const arr = nfts.map((item) => {
-      if (
-        item.contract_address == nft.contract_address &&
-        item.token_id == nft.token_id
-      ) {
-        return {
-          ...item,
-          checked: status,
-        };
-      }
-
-      if (nft.staking.status != item.staking.status) {
-        return {
-          ...item,
-          checked: false,
-        };
-      }
-
-      return item;
-    });
-
-    let isActionStaked =
-      arr.findIndex(
-        (item) =>
-          item.staking.status == StakingStatusEnum.STAKED && item.checked,
-      ) < 0;
-
-    setActionStaked(isActionStaked);
-    setNfts(arr);
-  };
-
   const onReloadData = () => {
-    getNFTStaked();
-    onReloadNftOwner();
+    setNftsReadyToStake([]);
+    setNftsReadyToUnStake([]);
+    if (address) {
+      getNFTStaked();
+      getNftsToStake();
+      getUserTotalPoint();
+    }
   };
 
   const getUserTotalPoint = async () => {
@@ -265,7 +328,7 @@ const Staking = () => {
       const nftContract = new Contract(
         stakingABI,
         process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        provider,
+        provider
       );
 
       const totalPoint = await nftContract.getUserTotalPoint(address, {
@@ -280,54 +343,26 @@ const Staking = () => {
 
   useEffect(() => {
     if (address) {
-      getUserTotalPoint();
+      onReloadData();
     }
   }, [address]);
 
-  const getTotalPointItem = async (
-    contract_address: string,
-    token_id: string,
+  const removeNftDuplicate = (
+    nftsStaked: IStagingNftResponse[],
+    nftsAbleToStake: IStagingNftResponse[]
   ) => {
-    try {
-      const nftContract = new Contract(
-        stakingABI,
-        process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || "",
-        provider,
+    if (nftsAbleToStake.length > 0 && nftsStaked.length > 0) {
+      const result = nftsAbleToStake.filter(
+        (ableToStake) =>
+          !nftsStaked.some(
+            (staked) =>
+              ableToStake.nftData.nftContract == staked.nftData.nftContract &&
+              ableToStake.nftData.tokenId == staked.nftData.tokenId
+          )
       );
 
-      const totalPoint = await nftContract.getUserPointByItem(
-        address,
-        contract_address,
-        token_id,
-        {
-          parseResponse: true,
-        },
-      );
-
-      return Number(totalPoint);
-    } catch (error) {
-      return 0;
-    }
-  };
-
-  const calculatePointsItem = async (nfts: any[]) => {
-    try {
-      const tempArr = [...nfts];
-      for (let i = 0; i < nfts.length; i++) {
-        if (nfts[i].staking.status == StakingStatusEnum.STAKED) {
-          let point = await getTotalPointItem(
-            nfts[i].contract_address,
-            nfts[i].token_id,
-          );
-          console.log(point);
-          tempArr[i].point = point;
-        }
-      }
-
-      setNfts(tempArr);
-    } catch (error) {
-      console.log(error);
-    }
+      return result;
+    } else return nftsAbleToStake;
   };
 
   return (
@@ -335,17 +370,17 @@ const Staking = () => {
       <StakingPopup
         isOpen={isOpenStake}
         toggleModal={toggleModalStake}
-        nfts={nftsStake}
-        setNfts={setNftsStake}
+        nfts={nftsReadyToStake}
+        setNfts={setNftsReadyToStake}
         onReload={onReloadData}
-        totalStaked={numNftStaked}
+        numOfStakingNfts={nftsStaked.length}
       />
 
       <UnStakingPopup
         isOpen={isOpenUnStake}
         toggleModal={toggleModalUnStake}
-        nfts={nftsUnStake}
-        setNfts={setNftsUnStake}
+        nfts={nftsReadyToUnStake}
+        setNfts={setNftsReadyToUnStake}
         onReload={onReloadData}
       />
 
@@ -433,7 +468,9 @@ const Staking = () => {
             <div className="flex items-center gap-4">
               <p className="font-normal">
                 Staking NFTs:
-                <span className="text-[#56CCF2]">{numNftStaked}</span>
+                <span className="text-[#56CCF2]">
+                  {nftsStaked?.length || 0}
+                </span>
               </p>
 
               <p className="font-normal">
@@ -441,14 +478,17 @@ const Staking = () => {
               </p>
             </div>
 
-            {actionStaked && (
+            {(nftsReadyToStake.length > 0 ||
+              (nftsReadyToStake.length == 0 &&
+                nftsReadyToUnStake.length == 0)) && (
               <Button
                 title="Stake"
-                className="min-w-[106px]"
+                className={`min-w-[106px]`}
+                disabled={nftsReadyToStake.length == 0}
                 onClick={onStake}
               />
             )}
-            {!actionStaked && (
+            {nftsReadyToUnStake.length > 0 && (
               <Button
                 title="Unstake"
                 onClick={onUnstake}
@@ -479,38 +519,120 @@ const Staking = () => {
               </div>
 
               <div className="pb-4">
-                {nfts.map((_, index) => {
-                  return (
-                    <div className="py-2" key={index}>
+                <div className="p-4">
+                  <p className="text-grays">
+                    {`If you don’t see your NFTs right after unstaking, don’t worry they’re still being processed!`}
+                  </p>
+                </div>
+                {nftsStaked.map(
+                  (nftStaked: IStagingNftResponse, index: number) => {
+                    return (
                       <div
-                        className="flex cursor-pointer items-center py-1 pl-4 pr-8 uppercase hover:bg-dark-black"
-                        onMouseDown={() => onChecked(_, !_?.checked)}
+                        className={`py-2 ${nftsReadyToStake.length > 0 && "opacity-70 pointer-events-none"}`}
+                        key={index}
                       >
-                        <Checkbox isChecked={_?.checked} onChange={() => {}} />
-
-                        <div className="relative ml-2 flex flex-1 items-center justify-start">
-                          <ImageKit
-                            alt=""
-                            src={_.image_url}
-                            className="ml-2 h-[52px] w-[52px]"
+                        <div
+                          className="flex cursor-pointer items-center py-1 pl-4 pr-8 uppercase hover:bg-dark-black"
+                          onMouseDown={() =>
+                            toggleAction(nftStaked, NFTState.STAKED)
+                          }
+                        >
+                          <Checkbox
+                            isChecked={isSelected(nftStaked, NFTState.STAKED)}
+                            onChange={() => {}}
                           />
 
-                          <p className="ml-4 truncate font-normal ">{_.name}</p>
-                        </div>
+                          <div className="relative ml-2 flex flex-1 items-center justify-start">
+                            <ImageKit
+                              alt=""
+                              src={nftStaked?.nftData?.image}
+                              className="ml-2 h-[52px] w-[52px]"
+                            />
 
-                        <div className="flex min-w-[200px] items-center justify-end">
-                          <p> {timeElapsed(_.staking?.updatedAt)}</p>
-                        </div>
-                        <div className="flex min-w-[150px] items-center justify-end">
-                          {_.point}
-                        </div>
-                        <div className="flex min-w-[200px] items-center justify-end">
-                          {renderAction(_.staking?.status)}
+                            <p className="ml-4 truncate font-normal">
+                              {nftStaked?.nftData?.name}
+                            </p>
+                          </div>
+
+                          <div className="flex min-w-[200px] items-center justify-end">
+                            <p>
+                              {timeElapsed(
+                                timeStakedOfNft(
+                                  nftStaked.nftData.nftContract,
+                                  nftStaked.nftData.tokenId
+                                )
+                              )}
+                            </p>
+                          </div>
+                          <div className="flex min-w-[150px] items-center justify-end">
+                            {pointOfNft(
+                              nftStaked.nftData.nftContract,
+                              nftStaked.nftData.tokenId
+                            )}
+                          </div>
+                          <div className="flex min-w-[200px] items-center justify-end">
+                            {/* {renderAction(_.staking?.status)} */}
+                            <Button
+                              title="Unstake"
+                              variant="outline"
+                              className="border-cancel text-cancel"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
+
+                {nftsAbleToStake.map(
+                  (nftAbleToStake: IStagingNftResponse, index: number) => {
+                    return (
+                      <div
+                        className={`py-2 ${nftsReadyToUnStake.length > 0 && "opacity-70 pointer-events-none"}`}
+                        key={index}
+                      >
+                        <div
+                          className="flex cursor-pointer items-center py-1 pl-4 pr-8 uppercase hover:bg-dark-black"
+                          onMouseDown={() =>
+                            toggleAction(nftAbleToStake, NFTState.NOT_STAKE)
+                          }
+                        >
+                          <Checkbox
+                            isChecked={isSelected(
+                              nftAbleToStake,
+                              NFTState.NOT_STAKE
+                            )}
+                            onChange={() => {}}
+                          />
+
+                          <div className="relative ml-2 flex flex-1 items-center justify-start">
+                            <ImageKit
+                              alt=""
+                              src={nftAbleToStake?.nftData?.image}
+                              className="ml-2 h-[52px] w-[52px]"
+                            />
+
+                            <p className="ml-4 truncate font-normal">
+                              {nftAbleToStake?.nftData?.name}
+                            </p>
+                          </div>
+
+                          <div className="flex min-w-[200px] items-center justify-end">
+                            {/* <p> {timeElapsed(nftStaked.staking?.updatedAt)}</p> */}
+                            <p>-</p>
+                          </div>
+                          <div className="flex min-w-[150px] items-center justify-end">
+                            {/* {_.point} */} -
+                          </div>
+                          <div className="flex min-w-[200px] items-center justify-end">
+                            {/* {renderAction(_.staking?.status)} */}
+                            <Button title="Stake" />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
               </div>
             </div>
           </div>

@@ -3,7 +3,6 @@ import { addresses } from "./address";
 import { convertEtherToWei } from "@/utils/string";
 import { typedDataValidate } from "./type";
 import { stark, uint256 } from "starknet";
-import { useGetNftOwner721 } from "../api/nft/useGetNftOwner721";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
 
 import dayjs from "dayjs";
@@ -11,6 +10,7 @@ import utc from "dayjs/plugin/utc";
 import { usePostSignature } from "../api/usePostSignature";
 import { useCancelOrder } from "../api/nft/useCancelOrder";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { useGetNft } from "../api/nft/useGetNft";
 
 dayjs.extend(utc);
 
@@ -19,9 +19,9 @@ const useBidActionNft = () => {
 
   const { onShowToast } = useToast();
 
-  const _getOwner721 = useGetNftOwner721();
   const _postSignature = usePostSignature();
   const _cancelOrder = useCancelOrder();
+  const _getNft721 = useGetNft();
 
   const handleModifyTypedDataBidMessage = async (
     timeEnd: number,
@@ -57,10 +57,16 @@ const useBidActionNft = () => {
     token_id: string,
     currency: string,
   ) => {
-    const owner_address = await _getOwner721.mutateAsync({
+    const nftRes = await _getNft721.mutateAsync({
       contract_address: contract_address,
       token_id: token_id,
-    });
+    })
+
+    const owner_address = nftRes.nftData.owner.address;
+    // const owner_address = await _getOwner721.mutateAsync({
+    //   contract_address: contract_address,
+    //   token_id: token_id,
+    // });
 
     let nonce = dayjs().utc().unix();
 
@@ -81,21 +87,21 @@ const useBidActionNft = () => {
 
       if (address && signature4) {
         const sign: ISignature = {
-          contract_address,
-          token_id,
+          nftContract: contract_address,
+          tokenId: token_id,
           signature4: JSON.stringify(signature4),
           nonce: nonce,
           price: priceInEther,
           currency: currency,
           amount,
-          amount_sig: amount,
+          amountSig: amount,
           status: SignStatusEnum.BID,
-          transaction_hash: "",
-          transaction_status: "",
-          sell_end: timeEnd,
-          signer: address as string,
-          buyer_address: owner_address,
+          transactionHash: "",
+          transactionStatus: "",
+          sellEnd: timeEnd,
+          buyerAddress: owner_address,
           nft: {} as any,
+          signer: address as string,
         };
 
         await _postSignature.mutateAsync(sign);
@@ -112,10 +118,10 @@ const useBidActionNft = () => {
     currency: string,
   ) => {
     if (status == "connected") {
-      const owner_address = await _getOwner721.mutateAsync({
-        contract_address: contract_address,
-        token_id: token_id,
-      });
+      // const owner_address = await _getOwner721.mutateAsync({
+      //   contract_address: contract_address,
+      //   token_id: token_id,
+      // });
 
       try {
         await account?.execute({

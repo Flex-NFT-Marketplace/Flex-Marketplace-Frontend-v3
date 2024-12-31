@@ -3,7 +3,7 @@ import { getCookie } from '@/helpers/cookie';
 import axios from 'axios';
 
 export const axiosWithAccessToken = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_STAGING,
+  baseURL: process.env.NEXT_PUBLIC_API,
 });
 
 axiosWithAccessToken.interceptors.request.use(
@@ -22,5 +22,5 @@ axiosWithAccessToken.interceptors.request.use(
 );
 
 export const axiosWithoutAccessToken = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_STAGING,
+    baseURL: process.env.NEXT_PUBLIC_API,
   });

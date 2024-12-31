@@ -16,7 +16,7 @@ const TableCard = () => {
         }
       }
     },
-    [isLoading, fetchNextPage],
+    [isLoading, fetchNextPage]
   );
 
   useEffect(() => {
@@ -36,12 +36,7 @@ const TableCard = () => {
       className="flex h-full w-full flex-wrap items-stretch justify-start gap-2 overflow-auto px-8 py-4"
     >
       {signatures?.map((_, index) => (
-        <CardNFT
-          key={index}
-          nft={_.nft}
-          bestAsk={_}
-          onReload={() => {}}
-        />
+        <CardNFT key={index} nft={_.nft} bestAsk={_} onReload={() => {}} />
       ))}
     </div>
   );

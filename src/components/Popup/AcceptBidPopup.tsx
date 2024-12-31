@@ -16,13 +16,15 @@ import Button from "@/packages/@ui-kit/Button";
 import { IoClose } from "react-icons/io5";
 import Input from "@/packages/@ui-kit/Input";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
+import { useAccount } from "@starknet-react/core";
 
 dayjs.extend(utc);
 
 interface IBuyPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  nft?: INft;
+  nft?: IStagingNft;
   signature?: ISignature;
   schema?: string;
   onReload: () => void;
@@ -39,10 +41,18 @@ const AcceptBidPopup: React.FC<IBuyPopupProps> = (props) => {
       if (isError || signature!.amount < amount) return;
       setLoading(true);
 
-      await onAcceptBid(signature as ISignature, nft as INft, amount);
+      await onAcceptBid(
+        signature as ISignature,
+        nft as IStagingNft,
+        signature!.signer,
+        amount
+      );
       toggleModal();
-      onReload();
-      setLoading(false);
+
+      setTimeout(() => {
+        onReload();
+        setLoading(false);
+      }, 7000);
     } catch (error) {
       toggleModal();
       setLoading(false);
@@ -70,7 +80,7 @@ const AcceptBidPopup: React.FC<IBuyPopupProps> = (props) => {
             width={100}
             height={100}
             alt=""
-            src={nft?.image_url}
+            src={nft?.image}
             className="aspect-square w-[75px] rounded-md"
           />
           <div className="flex flex-1 flex-col">

@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/lib/@core/Button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { INft, SchemaTypeEnum } from "@/types/INft";
@@ -9,21 +8,18 @@ import useModal from "@/hooks/useModal";
 import BuyPopup from "../Popup/BuyPopup";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
 import { ICollection } from "@/types/ICollection";
-import { useBuyActionNft } from "@/services/context/useBuyActionNft";
-import useListActionNft from "@/services/context/useListActionNft";
 import { useAccount } from "@starknet-react/core";
-import useGetBalanceERC1155 from "@/services/api/nft/useGetBalanceERC1155";
 import UnListPopup from "../Popup/UnListPopup";
 import BidPopup from "../Popup/BidPopup";
-import { on } from "events";
-import styles from "./CardNFT.module.css";
 import clsx from "clsx";
 import FormatPrice, { FormatPriceWithIcon } from "../FormatPrice";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
+import Button from "@/packages/@ui-kit/Button";
+import { formattedContractAddress } from "@/utils/string";
 
 interface CardNFTProps {
-  nft: INft;
-  isOwner?: boolean;
+  nft: IStagingNft;
   isShowFilter?: boolean;
   isShowActivity?: boolean;
   bestAsk?: ISignature;
@@ -34,19 +30,19 @@ interface CardNFTProps {
 
 enum CardNFTModeAction {
   NOT_LISTED = "NOT_LISTED",
-  LISTED = "LISTED",
+  LISTING = "LISTING",
   PENDING = "PENDING",
 }
 
 const CardNFT: React.FC<CardNFTProps> = (props) => {
   const {
     nft,
-    isOwner,
     isShowFilter,
     isShowActivity,
     bestAsk,
     collection,
     onReload,
+    bestBid,
   } = props;
 
   const { isOpen: isOpenSellModal, toggleModal: toggleSellModal } = useModal();
@@ -57,6 +53,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   const { address } = useAccount();
 
   const [isHover, setIsHover] = useState(false);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
 
   const [cardMode, setCardMode] = useState(CardNFTModeAction.NOT_LISTED);
 
@@ -67,24 +64,31 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   };
 
   const onNavigateDetail = () => {
-    onNavigate("/starknet/asset/" + nft.contract_address + "/" + nft.token_id);
+    onNavigate("/starknet/asset/" + nft.nftContract + "/" + nft.tokenId);
   };
 
   useEffect(() => {
+    if (address && nft.owner.address) {
+      setIsOwner(
+        formattedContractAddress(address) ==
+          formattedContractAddress(nft.owner.address)
+      );
+    }
+
     if (bestAsk) {
-      if (collection?.schema == "ERC721") {
+      if (collection?.schema == SchemaTypeEnum.ERC721) {
         if (bestAsk.status == SignStatusEnum.BUYING)
           setCardMode(CardNFTModeAction.PENDING);
-        else setCardMode(CardNFTModeAction.LISTED);
-      } else if (collection?.schema == "ERC1155") {
-        if (bestAsk.signer == address) setCardMode(CardNFTModeAction.LISTED);
+        else setCardMode(CardNFTModeAction.LISTING);
+      } else if (collection?.schema == SchemaTypeEnum.ERC1155) {
+        if (bestAsk.signer == address) setCardMode(CardNFTModeAction.LISTING);
         else setCardMode(CardNFTModeAction.NOT_LISTED);
       }
     } else setCardMode(CardNFTModeAction.NOT_LISTED);
   }, [bestAsk, address]);
 
   const baseClasses =
-    "border border-stroke hover:border-white select-none overflow-hidden rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem]";
+    "border border-stroke hover:border-white select-none  rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem] group";
 
   // Define width classes with improved granularity and consistency
   const widthClasses =
@@ -165,20 +169,20 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
       )}
 
       <div
-        className="cursor-pointer overflow-hidden"
+        className="cursor-pointer overflow-hidden rounded"
         onClick={onNavigateDetail}
       >
         <ImageKit
-          src={nft?.image_url || "https://via.placeholder.com/272"}
+          src={nft?.image || "https://via.placeholder.com/272"}
           alt=""
-          className={`aspect-square w-full rounded-t ${isHover == true ? "scale-110 rounded" : "scale-[1.01]"} transition-all`}
+          className={`aspect-square w-full min-w-[150px] rounded-t ${isHover == true ? "scale-110 rounded" : "scale-[1.01]"} transition-all`}
         />
       </div>
 
       <div className="relative flex flex-col gap-1 px-3 py-2">
         <div className="cursor-pointer" onClick={onNavigateDetail}>
           <p className="line-clamp-1 truncate text-lg font-normal">
-            {nft?.name || "#" + nft?.token_id}
+            {nft?.name || "#" + nft?.tokenId}
           </p>
           <div className="h-7">
             {(bestAsk?.price && (
@@ -200,28 +204,29 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
             )}
           </div>
         </div>
-        {/* <div className="flex items-center justify-between text-grays">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between text-grays mt-4 group-hover:opacity-0">
+          {/* <div className="flex items-center gap-2">
             <p className="text-xs ">Last Sale:</p>
             <p>-</p>
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-2 text-grays">
-            <p className="text-xs ">Best Bid</p>
-            <p>-</p>
+          <div
+            className={`flex items-center gap-2 text-grays text-xs ${!bestBid && "opacity-0"}`}
+          >
+            <p className="">Best Bid</p>
+            <FormatPrice price={bestBid?.price} currency={bestBid?.currency} />
           </div>
-        </div> */}
+        </div>
 
-        {/* {isHover && (
+        {isHover && (
           <div className="absolute bottom-0 left-0 right-0 grid place-items-center">
             <div className="grid w-full grid-cols-2 gap-2">
               {bestAsk?.signer == address &&
-                CardNFTModeAction.LISTED == cardMode && (
+                CardNFTModeAction.LISTING == cardMode && (
                   <>
                     <Button
                       className="col-span-2"
                       title="Cancel Order"
-                      mode="unlist"
                       onClick={async () => {
                         // await onCancelOrder(bestAsk?._id as string);
 
@@ -233,22 +238,26 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                 )}
 
               {isOwner && CardNFTModeAction.NOT_LISTED == cardMode && (
-                <>
+                <div
+                  className="col-span-2 px-3 pb-2 gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Button
-                    className="col-span-2"
+                    className="w-full"
                     title="Listing"
-                    mode="buy"
                     onClick={toggleSellModal}
                   />
-                </>
+                </div>
               )}
               {!isOwner && (
-                <div className="col-span-2 flex px-3 pb-1" onClick={(e) => e.stopPropagation()}>
-                  {CardNFTModeAction.LISTED == cardMode && (
+                <div
+                  className="col-span-2 flex px-3 pb-2 gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {bestAsk && (
                     <>
                       <Button
                         title="Buy"
-                        mode="buy"
                         className="w-full"
                         onClick={() => {
                           toggleBuyModal();
@@ -258,8 +267,8 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                   )}
                   <Button
                     title="Bid"
-                    mode="bidViaCard"
                     className="w-full"
+                    variant="secondary"
                     onClick={() => {
                       toggleBidModal();
                     }}
@@ -269,17 +278,12 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
 
               {CardNFTModeAction.PENDING == cardMode && (
                 <>
-                  <Button
-                    title="Pending"
-                    mode="buy"
-                    active={false}
-                    className="col-span-2"
-                  />
+                  <Button title="Pending" className="col-span-2" />
                 </>
               )}
             </div>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,5 @@
-import { ICollection } from "@/types/ICollection";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { IStagingCollection } from "@/types/IStagingCollection";
-import { convertStagingCollectionTypeToICollectionType } from "@/utils/convertType";
 import { ITrendingCollection } from "@/types/ITrendingCollection";
 
 const useGetBannerCollections = () => {
@@ -11,15 +8,14 @@ const useGetBannerCollections = () => {
     queryKey: ["trending_collections"],
     queryFn: async () => {
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_STAGING}nft-collection/tredingNftCollection`,
+            `${process.env.NEXT_PUBLIC_API}nft-collection/tredingNftCollection`,
             {
                 "page": 1,
                 "size": 10,
-                "desc": "desc"
             }
           )
           const { items } = response?.data?.data;
-          
+            
         return items as ITrendingCollection[];
     },
     retry: 1,

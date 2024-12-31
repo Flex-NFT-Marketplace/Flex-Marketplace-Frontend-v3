@@ -12,12 +12,13 @@ import EditProfilePopup from "@/components/Popup/EditProfilePopup";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 import { useAuth } from "@/services/providers/AuthProvider";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { getCookie } from "@/helpers/cookie";
+import { ACCESS_TOKEN } from "@/constants/cookies";
 
 const Profile = () => {
   const { address } = useParams();
-  const { profile, setAddress, onUpdateProfile, profileOwner } =
-    useAccountContext();
-  const { token, signMessageValidate } = useAuth();
+  const { profile, setAddress, profileOwner } = useAccountContext();
+  const { signMessageValidate } = useAuth();
 
   const { isShow: isShowEditProfile, toggle: toggleShowEditProfile } =
     useModal();
@@ -39,6 +40,7 @@ const Profile = () => {
   };
 
   const openEditProfile = () => {
+    const token = getCookie(ACCESS_TOKEN);
     if (!token) {
       signMessageValidate().then((res) => {
         if (res) {
@@ -71,16 +73,19 @@ const Profile = () => {
         /> */}
 
         <ImageKit
-          src={profile?.avatar || profile?.image || UserImg.src}
+          // src={profile?.avatar || profile?.image || UserImg.src}
+          src={UserImg.src}
           alt=""
           className="h-[52px] w-[52px] rounded-sm"
         />
 
         <div className="flex flex-col justify-center">
           <p className="text-2xl font-bold">
-            {profile?.name ||
-              profile?.nick_name ||
-              strShortAddress(address as string)}
+            {
+              // profile?.username ||
+              //   profile?.nick_name ||
+              strShortAddress(address as string)
+            }
           </p>
 
           <div className="flex items-center max-sm:flex-col max-sm:items-start">
@@ -103,13 +108,13 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="flex gap-7 font-normal">
+      {/* <div className="flex gap-7 font-normal">
         <Button
           icon={<IoSettings />}
           variant="icon"
           onClick={openEditProfile}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -6,6 +6,8 @@ import SOLDSVG from "@/assets/actionNFT/local_grocery_store.svg";
 import ORDERCANCELSVG from "@/assets/actionNFT/cancel.svg";
 import clsx from "clsx";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { LuSend } from "react-icons/lu";
+import { MdOutlineGetApp } from "react-icons/md";
 
 export enum HistoryType {
   Mint = "mint",
@@ -41,7 +43,9 @@ const ActionNFT2: React.FC<{ status?: string; isShowStatus?: boolean }> = ({
     { "text-[#4F92FF]": status === HistoryType.Transfer },
     { "text-[#B85EFF]": status === HistoryType.Mint },
     { "text-green-500": status === HistoryType.Sale },
-    { "max-md:hidden": !isShowStatus },
+    { "text-[#f7f546]": status === HistoryType.Stake },
+    { "text-[#de8aff]": status === HistoryType.Unstake },
+    { "max-md:hidden": !isShowStatus }
   );
 
   const RenderStatus = () => {
@@ -69,6 +73,24 @@ const ActionNFT2: React.FC<{ status?: string; isShowStatus?: boolean }> = ({
           <div className="flex gap-2">
             <ImageKit src={SOLDSVG} alt="" width={20} />
             <p className={classes}>{HistoryType.Sale}</p>
+          </div>
+        );
+      }
+
+      case HistoryType.Stake: {
+        return (
+          <div className="flex gap-2 items-center">
+            <LuSend className={`${classes} w-3 h-3`} />
+            <p className={classes}>{HistoryType.Stake}</p>
+          </div>
+        );
+      }
+
+      case HistoryType.Unstake: {
+        return (
+          <div className="flex gap-2 items-center">
+            <MdOutlineGetApp className={`${classes} w-4 h-4`} />
+            <p className={classes}>{HistoryType.Unstake}</p>
           </div>
         );
       }

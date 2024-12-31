@@ -1,17 +1,16 @@
 import TableListItemSkeleton from "@/app/(skeletonLoading)/collectionsSkeleton/TableListItemSkeleton";
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
-import FormatTime from "@/components/FormatTime";
 import FormatTime2 from "@/components/FormatTime2";
-import Checkbox from "@/lib/@core/Checkbox";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useCollectionDetailContext } from "@/services/providers/CollectionDetailProvider";
-import { INft } from "@/types/INft";
+import { IStagingNft } from "@/types/IStagingNft";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 
 const TableList = () => {
-  const { nfts, isLoading, fetchNextPage } = useCollectionDetailContext();
+  const { nfts, isLoading, fetchNextPage, getBestBid } =
+    useCollectionDetailContext();
 
   const scrollRef = useRef(null);
 
@@ -27,7 +26,7 @@ const TableList = () => {
         }
       }
     },
-    [isLoading, fetchNextPage],
+    [isLoading, fetchNextPage]
   );
 
   useEffect(() => {
@@ -46,8 +45,8 @@ const TableList = () => {
     router.push(path);
   };
 
-  const onNavigateDetail = (nft: INft) => {
-    onNavigate("/starknet/asset/" + nft.contract_address + "/" + nft.token_id);
+  const onNavigateDetail = (nft: IStagingNft) => {
+    onNavigate("/starknet/asset/" + nft.nftContract + "/" + nft.tokenId);
   };
 
   return (
@@ -84,19 +83,19 @@ const TableList = () => {
       <div className="relative min-w-[900px] overflow-auto">
         {nfts?.map((_, i) => (
           <div
-            onClick={() => onNavigateDetail(_)}
+            onClick={() => onNavigateDetail(_.nftData)}
             key={i}
             className="flex cursor-pointer items-center pr-8 py-1 font-normal uppercase hover:bg-dark-black max-md:pr-5"
           >
             <div className="sticky left-0 flex flex-1 items-center">
               <div className="h-5 w-5">{/* <Checkbox /> */}</div>
               <ImageKit
-                src={_.image_url}
+                src={_?.nftData?.image}
                 alt=""
                 className="ml-2 h-[52px] w-[52px]"
               />
 
-              <p className="ml-4  truncate font-normal ">{_.name}</p>
+              <p className="ml-4  truncate font-normal ">{_?.nftData?.name}</p>
             </div>
 
             {/* <div className="flex min-w-[100px] items-center justify-end">
@@ -104,21 +103,24 @@ const TableList = () => {
             </div> */}
             <div className="flex min-w-[100px] items-center justify-end">
               <FormatPrice
-                price={_.signatures.price}
-                currency={_.signatures.currency}
+                price={_?.orderData.bestAsk?.price}
+                currency={_?.orderData?.bestAsk?.currency}
               />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
               <FormatPrice price={0} />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
-              <FormatPrice price={0} />
+              <FormatPrice
+                price={getBestBid(_)?.price}
+                currency={getBestBid(_)?.currency}
+              />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
-              <FormatAddress />
+              <FormatAddress address={_?.nftData?.owner?.address} />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
-              <FormatTime2 time={_.signatures.updatedAt} />
+              <FormatTime2 time={_?.orderData.bestAsk?.updatedAt} />
             </div>
           </div>
         ))}

@@ -6,12 +6,13 @@ import useListActionNft from "@/services/context/useListActionNft";
 import { useNftContext } from "@/services/providers/NFTProvider";
 import { INft } from "@/types/INft";
 import { ISignature } from "@/types/ISignature";
+import { IStagingNft } from "@/types/IStagingNft";
 import { formatTimestamp } from "@/utils/string";
 import { useAccount } from "@starknet-react/core";
 import { useEffect } from "react";
 
 interface CancelOrderProps {
-  nftData: INft | undefined;
+  nftData: IStagingNft | undefined;
   signature: ISignature | undefined;
   schema?: string;
 }
@@ -22,16 +23,12 @@ const CancelOrder: React.FC<CancelOrderProps> = (props) => {
   const { isOpen, toggleModal } = useModal();
 
   const { onCancelOrder } = useListActionNft();
-  const { onReload, isOwner, collection, getData } = useNftContext();
+  const { onReload, isOwner, collection, getNft } = useNftContext();
 
   const onCancel = async () => {
     try {
       await onCancelOrder(signature?._id as string);
-      getData(
-        nftData?.contract_address as string,
-        nftData?.token_id as string,
-        address as string,
-      );
+      getNft();
     } catch (error) {
       error;
     }
@@ -52,7 +49,7 @@ const CancelOrder: React.FC<CancelOrderProps> = (props) => {
 
         <div className="flex items-center gap-1 font-normal">
           <p className="uppercase text-grays">Time end:</p>
-          <p>{formatTimestamp(signature?.sell_end)}</p>
+          <p>{formatTimestamp(signature?.sellEnd)}</p>
         </div>
       </div>
       {/* <FormatPrice

@@ -7,6 +7,7 @@ import { num, uint256 } from "starknet";
 import { typedDataValidate } from "./type";
 import { useActionBidNft } from "../api/nft/useActionBidNft";
 import { useNotify } from "../providers/NotifyProvider";
+import { IStagingNft } from "@/types/IStagingNft";
 
 const useAcceptBid = () => {
   const { status, account, address } = useAccount();
@@ -19,7 +20,7 @@ const useAcceptBid = () => {
 
   const generateBidCalldataSignature = (
     signature: ISignature,
-    nft: INft,
+    nft: IStagingNft,
     amount: number,
   ) => {
     if (!signature) return null;
@@ -29,27 +30,27 @@ const useAcceptBid = () => {
       address, //   taker
       convertEtherToWei((signature.price * amount).toString()).toString(), //   price
       (typedDataValidate.message["tokenId.low"] = num.hexToDecimalString(
-        uint256.bnToUint256(nft.token_id).low.toString(),
+        uint256.bnToUint256(nft.tokenId).low.toString(),
       )), //   tokenId
-      num.hexToDecimalString(uint256.bnToUint256(nft.token_id).high.toString()), //   tokenId
+      num.hexToDecimalString(uint256.bnToUint256(nft.tokenId).high.toString()), //   tokenId
       signature.amount, //   amount
       "8500", // minPercentageToAsk
       "0", // params
       "0", //   makerBid.isOrderAsk
       signature.signer, //   signer
-      signature.contract_address, //   collection
+      signature.nftContract, //   collection
       convertEtherToWei(signature.price.toString()).toString(), //   price
       // signature.buyer_address,
       (typedDataValidate.message["tokenId.low"] = num.hexToDecimalString(
-        uint256.bnToUint256(nft.token_id).low.toString(),
+        uint256.bnToUint256(nft.tokenId).low.toString(),
       )), //   tokenId
-      num.hexToDecimalString(uint256.bnToUint256(nft.token_id).high.toString()), //   tokenId
-      signature.amount_sig, //   amount
+      num.hexToDecimalString(uint256.bnToUint256(nft.tokenId).high.toString()), //   tokenId
+      signature.amountSig, //   amount
       addresses.strategyStandardSaleForFixedPrice.address, //   strategy
       signature.currency, //   currency
       signature.nonce.toString(), //   nonce
       "0", //   startTime
-      signature.sell_end, //   endTime
+      signature.sellEnd, //   endTime
       "8500", //   minPercentageToAsk
       "0", //   params
       handleSignature(signature).length.toString(), //   makerAskSignature_len
@@ -60,19 +61,21 @@ const useAcceptBid = () => {
 
   const onAcceptBid = async (
     signature: ISignature,
-    nft: INft,
+    nft: IStagingNft,
+    buyerAddress: string,
     amount: number,
   ) => {
     if (status == "connected") {
       try {
+       
         const result = await account?.execute([
           {
-            contractAddress: nft.contract_address || "",
+            contractAddress: nft.nftContract || "",
             entrypoint: "setApprovalForAll",
             calldata: [addresses.transferManagerERC721.address, 0x1],
           },
           {
-            contractAddress: nft.contract_address || "",
+            contractAddress: nft.nftContract || "",
             entrypoint: "setApprovalForAll",
             calldata: [addresses.transferManagerERC1155.address, 0x1],
           },
@@ -83,18 +86,22 @@ const useAcceptBid = () => {
               generateBidCalldataSignature(signature, nft, amount) || [],
           },
         ]);
+        
 
         if (result?.transaction_hash) {
           const bodyData = {
-            signature_id: signature._id || "",
-            transaction_hash: result.transaction_hash || "",
+            signatureId: signature._id || "",
+            transactionHash: result.transaction_hash || "",
+            buyerAddress: buyerAddress,
+            amount: amount,
           };
-
           await _putTransaction.mutateAsync(bodyData);
           onShowNotify("Accept bid successfully");
         } else {
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     } else {
     }
   };

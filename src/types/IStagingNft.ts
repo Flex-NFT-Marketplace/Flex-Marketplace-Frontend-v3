@@ -1,4 +1,5 @@
 import { IAttributesCollection } from "./INft";
+import { ISignature } from "./ISignature";
 
   interface NftCollection {
     avatar: string;
@@ -11,7 +12,7 @@ import { IAttributesCollection } from "./INft";
     _id: string;
   }
   
-  interface Owner {
+  export interface IProfileStaging {
     address: string;
     isVerified: string;
     username: string;
@@ -21,6 +22,7 @@ import { IAttributesCollection } from "./INft";
   // Define the main NFT item type.
   export interface IStagingNft {
     amount: number;
+    animationUrl?: string,
     attributes: IAttributesCollection[];
     blockTime: number;
     burnedAt: string | null;
@@ -34,9 +36,21 @@ import { IAttributesCollection } from "./INft";
     name: string;
     nftCollection: NftCollection;
     nftContract: string;
-    owner: Owner;
+    owner: IProfileStaging;
     royaltyRate: number;
     tokenId: string;
     tokenUri: string;
     _id: string;
+    signature4: string,
+    orderData: IOrderData;
+  }
+
+  export interface IStagingNftResponse {
+    nftData: IStagingNft;
+    orderData: IOrderData;
+  }
+  export interface IOrderData {
+    bestAsk: ISignature;
+    listAsk: ISignature[];
+    listBid: ISignature[];
   }

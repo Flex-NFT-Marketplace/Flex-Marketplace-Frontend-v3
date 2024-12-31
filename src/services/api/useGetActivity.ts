@@ -1,19 +1,17 @@
+import { axiosWithoutAccessToken } from "@/axiosConfig/axiosConfig";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 
 export const useGetActivity = () => {
   return useMutation({
     mutationKey: ["getActivity"],
     mutationFn: async (body: { contractAddress: string; tokenId: string }) => {
-      const res = await axios.post(
-        process.env.NEXT_PUBLIC_API_STAGING + `histories`,
-        {
-          nftContract: body.contractAddress,
-          tokenId: body.tokenId,
-          orderBy: "updatedAt",
-          desc: "asc",
-        },
-      );
+      const res = await axiosWithoutAccessToken.post("histories", {
+        page: 1,
+        size: 10,
+        desc: "desc",
+        tokenId: body.tokenId,
+        nftContract: body.contractAddress,
+      })
 
       return res.data.data.items;
     },

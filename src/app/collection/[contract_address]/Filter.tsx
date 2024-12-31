@@ -6,15 +6,19 @@ import {
   SortStatusEnum,
   useCollectionDetailContext,
 } from "@/services/providers/CollectionDetailProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import Traits from "./Traits";
+import { IAttributesCollectionFilter } from "@/types/INft";
+import { useSearchParams } from "next/navigation";
 
 const Filter = () => {
   const [isShowPrice, setIsShowPrice] = useState(true);
-  const [isShowTraits, setIsShowTraits] = useState(false);
+  const [isShowTraits, setIsShowTraits] = useState(true);
 
   const [_minPrice, _setMinPrice] = useState(0);
   const [_maxPrice, _setMaxPrice] = useState(1000);
+  const params = useSearchParams();
 
   const {
     priceSortType,
@@ -23,12 +27,18 @@ const Filter = () => {
     setSortStatus,
     setMinPrice,
     setMaxPrice,
+    collectionAttributes,
+    traitsActive,
+    setTraitsActive,
+    changeTraitsActive,
+    setTraitType,
+    setTraitValue,
   } = useCollectionDetailContext();
 
   const onSortByPrice = () => {
     setMinPrice(_minPrice);
     setMaxPrice(_maxPrice);
-    setSortStatus(SortStatusEnum.LISTED);
+    setSortStatus(SortStatusEnum.LISTING);
   };
 
   const onStatusChange = (status: SortStatusEnum) => {
@@ -42,10 +52,22 @@ const Filter = () => {
     }
   };
 
+  useEffect(() => {
+    const _traitType = params.get("trait_type");
+    const _traitValue = params.get("value");
+    if (_traitType && _traitValue) {
+      setTraitType(_traitType);
+      setTraitValue(_traitValue);
+    }
+  }, []);
+
   return (
-    <div className="sticky top-[52px] flex h-full min-w-[260px] select-none flex-col gap-10 border-stroke py-4 pl-8 pr-4 max-sm:w-[100vw]">
+    <div
+      style={{ maxHeight: "calc(100vh - 116px)" }}
+      className="sticky top-[52px] flex h-full  overflow-auto min-w-[260px] select-none flex-col gap-10 border-stroke py-4 pl-8 pr-4 max-sm:w-[100vw]"
+    >
       <div className="flex flex-col">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 p-2">
           <div>
             <p className="text-xl font-bold">STATUS</p>
           </div>
@@ -61,13 +83,13 @@ const Filter = () => {
           <div className="flex items-center justify-between">
             <p className="font-normal text-grays">Only Listed</p>
             <Checkbox
-              isChecked={sortStatus == SortStatusEnum.LISTED}
-              onChange={() => onStatusChange(SortStatusEnum.LISTED)}
+              isChecked={sortStatus == SortStatusEnum.LISTING}
+              onChange={() => onStatusChange(SortStatusEnum.LISTING)}
             />
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 p-2">
         <div>
           <p className="text-xl font-bold">SORT BY</p>
         </div>
@@ -96,7 +118,7 @@ const Filter = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 p-2">
         <div
           className="flex cursor-pointer items-center justify-between text-xl transition-all"
           onClick={() => setIsShowPrice(!isShowPrice)}
@@ -130,6 +152,46 @@ const Filter = () => {
           </div>
         </div>
       </div>
+      {collectionAttributes.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <div className="flex cursor-pointer items-center justify-between text-xl transition-all p-2">
+            <p className="font-bold">TRAITS</p>
+            <div className="flex items-center gap-2">
+              {traitsActive.length > 0 && (
+                <p
+                  className="text-base hover:text-primary font-bold"
+                  onClick={() => setTraitsActive([])}
+                >
+                  Clear
+                </p>
+              )}
+              {isShowTraits ? (
+                <IoIosArrowUp onClick={() => setIsShowTraits(!isShowTraits)} />
+              ) : (
+                <IoIosArrowDown
+                  onClick={() => setIsShowTraits(!isShowTraits)}
+                />
+              )}
+            </div>
+          </div>
+          <div className={`${!isShowTraits && "hidden"} flex flex-col gap-2`}>
+            {collectionAttributes?.map(
+              (attributes: IAttributesCollectionFilter, index: number) => {
+                return (
+                  attributes.trait_type && (
+                    <Traits
+                      traits={attributes}
+                      key={index}
+                      onChange={changeTraitsActive}
+                      traitsActive={traitsActive}
+                    />
+                  )
+                );
+              }
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

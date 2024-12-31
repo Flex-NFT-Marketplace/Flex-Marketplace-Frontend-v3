@@ -1,10 +1,13 @@
+import { axiosWithAccessToken } from "@/axiosConfig/axiosConfig";
 import { ISignature } from "@/types/ISignature";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 interface BodyProps {
-  signature_id: string;
-  transaction_hash: string;
+  signatureId: string;
+  transactionHash: string;
+  buyerAddress: string,
+  amount: number,
 }
 
 export const useActionBidNft = () => {
@@ -12,10 +15,7 @@ export const useActionBidNft = () => {
     mutationKey: ["PUT_SIGNATURE"],
     mutationFn: async (signature: BodyProps) => {
       try {
-        const { data } = await axios.put(
-          process.env.NEXT_PUBLIC_API_HOST + "signatures/bid",
-          signature,
-        );
+        const { data } = await axiosWithAccessToken.put("signatures/bid", signature)
 
         return data;
       } catch (error) {

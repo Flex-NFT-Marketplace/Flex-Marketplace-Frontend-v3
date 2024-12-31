@@ -14,13 +14,14 @@ import FormatPrice from "../FormatPrice";
 import { IoClose } from "react-icons/io5";
 import Input from "@/packages/@ui-kit/Input";
 import ImageKit from "@/packages/@ui-kit/Image";
+import { IStagingNft } from "@/types/IStagingNft";
 
 dayjs.extend(utc);
 
 interface IBuyPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  nft?: INft;
+  nft?: IStagingNft;
   signature?: ISignature;
   schema?: string;
   onReload: () => void;
@@ -35,7 +36,8 @@ const BuyPopup: React.FC<IBuyPopupProps> = (props) => {
   const onHandleBuy = async () => {
     try {
       if (isError || signature!.amount < amount) return;
-      await onBuy(signature as ISignature, nft as INft, amount);
+
+      await onBuy(signature as ISignature, nft as IStagingNft, amount);
       toggleModal();
       onReload();
     } catch (error) {
@@ -64,7 +66,7 @@ const BuyPopup: React.FC<IBuyPopupProps> = (props) => {
             width={100}
             height={100}
             alt=""
-            src={nft?.image_url}
+            src={nft?.image}
             className="aspect-square w-[75px] rounded-md"
           />
           <div className="flex flex-1 flex-col">
@@ -83,7 +85,7 @@ const BuyPopup: React.FC<IBuyPopupProps> = (props) => {
                 onChange={(e: any) => setAmount(e.target.value)}
               />
               <p className="text-xs text-grays">
-                Available: <span>{signature?.amount_sig}</span>
+                Available: <span>{signature?.amountSig}</span>
               </p>
             </div>
           </div>

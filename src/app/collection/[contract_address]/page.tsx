@@ -4,7 +4,6 @@ import Icon from "@/lib/@core/Icon";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { MdOutlineFormatListBulleted } from "react-icons/md";
 import { TbActivity } from "react-icons/tb";
-import { TbReload } from "react-icons/tb";
 import { FiGrid } from "react-icons/fi";
 import Search from "./Search";
 
@@ -14,25 +13,18 @@ import Profile from "./Profile";
 import Activity from "./Activity";
 import TableList from "./TableList";
 import TableCard from "./TableCard";
-import {
-  CollectionDetailProvider,
-  useCollectionDetailContext,
-} from "@/services/providers/CollectionDetailProvider";
-import Button from "@/lib/@core/Button";
-import { useParams } from "next/navigation";
+import { useCollectionDetailContext } from "@/services/providers/CollectionDetailProvider";
 import useModal from "@/hooks/useModal";
-import ClaimPopup from "@/components/Popup/ClaimPopup";
 import { useLoading } from "@/packages/@ui-kit/Loading/LoadingProvider";
 
 const CollectionPage = () => {
-  const { contract_address } = useParams();
   const [isShowFilter, setIsShowFilter] = useState(true);
   const [isShowActivity, setIsShowActivity] = useState(false);
 
   const [isShowList, setIsShowList] = useState(false);
   const [isShowCard, setIsShowCard] = useState(true);
   const { isOpen: isOpenClaim, toggleModal: toggleModalClaim } = useModal();
-  const { nfts, isFetching, fetchNextPage, hasNextPage } =
+  const { nfts, isFetching, fetchNextPage, hasNextPage, setTraitsActive } =
     useCollectionDetailContext();
   const { setLoading } = useLoading();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,7 +50,7 @@ const CollectionPage = () => {
         }
       }
     },
-    [isFetching, fetchNextPage],
+    [isFetching, fetchNextPage]
   );
 
   useEffect(() => {
@@ -88,7 +80,7 @@ const CollectionPage = () => {
         <div className="relative top-0 z-10">
           <Profile />
 
-          <ClaimPopup isOpen={isOpenClaim} toggleModal={toggleModalClaim} />
+          {/* <ClaimPopup isOpen={isOpenClaim} toggleModal={toggleModalClaim} /> */}
         </div>
         <div
           id="filter-bar"
@@ -104,7 +96,7 @@ const CollectionPage = () => {
           </div>
 
           <div className="flex items-center gap-4 py-2">
-            <Search />
+            {/* <Search /> */}
             <div className="flex items-center gap-0">
               <Icon
                 onClick={() => handleChangeViewList("card")}
@@ -133,7 +125,7 @@ const CollectionPage = () => {
           </div>
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex">
           {isShowFilter && <Filter />}
           {isShowCard && (
             <TableCard

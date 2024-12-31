@@ -3,11 +3,9 @@
 import Button from "@/packages/@ui-kit/Button";
 import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
 import clsx from "clsx";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { FaWallet } from "react-icons/fa";
 import { useStarknetkitConnectModal } from "starknetkit";
-import LogoSVG from "../../../../public/logo-flex.svg";
 import DropdownItem from "@/packages/@ui-kit/Dropdown/DropdownItem";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { MdInventory } from "react-icons/md";
@@ -15,10 +13,9 @@ import {
   MessageTypeEnum,
   useToast,
 } from "@/packages/@ui-kit/Toast/ToastProvider";
-import FormatAddress from "@/components/FormatAddress";
 import { usePathname, useRouter } from "next/navigation";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { strShortPrefixAddress } from "@/utils/string";
+import { strShortAddress } from "@/utils/string";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { deleteCookie } from "@/helpers/cookie";
 import { ACCESS_TOKEN, USER_ADDRESS } from "@/constants/cookies";
@@ -105,13 +102,17 @@ const ConnectWallet = () => {
             onClick={() => setIsShowDropdown(!isShowDropdown)}
           >
             <p className="lowercase">
-              {profileOwner != undefined && profileOwner.name != ""
-                ? profileOwner?.name
-                : strShortPrefixAddress(address as string)}
+              {
+                // profileOwner != undefined && profileOwner.username != ""
+                //   ? profileOwner?.username
+                //   :
+                strShortAddress(address as string)
+              }
             </p>
             {/* <FormatAddress address={address} /> */}
             <ImageKit
-              src={profileOwner?.avatar || profileOwner?.image}
+              // src={profileOwner?.avatar || profileOwner?.image }
+              src={""}
               width={40}
               height={40}
               alt="Flex"
