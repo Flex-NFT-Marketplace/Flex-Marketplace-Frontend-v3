@@ -68,7 +68,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   };
 
   useEffect(() => {
-    if (address) {
+    if (address && nft.owner.address) {
       setIsOwner(
         formattedContractAddress(address) ==
           formattedContractAddress(nft.owner.address)
@@ -238,13 +238,16 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                 )}
 
               {isOwner && CardNFTModeAction.NOT_LISTED == cardMode && (
-                <>
+                <div
+                  className="col-span-2 px-3 pb-2 gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Button
-                    className="col-span-2"
+                    className="w-full"
                     title="Listing"
                     onClick={toggleSellModal}
                   />
-                </>
+                </div>
               )}
               {!isOwner && (
                 <div

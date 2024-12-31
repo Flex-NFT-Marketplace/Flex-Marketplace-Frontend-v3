@@ -82,7 +82,7 @@ const TableList = () => {
                 <p
                   onClick={(e) => {
                     e.stopPropagation();
-                    onNavigateCollection(signature.nft.nftContract);
+                    onNavigateCollection(signature?.nft.nftContract);
                   }}
                   className="ml-4 font-normal text-sm text-grays hover:text-white truncate max-xl:max-w-64 max-sm:max-w-32"
                 >
@@ -101,7 +101,7 @@ const TableList = () => {
               <FormatAddress address={signature?.signer} />
             </div>
             <div className="hidden min-w-[150px] items-center justify-end lg:flex">
-              <FormatAddress address={signature?.buyer_address} />
+              <FormatAddress address={signature?.buyer} />
             </div>
             <div className="flex min-w-[100px] items-center justify-end max-sm:min-w-[75px]">
               <FormatTime2 time={signature?.updatedAt} />

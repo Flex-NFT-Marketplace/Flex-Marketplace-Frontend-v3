@@ -95,7 +95,7 @@ const ListingList = () => {
                 <FormatPrice price={_.price} currency={_.currency} />
               </td>
               <td>{_.amount}</td>
-              <td>{timeElapsedFromTimestamp(_.sell_end)}</td>
+              <td>{timeElapsedFromTimestamp(_.sellEnd)}</td>
               <td>
                 <FormatAddress address={_.signer} />
               </td>

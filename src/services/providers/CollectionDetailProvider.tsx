@@ -18,6 +18,7 @@ import { useGetCollectionEconomic } from "../api/collection/useGetCollectionEcon
 import { useGetCollectionCount } from "../api/collection/useGetNftCount";
 import { IStagingNftResponse } from "@/types/IStagingNft";
 import { useGetAttributesCollection } from "../api/collection/useGetAttributesCollection";
+import { ISignature } from "@/types/ISignature";
 
 interface CollectionDetailContextType {
   collectionCount?: ICollectionCounter;
@@ -58,6 +59,8 @@ interface CollectionDetailContextType {
 
   searchValue: string;
   setSearchValue: (value: string) => void;
+
+  getBestBid: (nft: IStagingNftResponse) => ISignature | undefined;
 }
 
 export const CollectionDetailContext = createContext<
@@ -215,6 +218,15 @@ export const CollectionDetailProvider = ({
     return isKeyFiltered;
   };
 
+  const getBestBid = (nft: IStagingNftResponse): ISignature | undefined => {
+    if (nft.orderData.listBid.length > 0) {
+      return nft.orderData.listBid.reduce((maxBid, currentBid) => {
+        return currentBid.price > maxBid.price ? currentBid : maxBid;
+      }, nft.orderData.listBid[0]);
+    }
+    return undefined;
+  };
+
   useEffect(() => {
     setAttributesFilter(convertAttributeFilter(traitsActive));
   }, [traitsActive]);
@@ -322,6 +334,8 @@ export const CollectionDetailProvider = ({
 
     searchValue,
     setSearchValue,
+
+    getBestBid,
   };
 
   return (

@@ -32,7 +32,7 @@ const Card: React.FC<ICardProps> = forwardRef<HTMLDivElement, ICardProps>(
     return (
       <div
         ref={ref}
-        className={`${className} rotating-card wrap w-[262px] h-[384px] perspective-1000`}
+        className={`${className} rotating-card wrap w-full h-full perspective-1000`}
         onMouseMove={handleMouseMove}
         onMouseOut={handleMouseOut}
         style={{

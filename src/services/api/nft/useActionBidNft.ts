@@ -4,8 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 interface BodyProps {
-  signature_id: string;
-  transaction_hash: string;
+  signatureId: string;
+  transactionHash: string;
+  buyerAddress: string,
+  amount: number,
 }
 
 export const useActionBidNft = () => {

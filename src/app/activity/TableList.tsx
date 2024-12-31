@@ -121,7 +121,7 @@ const TableList = () => {
               <FormatAddress address={_?.signer} />
             </div>
             <div className="flex min-w-[150px] items-center justify-end">
-              <FormatAddress address={_?.buyer_address} />
+              <FormatAddress address={_?.buyer} />
             </div>
             <div className="flex min-w-[150px] items-center justify-end">
               <FormatTime2 time={_?.updatedAt} />

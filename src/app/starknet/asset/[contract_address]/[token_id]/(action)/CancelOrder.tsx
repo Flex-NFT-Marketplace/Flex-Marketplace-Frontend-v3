@@ -49,7 +49,7 @@ const CancelOrder: React.FC<CancelOrderProps> = (props) => {
 
         <div className="flex items-center gap-1 font-normal">
           <p className="uppercase text-grays">Time end:</p>
-          <p>{formatTimestamp(signature?.sell_end)}</p>
+          <p>{formatTimestamp(signature?.sellEnd)}</p>
         </div>
       </div>
       {/* <FormatPrice

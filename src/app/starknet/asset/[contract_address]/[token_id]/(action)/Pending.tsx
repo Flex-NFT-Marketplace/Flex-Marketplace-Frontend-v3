@@ -34,11 +34,11 @@ const Pending: React.FC<PendingProps> = (props) => {
 
         <div className="flex gap-2 underline">
           <a
-            href={`https://voyager.online/tx/${signature.transaction_hash}`}
+            href={`https://voyager.online/tx/${signature.transactionHash}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FormatAddress address={signature.transaction_hash} />
+            <FormatAddress address={signature.transactionHash} />
             <FaRegShareSquare />
           </a>
         </div>

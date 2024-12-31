@@ -70,7 +70,7 @@ const Buy: React.FC<BuyProps> = (props) => {
 
         <div className="flex items-center gap-1 font-normal">
           <p className="pr-2 uppercase text-grays">Time left</p>
-          <p>{timeElapsedFromTimestamp(signature?.sell_end)}</p>
+          <p>{timeElapsedFromTimestamp(signature?.sellEnd)}</p>
         </div>
       </div>
 

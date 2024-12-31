@@ -232,3 +232,9 @@ export const convertIpfsUrl = (imageUrl: string): string => {
   return imageUrl;
 }
 
+export const isDigit = (str: string): boolean => {
+  str = str.trim();
+  const regex = /^-?\d+(\.\d+)?$/;
+
+  return regex.test(str);
+};

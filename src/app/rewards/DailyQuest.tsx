@@ -9,8 +9,7 @@ import FormatAddress from "@/components/FormatAddress";
 import { MdContentCopy } from "react-icons/md";
 
 const DailyQuest = () => {
-  const { profile, setAddress, onUpdateProfile, profileOwner } =
-    useAccountContext();
+  const { profile } = useAccountContext();
   const address = "0x1234567890123456789012345678901234567890"; // mockup
 
   const [copied, setCopied] = useState(false);
@@ -32,15 +31,13 @@ const DailyQuest = () => {
         <p className="text-xl font-bold uppercase">Profile</p>
         <div className="mt-4 flex items-center gap-3">
           <ImageKit
-            src={profile?.avatar || profile?.image || UserImg.src}
+            src={UserImg.src}
             alt=""
             className="h-[52px] w-[52px] rounded-sm"
           />
           <div className="flex flex-col justify-center">
             <p className="text-2xl font-bold">
-              {profile?.name ||
-                profile?.nick_name ||
-                strShortAddress(address as string)}
+              {strShortAddress(address as string)}
             </p>
 
             <div className="flex items-center max-sm:flex-col max-sm:items-start">

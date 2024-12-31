@@ -82,6 +82,7 @@ const Staking = () => {
     let timeStakeds: TimeKeeper[] = [];
 
     const nftsStakedRes = await getStaked(address);
+
     for (let i = 0; i < nftsStakedRes?.length; i++) {
       let res = await _getNftDetail.mutateAsync({
         contract_address: formattedContractAddress(

@@ -36,7 +36,6 @@ const BuyPopup: React.FC<IBuyPopupProps> = (props) => {
   const onHandleBuy = async () => {
     try {
       if (isError || signature!.amount < amount) return;
-      console.log(signature, nft, amount);
 
       await onBuy(signature as ISignature, nft as IStagingNft, amount);
       toggleModal();
@@ -86,7 +85,7 @@ const BuyPopup: React.FC<IBuyPopupProps> = (props) => {
                 onChange={(e: any) => setAmount(e.target.value)}
               />
               <p className="text-xs text-grays">
-                Available: <span>{signature?.amount_sig}</span>
+                Available: <span>{signature?.amountSig}</span>
               </p>
             </div>
           </div>
