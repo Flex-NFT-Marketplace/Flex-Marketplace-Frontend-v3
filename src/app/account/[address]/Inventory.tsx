@@ -50,6 +50,7 @@ const Inventory = () => {
             nft={nft.nftData}
             onReload={() => {}}
             bestAsk={nft?.orderData?.bestAsk}
+            collection={nft?.nftData.nftCollection}
           />
         ))}
       </div>

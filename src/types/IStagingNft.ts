@@ -1,7 +1,7 @@
 import { IAttributesCollection } from "./INft";
 import { ISignature } from "./ISignature";
 
-  interface NftCollection {
+ export interface NftCollection {
     avatar: string;
     description: string;
     key: string;
