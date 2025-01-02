@@ -72,7 +72,6 @@ const NftProvider = ({ children }: { children: React.ReactNode }) => {
   const getCollection = async () => {
     if (!contract_address) return;
     const res = await _getCollection.mutateAsync(contract_address as string);
-
     setCollection(res);
   };
 

@@ -99,6 +99,7 @@ const useBidActionNft = () => {
           transactionHash: "",
           transactionStatus: "",
           sellEnd: timeEnd,
+          sell_end: timeEnd,
           buyerAddress: owner_address,
           nft: {} as any,
           signer: address as string,

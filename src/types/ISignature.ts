@@ -33,7 +33,7 @@ export interface ISignature {
   transactionHash: string;
   transactionStatus: string;
   sellEnd: number;
-  sell_end?: number;
+  sell_end: number;
   signer: string;
   buyer?: string;
   nft: IStagingNft;
