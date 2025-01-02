@@ -257,6 +257,7 @@ const useListActionNft = (): BuyActionNftType => {
         transactionHash: "",
         transactionStatus: "",
         sellEnd: timeEnd,
+        sell_end: timeEnd,
         signer: address as string,
         buyerAddress: "",
         nft: {} as any,
