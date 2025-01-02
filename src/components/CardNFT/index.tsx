@@ -225,7 +225,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                 CardNFTModeAction.LISTING == cardMode && (
                   <>
                     <Button
-                      className="col-span-2"
+                      className="col-span-2 !h-7"
                       title="Cancel Order"
                       onClick={async () => {
                         // await onCancelOrder(bestAsk?._id as string);
@@ -243,7 +243,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Button
-                    className="w-full"
+                    className="w-full !h-7"
                     title="Listing"
                     onClick={toggleSellModal}
                   />
@@ -258,7 +258,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                     <>
                       <Button
                         title="Buy"
-                        className="w-full"
+                        className="w-full !h-7"
                         onClick={() => {
                           toggleBuyModal();
                         }}
@@ -267,7 +267,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
                   )}
                   <Button
                     title="Bid"
-                    className="w-full"
+                    className="w-full !h-7"
                     variant="secondary"
                     onClick={() => {
                       toggleBidModal();
@@ -278,7 +278,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
 
               {CardNFTModeAction.PENDING == cardMode && (
                 <>
-                  <Button title="Pending" className="col-span-2" />
+                  <Button title="Pending" className="col-span-2 !h-7" />
                 </>
               )}
             </div>
