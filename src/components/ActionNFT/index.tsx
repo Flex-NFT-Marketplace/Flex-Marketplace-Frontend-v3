@@ -26,9 +26,10 @@ type SignStatus =
   | SignStatusEnum.REVERTED
   | SignStatusEnum.BIDDING;
 
-
-  
-const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ status, isShowStatus = true }) => {
+const ActionNFT: React.FC<{ status?: SignStatus; isShowStatus?: boolean }> = ({
+  status,
+  isShowStatus = true,
+}) => {
   const classes = clsx(
     "font-normal uppercase",
     { "text-[#FF9F0A]": status === SignStatusEnum.BID },
@@ -39,18 +40,16 @@ const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ 
     { "text-primary": status === SignStatusEnum.ORDER_CANCEL },
     { "text-red-500": status === SignStatusEnum.REVERTED },
     { "text-primary": status === SignStatusEnum.BIDDING },
-    { "max-md:hidden": !isShowStatus },
+    { "max-md:hidden": !isShowStatus }
   );
-  
+
   const RenderStatus = () => {
     switch (status) {
       case SignStatusEnum.BID: {
         return (
           <div className="flex gap-2">
-            <ImageKit src={BIDSVG} alt="" width={20} />
-            <p className={classes}>
-              {SignStatusEnum.BID}
-            </p>
+            <ImageKit src={BIDSVG} alt="" width={20} height={20} />
+            <p className={classes}>{SignStatusEnum.BID}</p>
           </div>
         );
       }
@@ -58,10 +57,8 @@ const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ 
       case SignStatusEnum.LISTING: {
         return (
           <div className="flex gap-2">
-            <ImageKit src={ListSVG} alt="" width={20} />
-            <p className={classes}>
-              {SignStatusEnum.LISTING}
-            </p>
+            <ImageKit src={ListSVG} alt="" width={20} height={20} />
+            <p className={classes}>{SignStatusEnum.LISTING}</p>
           </div>
         );
       }
@@ -69,10 +66,8 @@ const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ 
       case SignStatusEnum.BUYING: {
         return (
           <div className="flex gap-2">
-            <ImageKit src={ListSVG} alt="" width={20} />
-            <p className={classes}>
-              {SignStatusEnum.BUYING}
-            </p>
+            <ImageKit src={ListSVG} alt="" width={20} height={20} />
+            <p className={classes}>{SignStatusEnum.BUYING}</p>
           </div>
         );
       }
@@ -80,10 +75,8 @@ const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ 
       case SignStatusEnum.BIDDING: {
         return (
           <div className="flex gap-2">
-            <ImageKit src={ListSVG} alt="" width={20} />
-            <p className={classes}>
-              {SignStatusEnum.BIDDING}
-            </p>
+            <ImageKit src={ListSVG} alt="" width={20} height={20} />
+            <p className={classes}>{SignStatusEnum.BIDDING}</p>
           </div>
         );
       }
@@ -91,7 +84,7 @@ const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ 
       case SignStatusEnum.ORDER_CANCEL: {
         return (
           <div className="flex gap-2">
-            <ImageKit src={ORDERCANCELSVG} alt="" width={20} />
+            <ImageKit src={ORDERCANCELSVG} alt="" width={20} height={20} />
             <p className={classes}>CANCEL</p>
           </div>
         );
@@ -100,17 +93,15 @@ const ActionNFT: React.FC<{ status?: SignStatus, isShowStatus?: boolean }> = ({ 
       case SignStatusEnum.SOLD: {
         return (
           <div className="flex gap-2">
-            <ImageKit src={SOLDSVG} alt="" width={20} />
-            <p className={classes}>
-              {SignStatusEnum.SOLD}
-            </p>
+            <ImageKit src={SOLDSVG} alt="" width={20} height={20} />
+            <p className={classes}>{SignStatusEnum.SOLD}</p>
           </div>
         );
       }
       default:
         return (
           <div className="flex gap-2">
-            <ImageKit src={ORDERCANCELSVG} alt="" width={20} />
+            <ImageKit src={ORDERCANCELSVG} alt="" width={20} height={20} />
             <p className={classes}>CANCEL</p>
           </div>
         );

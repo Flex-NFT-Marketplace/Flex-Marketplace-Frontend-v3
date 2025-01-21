@@ -34,7 +34,7 @@ const Profile = () => {
         >
           <ImageKit
             src={
-              nftStaging?.nftCollection.avatar ||
+              nftStaging?.nftCollection.image_url ||
               "https://via.placeholder.com/272"
             }
             alt=""

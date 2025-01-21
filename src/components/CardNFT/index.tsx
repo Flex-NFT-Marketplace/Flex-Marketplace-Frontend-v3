@@ -68,6 +68,12 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   };
 
   useEffect(() => {
+    if (address) {
+      console.log(collection);
+      console.log(bestAsk?.signer, formattedContractAddress(address), cardMode);
+    }
+  }, [address, bestAsk?.signer, cardMode]);
+  useEffect(() => {
     if (address && nft.owner.address) {
       setIsOwner(
         formattedContractAddress(address) ==
@@ -221,7 +227,8 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
         {isHover && (
           <div className="absolute bottom-0 left-0 right-0 grid place-items-center">
             <div className="grid w-full grid-cols-2 gap-2">
-              {bestAsk?.signer == address &&
+              {address &&
+                bestAsk?.signer == formattedContractAddress(address) &&
                 CardNFTModeAction.LISTING == cardMode && (
                   <>
                     <Button
