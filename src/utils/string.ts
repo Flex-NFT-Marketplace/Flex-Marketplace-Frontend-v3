@@ -51,7 +51,7 @@ export const convertEtherToWei = (ether: string | number) => {
   if (typeof ether === "string" && /e/i.test(ether)) {
     const [coeff, exp] = ether.split("e").map(Number);
     const wei = BigNumber.from(coeff.toFixed(18)).mul(
-      BigNumber.from(10).pow(exp + 18),
+      BigNumber.from(10).pow(exp + 18)
     );
     return wei.toString();
   }
@@ -156,7 +156,7 @@ export function timeElapsedFromTimestamp(timestamp: number): string {
 
 export function calculatePointsStaking(
   pastDate: string,
-  pointsPerHour: number,
+  pointsPerHour: number
 ): string | number {
   if (!pastDate) {
     return "-";
@@ -177,7 +177,8 @@ export function calculatePointsStaking(
   return Math.floor(hours * pointsPerHour);
 }
 
-export const formattedContractAddress = (contractAddress: string) => {
+export const formattedContractAddress = (contractAddress: string | undefined) => {
+  if (!contractAddress || contractAddress == '') return "";
   while (contractAddress.trim().length < 66) {
     contractAddress = contractAddress.trim().replace("0x", "0x0");
   }
@@ -224,13 +225,13 @@ export const getShortTraits = (trait_value: string, maxLength: number) => {
 export const ipfsPrefix = "ipfs://";
 
 export const convertIpfsUrl = (imageUrl: string): string => {
-  const httpPrefix = 'https://ipfs.io/ipfs/';
+  const httpPrefix = "https://ipfs.io/ipfs/";
 
   if (imageUrl.startsWith(ipfsPrefix)) {
-      return httpPrefix + imageUrl.slice(ipfsPrefix.length);
+    return httpPrefix + imageUrl.slice(ipfsPrefix.length);
   }
   return imageUrl;
-}
+};
 
 export const isDigit = (str: string): boolean => {
   str = str.trim();

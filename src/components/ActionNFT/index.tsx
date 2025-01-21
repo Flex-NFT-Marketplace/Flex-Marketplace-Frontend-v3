@@ -36,9 +36,9 @@ const ActionNFT: React.FC<{ status?: SignStatus; isShowStatus?: boolean }> = ({
     { "text-[#63B1FF]": status === SignStatusEnum.LISTING },
     { "text-[#63B1FF]": status === SignStatusEnum.BUYING },
     { "text-sell": status === SignStatusEnum.CANCEL },
-    { "text-green-500": status === SignStatusEnum.SOLD },
+    { "text-green": status === SignStatusEnum.SOLD },
     { "text-primary": status === SignStatusEnum.ORDER_CANCEL },
-    { "text-red-500": status === SignStatusEnum.REVERTED },
+    { "text-red": status === SignStatusEnum.REVERTED },
     { "text-primary": status === SignStatusEnum.BIDDING },
     { "max-md:hidden": !isShowStatus }
   );

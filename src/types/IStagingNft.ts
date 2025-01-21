@@ -2,7 +2,7 @@ import { ICollection } from "./ICollection";
 import { IAttributesCollection, INftCollection } from "./INft";
 import { ISignature } from "./ISignature";
 
-  interface NftCollection {
+ export interface NftCollection {
     avatar: string;
     description: string;
     key: string;
@@ -35,7 +35,7 @@ import { ISignature } from "./ISignature";
     isBurned: boolean;
     marketType: string;
     name: string;
-    nftCollection: ICollection;
+    nftCollection: NftCollection;
     nftContract: string;
     owner: IProfileStaging;
     royaltyRate: number;
