@@ -33,10 +33,13 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
   //   const { account } = useAccount();
   //   const { onShowToast } = useToast();
   const listSrc = [atemu_1, atemu_2, atemu_3, atemu_4, atemu_5];
+  const [clickedCards, setClickedCards] = useState<boolean[]>(
+    Array(listSrc.length).fill(false)
+  );
 
   const { isOpen, toggleModal } = props;
   const [count, setCount] = useState(1);
-  let unPackCount = 0;
+  const [unPackCount, setUnPackCount] = useState(0);
   const countRef = useRef(count);
 
   const handleIncrement = () => {
@@ -49,15 +52,24 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
     }
   };
   const handleCardClick = (index: number) => {
-    unPackCount += 1;
-    if (unPackCount >= 5) {
+    if (clickedCards[index]) return;
+    setClickedCards((prev) => {
+      const newState = [...prev];
+      newState[index] = true;
+      return newState;
+    });
+    setUnPackCount((prev) => prev + 1);
+    if (unPackCount >= listSrc.length - 1) {
       buttonClaim.current && buttonClaim.current.classList.remove("hidden");
     }
     gsap.to(cardRefs.current[index].querySelector(".rotating-card-inner"), {
-      rotateY: 180, // Nếu đang lật thì 180, không thì 0
+      rotateY: 180,
       duration: 1,
       ease: "power1.inOut",
     });
+  };
+  const resetCards = () => {
+    setClickedCards(Array(listSrc.length).fill(false));
   };
 
   const buy = async () => {
@@ -160,7 +172,7 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
   return (
     <>
       <Modal isShow={isOpen} hide={toggleModal}>
-        <div className="flex flex-col bg-black bg-opacity-85 gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center justify-center flex-col">
             <p className="text-2xl uppercase font-bold">buy pack</p>
             <p className="text-gray text-base leading-5">
@@ -196,7 +208,7 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
           <div className="flex items-center justify-between">
             <p className="text-bold mb-1 font-bold">Quantity</p>
             <div className="flex flex-col items-end justify-end gap-1">
-              <div className="flex items-center border px-3 py-[2px] border-border gap-[88px]">
+              <div className="flex items-center border px-3 py-[2px] border-border gap-[50px]">
                 <Button
                   className="w-fit h-fit !p-1"
                   variant="icon"
@@ -265,7 +277,6 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
               }
             }}
             onClick={() => handleCardClick(index)} // Click để lật từng lá bài
-            id={`hehe` + index}
             className={`absolute opacity-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
           >
             <Card imageSrc={_.src} />
@@ -282,7 +293,10 @@ const BuyPackPopup: React.FC<IBuyPackPopupProps> = (props) => {
           <Button
             title="Claim"
             className="!w-[150px]"
-            onClick={() => claimSuccess()}
+            onClick={() => {
+              claimSuccess();
+              resetCards();
+            }}
           />
         </div>
       </div>
