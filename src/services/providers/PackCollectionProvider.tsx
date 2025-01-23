@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
 import { useParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
@@ -19,8 +25,10 @@ import { useGetCollectionCount } from "../api/collection/useGetNftCount";
 import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
 import { useGetAttributesCollection } from "../api/collection/useGetAttributesCollection";
 import { ISignature } from "@/types/ISignature";
+import { useGetPackOfOwner } from "../api/nft/useGetPackOfOwner";
+import { useAccount } from "@starknet-react/core";
 
-interface CollectionDetailContextType {
+interface PackCollectionContextType {
   collectionCount?: ICollectionCounter;
   collectionEconomic?: ICollectionEconomic;
   collection?: IStagingCollection;
@@ -63,10 +71,14 @@ interface CollectionDetailContextType {
   getBestBid: (nft: IStagingNftResponse) => ISignature | undefined;
 
   atemuPacks: IStagingNftResponse[];
+  isMarket: boolean;
+  setIsMarket: (isMarket: boolean) => void;
+
+  packOfOwner: IStagingNftResponse[];
 }
 
-export const CollectionDetailContext = createContext<
-  CollectionDetailContextType | undefined
+export const PackCollectionContext = createContext<
+  PackCollectionContextType | undefined
 >(undefined);
 
 export enum PriceSortEnum {
@@ -87,14 +99,15 @@ export enum SortStatusEnum {
 
 export type SortStatusType = SortStatusEnum.ALL | SortStatusEnum.LISTING;
 
-export const CollectionDetailProvider = ({
+export const PackCollectionProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
   const queryClient = useQueryClient();
 
-  const { contract_address } = useParams();
+  //   const { contract_address } = useParams();
+  const contract_address = process.env.NEXT_PUBLIC_ATEMU_CONTRACT as string;
   const [collection, setCollection] = useState<IStagingCollection>();
   const [collectionEconomic, setCollectionEconomic] =
     useState<ICollectionEconomic>();
@@ -123,6 +136,8 @@ export const CollectionDetailProvider = ({
   const [traitsActive, setTraitsActive] = useState<IAttributesCollection[]>([]);
   const [traitType, setTraitType] = useState("");
   const [traitValue, setTraitValue] = useState("");
+  const [isMarket, setIsMarket] = useState<boolean>(true);
+  const [packOfOwner, setPackOfOwner] = useState<IStagingNftResponse[]>([]);
 
   useEffect(() => {
     if (contract_address) {
@@ -139,6 +154,8 @@ export const CollectionDetailProvider = ({
   const _getCollectionAttributes = useGetAttributesCollection(
     contract_address as string
   );
+  const _getPackOfOwner = useGetPackOfOwner();
+  const { address } = useAccount();
 
   const {
     data: nftsRes,
@@ -169,6 +186,18 @@ export const CollectionDetailProvider = ({
 
     setNfts(nftsArr);
   }, [nftsRes]);
+
+  const getPackOfOwner = async (
+    contract_address: string,
+    ownerAddress: string
+  ) => {
+    const res = await _getPackOfOwner.mutateAsync({
+      contract_address,
+      ownerAddress,
+    });
+    console.log(res.items);
+    setPackOfOwner(res.items);
+  };
 
   const getCollectionData = async (contract_address: string) => {
     const res = await _getCollectionDetail.mutateAsync(contract_address);
@@ -306,6 +335,15 @@ export const CollectionDetailProvider = ({
   // ]
 
   useEffect(() => {
+    if (address) {
+      getPackOfOwner(
+        process.env.NEXT_PUBLIC_ATEMU_CONTRACT as string,
+        address as string
+      );
+    }
+  }, [address]);
+
+  useEffect(() => {
     setTraitsActive([]);
     if (traitType && value) {
       setTraitsActive([{ trait_type: traitType, value: traitValue as string }]);
@@ -355,17 +393,22 @@ export const CollectionDetailProvider = ({
     getBestBid,
 
     atemuPacks,
+
+    isMarket,
+    setIsMarket,
+
+    packOfOwner,
   };
 
   return (
-    <CollectionDetailContext.Provider value={value}>
+    <PackCollectionContext.Provider value={value}>
       {children}
-    </CollectionDetailContext.Provider>
+    </PackCollectionContext.Provider>
   );
 };
 
-export const useCollectionDetailContext = () => {
-  const context = useContext(CollectionDetailContext);
+export const usePackCollectionContext = () => {
+  const context = useContext(PackCollectionContext);
   if (!context) {
     throw new Error(
       "useCollectionContext must be used within a CollectionProvider"

@@ -17,7 +17,10 @@ import ImageKit from "@/packages/@ui-kit/Image";
 import { IStagingNft } from "@/types/IStagingNft";
 import Button from "@/packages/@ui-kit/Button";
 import { formattedContractAddress } from "@/utils/string";
-import BuyPackPopup from "@/app/social/on-chain/pack-detail/BuyPackPopup";
+import UnpackPopup from "@/app/pack-collection/UnpackPopup";
+import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
+import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+
 enum PackCardStatus {
   COMMON = "COMMON",
   CHAOTIC = "CHAOTIC",
@@ -25,29 +28,53 @@ enum PackCardStatus {
   MYTHICAL = "MYTHICAL",
   LEGENDARY = "LEGENDARY",
 }
-interface PackCardProps {}
+interface PackCardProps {
+  canOpen?: boolean;
+}
 
 const PackCard: React.FC<PackCardProps> = (props) => {
-  const {} = props;
+  const { canOpen = false } = props;
 
   const { isOpen, toggleModal } = useModal();
   const [isHover, setIsHover] = useState(false);
   const [status, setStatus] = useState(PackCardStatus.COMMON);
+  const { packOfOwner } = usePackCollectionContext();
+  const { onShowToast } = useToast();
   const baseClasses =
-    " border cursor-pointer border-stroke hover:border-white select-none rounded relative flex flex-col transition-all duration-100 ease-in-out group";
-
+    " border border-stroke hover:border-white select-none rounded relative flex flex-col transition-all duration-100 ease-in-out group";
+  const [packOpening, setPackOpening] = useState<IStagingNft | null>(null);
   const classes = clsx(baseClasses);
+
+  const toggleOpenPack = () => {
+    // if (packOfOwner.length > 0) {
+    //   setPackOpening(packOfOwner[0].nftData);
+    //   toggleModal();
+    // } else {
+    //   onShowToast("You don't have any packs");
+    // }
+
+    // setPackOpening(packOfOwner[0].nftData);
+    toggleModal();
+  };
 
   return (
     <>
-      <BuyPackPopup isOpen={isOpen} toggleModal={toggleModal} />
+      <UnpackPopup
+        packOpening={packOpening}
+        isOpen={isOpen}
+        toggleModal={toggleModal}
+      />
       <div
         className={classes}
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        onClick={toggleModal}
+        onClick={() => {
+          canOpen && toggleOpenPack();
+        }}
       >
-        <div className="cursor-pointer relative h-[70%]  min-w-[200px]">
+        <div
+          className={`relative h-[70%]  min-w-[200px] ${canOpen && "cursor-pointer"}`}
+        >
           <div className=" overflow-hidden aspect-square rounded w-full h-full">
             <ImageKit
               src={"/images/launchpad-bg.png"}
@@ -62,10 +89,15 @@ const PackCard: React.FC<PackCardProps> = (props) => {
           </div>
         </div>
         <div className="relative flex flex-col gap-1 px-3 py-2 flex-1 ">
-          <div className="cursor-pointer">
+          <div>
             <p className="line-clamp-1 truncate text-lg font-normal">
-              {"Pack name"}
+              {"ATEMU PACK"}
             </p>
+            {packOfOwner.length > 0 && (
+              <p className="line-clamp-1 truncate text-sm font-normal">
+                x{packOfOwner.length}
+              </p>
+            )}
             <div className="h-7">
               <FormatPriceWithIcon
                 price={0}

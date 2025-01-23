@@ -14,15 +14,22 @@ import { SiFarcaster } from "react-icons/si";
 import CardNFT from "@/components/CardNFT";
 import useModal from "@/hooks/useModal";
 import { useState } from "react";
-import BuyPackPopup from "./BuyPackPopup";
+import UnpackPopup from "../UnpackPopup";
 import PackCard from "@/components/AtemuCard/PackCard";
 import Activity from "@/app/(home)/Activity";
+import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
+import { useAccount } from "@starknet-react/core";
+import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import launchpadBg1 from "@/assets/launchpad-bg1.png";
 
 const PackDetail = () => {
   const recentActivities = ["All", "Sales", "Bids", "listings", "Opens"];
   const [activeActivity, setActiveActivity] = useState<string>("All");
   const { isOpen, toggleModal } = useModal();
-  const [isMarket, setIsMarket] = useState<boolean>(true);
+  const { collection, isMarket, setIsMarket, packOfOwner } =
+    usePackCollectionContext();
+  const { address } = useAccount();
+  const { onShowToast } = useToast();
 
   const nftMockup: any = {
     amount: 1,
@@ -86,61 +93,81 @@ const PackDetail = () => {
               <div className="absolute bottom-6 w-full">
                 <div className=" max-w-[1440px] max-sm:px-4 px-8 mx-auto w-full flex flex-col gap-2">
                   <ImageKit
-                    src={avt.src}
+                    src={collection?.avatar}
                     width={72}
                     className="aspect-square rounded-sm"
                     alt=""
                   />
-                  <div className="flex flex-col gap-2">
-                    <div className="flex gap-2 text-[24px] items-center">
-                      <div className="flex gap-1 items-center">
-                        <p className="font-bold  leading-7 uppercase">Atemu</p>
-                        <TbRosetteDiscountCheckFilled className="text-[#63B1FF] " />
-                      </div>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <rect
-                          x="3"
-                          y="3"
-                          width="18"
-                          height="18"
-                          rx="9"
-                          fill="#1F2937"
-                        />
-                        <path
-                          d="M11 7H13V9H11V7ZM11 11H13V17H11V11ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
-                          fill="#1F2937"
-                        />
-                        <rect x="11" y="11" width="2" height="6" fill="white" />
-                        <rect x="11" y="7" width="2" height="2" fill="white" />
-                      </svg>
-                    </div>
-                    <p className="text-base leading-5 max-w-[537px]">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                  </div>
+
                   <div className="flex justify-between">
-                    <div className="flex gap-3 text-gray text-base items-center">
+                    {/* <div className="flex gap-3 text-gray text-base items-center">
                       <TbWorld />
                       <FaTelegram />
                       <FaSquareXTwitter />
                       <SiFarcaster />
                       <IoLogoDiscord />
+                    </div> */}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex gap-2 text-[24px] items-center">
+                        <div className="flex gap-1 items-center">
+                          <p className="font-bold  leading-7 uppercase">
+                            Atemu
+                          </p>
+                          <TbRosetteDiscountCheckFilled className="text-[#63B1FF] " />
+                        </div>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="9"
+                            fill="#1F2937"
+                          />
+                          <path
+                            d="M11 7H13V9H11V7ZM11 11H13V17H11V11ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
+                            fill="#1F2937"
+                          />
+                          <rect
+                            x="11"
+                            y="11"
+                            width="2"
+                            height="6"
+                            fill="white"
+                          />
+                          <rect
+                            x="11"
+                            y="7"
+                            width="2"
+                            height="2"
+                            fill="white"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-base leading-5 max-w-[537px]">
+                        {collection?.description}
+                      </p>
                     </div>
-                    <div className="flex gap-2 font-bold text-base leading-5">
+                    <div className="flex gap-2 font-bold text-base leading-5 items-center">
                       <p className={`${isMarket ? "text-white" : "text-gray"}`}>
                         Market
                       </p>
                       <label className="inline-flex items-center cursor-pointer">
                         <input
-                          onChange={() => setIsMarket(!isMarket)}
+                          onChange={() => {
+                            if (!address) {
+                              onShowToast("Please connect your wallet");
+                              return;
+                            }
+
+                            setIsMarket(!isMarket);
+                          }}
                           type="checkbox"
                           value=""
                           className="sr-only peer"
@@ -181,18 +208,18 @@ const PackDetail = () => {
           <div className="max-sm:px-4 mt-9 mb-[72px] px-8 max-w-[1440px] mx-auto w-full flex flex-col gap-[84px] max-md:gap-[40px] max-md:mb-[112px]">
             <div className="flex flex-col gap-8 w-full">
               <div className="flex flex-col max-w-[537px] w-full">
-                <div className=" text-[#30D158] border border-[#30D158] bg-[#30D158]/15 font-bold text-[14px] leading-5 rounded-sm h-fit uppercase py-[2px] px-2 w-fit text-center">
+                {/* <div className=" text-[#30D158] border border-[#30D158] bg-[#30D158]/15 font-bold text-[14px] leading-5 rounded-sm h-fit uppercase py-[2px] px-2 w-fit text-center">
                   common
-                </div>
+                </div> */}
                 <p className="mt-1 w-fit mb-3 font-bold text-[32px] leading-9 uppercase">
-                  Pack name
+                  PACK COLLECTION
                 </p>
-                <p className="text-base leading-5">
+                {/* <p className="text-base leading-5">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
+                </p> */}
               </div>
-              <div className="flex gap-5 items-center max-lg:flex-col lg:h-[384px]">
+              {/* <div className="flex gap-5 items-center max-lg:flex-col lg:h-[384px]">
                 <div className="max-w-full lg:max-w-[50%] h-full lg:hidden">
                   <ImageKit
                     src="/images/launchpad-bg1.png"
@@ -208,10 +235,23 @@ const PackDetail = () => {
 
                 <div className="flex overflow-auto max-lg:w-full gap-4 h-full flex-1">
                   {Array.from({ length: 5 }).map((_, index) => {
-                    return <PackCard />;
+                 return  <PackCard />;
                   })}
                 </div>
+              </div> */}
+
+              <div className="flex gap-5 items-center max-lg:flex-col lg:h-[384px]">
+                <div className="max-w-full lg:max-w-[50%] h-full">
+                  <ImageKit src={launchpadBg1.src} className="h-full" />
+                </div>
+                <div className="flex overflow-auto gap-4 h-full flex-1 max-lg:w-full">
+                  <PackCard canOpen={!isMarket} />
+                  {/* <PackCard />
+                <PackCard />
+                <PackCard /> */}
+                </div>
               </div>
+
               {/* <div className="flex w-full gap-5 max-md:flex-col">
                 <div className="relative h-fit">
                   <ImageKit

@@ -68,7 +68,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   };
 
   useEffect(() => {
-    if (formattedContractAddress(address) && nft.owner.address) {
+    if (address && nft?.owner?.address) {
       setIsOwner(
         formattedContractAddress(address) ==
           formattedContractAddress(nft.owner.address)

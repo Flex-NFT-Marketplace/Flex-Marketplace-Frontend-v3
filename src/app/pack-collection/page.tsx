@@ -17,6 +17,10 @@ import PackCard from "@/components/AtemuCard/PackCard";
 import Spinner from "./Spinner";
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "@starknet-react/core";
+import { strShortAddress } from "@/utils/string";
+import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
+import Activity from "../(home)/Activity";
+import launchpadBg1 from "@/assets/launchpad-bg1.png";
 
 const OnChain = () => {
   const router = useRouter();
@@ -24,6 +28,10 @@ const OnChain = () => {
   const [copied, setCopied] = useState(false);
   const spinContainer = useRef<HTMLDivElement>(null);
   const [heightSpin, setHeightSpin] = useState(0);
+
+  const { atemuPacks, collection, collectionEconomic, collectionCount } =
+    usePackCollectionContext();
+
   const nftMockup: any = {
     amount: 1,
     attributes: [],
@@ -110,7 +118,7 @@ const OnChain = () => {
             <div className="absolute bottom-6 w-full">
               <div className=" max-w-[1440px] max-sm:px-4 px-8 mx-auto w-full flex flex-col gap-2">
                 <ImageKit
-                  src={avt.src}
+                  src={collection?.avatar}
                   width={72}
                   className="aspect-square rounded-sm"
                   alt=""
@@ -145,45 +153,43 @@ const OnChain = () => {
                     </svg>
                   </div>
                   <p className="text-base leading-5 max-w-[537px]">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    {collection?.description}
                   </p>
                 </div>
-                <div className="flex gap-3 text-gray text-base items-center">
+                {/* <div className="flex gap-3 text-gray text-base items-center">
                   <TbWorld />
                   <FaTelegram />
                   <FaSquareXTwitter />
                   <SiFarcaster />
                   <IoLogoDiscord />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
         </div>
-        <Spinner />
+        {/* <Spinner /> */}
 
         <div className="max-sm:px-4 mt-9 mb-[72px] px-8 max-w-[1440px] mx-auto w-full flex flex-col gap-[84px] max-md:gap-[40px] max-md:mb-[112px]">
           <div className="flex flex-col gap-8 w-full">
             <div className="w-full flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
               <div className="flex gap-3">
-                <div className="border p-1 h-fit border-border rounded-sm  max-sm:hidden">
+                {/* <div className="border p-1 h-fit border-border rounded-sm  max-sm:hidden">
                   <ImageKit
-                    src={avt.src}
+                    src={collection?.avatar}
                     className="rounded-sm w-11 aspect-square"
                     alt=""
                   />
-                </div>
+                </div> */}
                 <div className="flex flex-col gap-1">
                   <div className="flex gap-2 items-center">
                     <div className="flex gap-2 text-[24px] items-center">
                       <div className="flex gap-1 items-center">
                         <p className="font-bold uppercase leading-7">
-                          Atemu pack: pack 24
+                          {"PACK COLLECTION"}
                         </p>
-                        <TbRosetteDiscountCheckFilled className="text-[#63B1FF] " />
+                        {/* <TbRosetteDiscountCheckFilled className="text-[#63B1FF] " /> */}
                       </div>
-                      <svg
+                      {/* <svg
                         width="24"
                         height="24"
                         viewBox="0 0 24 24"
@@ -204,15 +210,19 @@ const OnChain = () => {
                         />
                         <rect x="11" y="11" width="2" height="6" fill="white" />
                         <rect x="11" y="7" width="2" height="2" fill="white" />
-                      </svg>
+                      </svg> */}
                     </div>
-                    <div className="text-green text-[10px] leading-4 bg-green/15 rounded-sm border border-green py-[2px] px-2 ">
+                    {/* <div className="text-green text-[10px] leading-4 bg-green/15 rounded-sm border border-green py-[2px] px-2 ">
                       On sale
-                    </div>
+                    </div> */}
                   </div>
-                  <div className="divide-gray flex items-center gap-4 divide-x max-sm:flex-col max-sm:items-start max-sm:divide-none max-sm:gap-1">
+                  {/* <div className="divide-gray flex items-center gap-4 divide-x max-sm:flex-col max-sm:items-start max-sm:divide-none max-sm:gap-1">
                     <div className="flex items-center gap-2">
-                      <p className="">0x00dCE...DCGH</p>
+                      <p className="">
+                        {strShortAddress(
+                          "0x00ac5b04b5a7334bba980e9d3e37c25fcfcde035a18355fe4fd37666ff93106f"
+                        )}
+                      </p>
                       <div className="flex gap-1">
                         <MdContentCopy
                           className=" cursor-pointer text-base leading-4 text-grays"
@@ -228,23 +238,23 @@ const OnChain = () => {
                       </div>
                       <div className="flex items-center gap-2 pl-4 font-bold leading-4 max-sm:p-0">
                         <p className=" text-gray">Owners</p>
-                        <p className="text-white">19.9k</p>
+                        <p className="text-white">{collectionCount?.owners}</p>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <Button onClick={() => onNavigateDetail()}>See all</Button>
             </div>
             <div className="flex gap-5 items-center max-lg:flex-col lg:h-[384px]">
               <div className="max-w-full lg:max-w-[50%] h-full">
-                <ImageKit src="/images/launchpad-bg1.png" className="h-full" />
+                <ImageKit src={launchpadBg1.src} className="h-full" />
               </div>
               <div className="flex overflow-auto gap-4 h-full flex-1 max-lg:w-full">
                 <PackCard />
+                {/* <PackCard />
                 <PackCard />
-                <PackCard />
-                <PackCard />
+                <PackCard /> */}
               </div>
             </div>
             {/* <div className="flex w-full gap-5 max-md:flex-col">
@@ -283,7 +293,7 @@ const OnChain = () => {
                 <div className="flex gap-3">
                   <div className="border p-1 h-fit border-border rounded-sm  max-sm:hidden">
                     <ImageKit
-                      src={avt.src}
+                      src={collection?.avatar}
                       className="rounded-sm w-11 aspect-square"
                       alt=""
                     />
@@ -293,11 +303,11 @@ const OnChain = () => {
                       <div className="flex gap-2 text-[24px] items-center">
                         <div className="flex gap-1 items-center">
                           <p className="font-bold uppercase leading-7">
-                            Atemu pack: pack 24
+                            {collection?.name}
                           </p>
                           <TbRosetteDiscountCheckFilled className="text-[#63B1FF] " />
                         </div>
-                        <svg
+                        {/* <svg
                           width="24"
                           height="24"
                           viewBox="0 0 24 24"
@@ -330,15 +340,19 @@ const OnChain = () => {
                             height="2"
                             fill="white"
                           />
-                        </svg>
+                        </svg> */}
                       </div>
-                      <div className="text-green text-[10px] leading-4 bg-green/15 rounded-sm border border-green py-[2px] px-2">
+                      {/* <div className="text-green text-[10px] leading-4 bg-green/15 rounded-sm border border-green py-[2px] px-2">
                         On sale
-                      </div>
+                      </div> */}
                     </div>
                     <div className="divide-gray flex items-center gap-4 divide-x max-sm:flex-col max-sm:items-start max-sm:divide-none max-sm:gap-1">
                       <div className="flex items-center gap-2">
-                        <p className="">0x00dCE...DCGH</p>
+                        <p className="">
+                          {strShortAddress(
+                            "0x00ac5b04b5a7334bba980e9d3e37c25fcfcde035a18355fe4fd37666ff93106f"
+                          )}
+                        </p>
                         <div className="flex gap-1">
                           <MdContentCopy
                             className=" cursor-pointer text-base leading-4 text-grays"
@@ -348,13 +362,15 @@ const OnChain = () => {
                         </div>
                       </div>
                       <div className="flex gap-5">
-                        <div className="flex items-center gap-2 pl-4 font-bold leading-4 max-sm:p-0">
+                        {/* <div className="flex items-center gap-2 pl-4 font-bold leading-4 max-sm:p-0">
                           <p className=" text-gray">Pack sold</p>
                           <p className="text-white">19.9k</p>
-                        </div>
+                        </div> */}
                         <div className="flex items-center gap-2 pl-4 font-bold leading-4 max-sm:p-0">
                           <p className=" text-gray">Owners</p>
-                          <p className="text-white">19.9k</p>
+                          <p className="text-white">
+                            {collectionCount?.owners}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -365,39 +381,65 @@ const OnChain = () => {
               <div className="flex gap-5 items-center ">
                 <div className="flex max-sm:flex-wrap gap-y-3 gap-9 text-nowrap">
                   <div className="flex flex-col font-bold text-[14px] items-end ">
-                    <p className="leading-4">112,9k ETH</p>
+                    <p className="leading-4">
+                      {collectionEconomic?.totalVol
+                        ? Number(collectionEconomic?.totalVol).toFixed(3)
+                        : "-"}{" "}
+                      ETH
+                    </p>
                     <p className="text-gray leading-[18px]">Total Volume</p>
                   </div>
                   <div className="flex flex-col font-bold text-[14px] items-end">
-                    <p className="leading-4">19 ETH</p>
+                    <p className="leading-4">
+                      {collection?.nftCollectionStats?.floorPrice?.toFixed(3) ||
+                        "-"}{" "}
+                      ETH
+                    </p>
                     <p className="text-gray leading-[18px]">Floor Price</p>
                   </div>
                   <div className="flex flex-col font-bold text-[14px] items-end">
-                    <p className="leading-4">1,234 ETH</p>
+                    <p className="leading-4">
+                      {collection?.nftCollectionStats?.bestOffer?.toFixed(3) ||
+                        "-"}{" "}
+                      ETH
+                    </p>
                     <p className="text-gray leading-[18px]">Best Offer</p>
                   </div>
                   <div className="flex flex-col font-bold text-[14px] items-end">
-                    <p className="leading-4">600 ETH</p>
+                    <p className="leading-4">
+                      {collectionEconomic?.sevenDayVol?.toFixed(2)} ETH
+                    </p>
                     <p className="text-gray leading-[18px]">7D Volume</p>
                   </div>
                   <div className="flex flex-col font-bold text-[14px] items-end">
-                    <p className="leading-4">10%</p>
+                    <p className="leading-4">
+                      {collection?.nftCollectionStats?.totalListingCount || "-"}
+                    </p>
                     <p className="text-gray leading-[18px]">Listed</p>
                   </div>
                   <div className="flex flex-col font-bold text-[14px] items-end">
-                    <p className="leading-4">10,000</p>
+                    <p className="leading-4">{collectionCount?.owners}</p>
                     <p className="text-gray leading-[18px]">Owners</p>
                   </div>
                 </div>
-                <Button onClick={() => onNavigateDetail()}>See all</Button>
+                <Link
+                  href={
+                    "/collection/0x00ac5b04b5a7334bba980e9d3e37c25fcfcde035a18355fe4fd37666ff93106f"
+                  }
+                >
+                  <Button onClick={() => {}}>See all</Button>
+                </Link>
               </div>
             </div>
             <div className="flex gap-4 overflow-auto">
-              {Array.from({ length: 8 }).map(() => {
-                return <CardNFT nft={nftMockup} onReload={() => {}} />;
+              {atemuPacks.map((pack, index) => {
+                return (
+                  <CardNFT key={index} nft={pack.nftData} onReload={() => {}} />
+                );
               })}
             </div>
           </div>
+          <Activity />
         </div>
       </div>
 
