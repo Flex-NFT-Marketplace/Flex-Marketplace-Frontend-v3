@@ -33,6 +33,10 @@ const Inventory = () => {
     };
   }, [handleScroll]);
 
+  useEffect(() => {
+    console.log(nftsOwner);
+  }, [nftsOwner]);
+
   return (
     <div id="scroll-container" className="p-4  overflow-auto">
       <div className="flex flex-wrap justify-start">
@@ -50,6 +54,7 @@ const Inventory = () => {
             nft={nft.nftData}
             onReload={() => {}}
             bestAsk={nft?.orderData?.bestAsk}
+            collection={nft?.nftData.nftCollection}
           />
         ))}
       </div>

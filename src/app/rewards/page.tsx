@@ -11,9 +11,9 @@ const Rewards = () => {
   const RECENTS = "recents";
 
   const spinContainer = useRef<HTMLDivElement>(null);
+  const [heightSpin, setHeightSpin] = useState(0);
   const [activeTab, setActiveTab] = useState(DAILY_QUEST);
   const [isSmallLayout, setIsSmallLayout] = useState(false);
-  const [heightSpin, setHeightSpin] = useState(0);
 
   useEffect(() => {
     if (spinContainer.current) {
