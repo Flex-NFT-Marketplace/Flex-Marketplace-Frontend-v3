@@ -54,7 +54,7 @@ export interface TraitManager {
 
 const initialState: AllStateProps = {
   // Common
-  activeStep: 1,
+  activeStep: 4,
 
   // Step 1
   tokenName: "",

@@ -148,7 +148,7 @@ const Step1 = () => {
     <div className="mx-auto flex h-full max-w-[1200px] flex-1 animate-fade flex-col justify-between gap-8 px-2 py-10">
       <div className="flex flex-col gap-8">
         <div>
-          <p className="text-[32px] font-bold uppercase">{`Let's Deploy the Drop`}</p>
+          <p className="text-[32px] font-bold uppercase">{`Let's Deploy An NFT Collection`}</p>
           <p className="text-grays">
             {`You’ll need to deploy an ERC-1155 contract onto the blockchain before you can create a drop`}
           </p>
@@ -285,7 +285,6 @@ const Step1 = () => {
                   classContainer={`!max-w-full w-full ${allState.isSelfReceiverWallet && "pointer-events-none opacity-50"}`}
                   onChange={handleReciverWallet}
                 />
-                <p className="whitespace-nowrap text-grays">| ETH</p>
               </div>
             </div>
           </div>

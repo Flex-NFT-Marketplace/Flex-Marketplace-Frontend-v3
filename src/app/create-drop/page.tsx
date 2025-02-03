@@ -42,7 +42,7 @@ interface AllStateProps {
 
 const initialState: AllStateProps = {
   // Common
-  activeStep: 2,
+  activeStep: 1,
 
   // Step 1
   tokenName: "",

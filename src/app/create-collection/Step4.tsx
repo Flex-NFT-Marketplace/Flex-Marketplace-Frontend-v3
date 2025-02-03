@@ -401,28 +401,48 @@ const Step4 = () => {
   };
 
   return (
-    <div className="mx-auto flex max-w-[1200px] animate-fade flex-col gap-8 px-2">
-      <div>
-        <p className="text-[32px] font-bold uppercase">{`Finally, let's set the sale info`}</p>
-        <p className="text-grays">{`Set up the sale info`}</p>
-      </div>
-      <div className="mt-8">
-        {allState.phases.map((item, index) => (
-          <PhaseItem key={index} phase={item} />
-        ))}
+    <div className="max-w-[1200px] animate-fade px-2 h-full mx-auto flex flex-col justify-between py-10">
+      <div className="flex flex-col gap-8">
+        <div>
+          <p className="text-[32px] font-bold uppercase">{`Finally, let's set the sale info`}</p>
+          <p className="text-grays">{`Set up the sale info`}</p>
+        </div>
+        <div className="mt-8">
+          {allState.phases.map((item, index) => (
+            <PhaseItem key={index} phase={item} />
+          ))}
 
-        <div className="flex gap-5 pb-10">
-          <Button
-            onClick={handleAddNewPhase}
-            title="Add new phase"
-            variant="outline"
-            className="border-[#63B1FF] text-[#63B1FF] max-md:w-full md:!w-[193px]"
-          />
+          <div className="flex gap-5 pb-10">
+            <Button
+              onClick={handleAddNewPhase}
+              title="Add new phase"
+              variant="outline"
+              className="border-[#63B1FF] text-[#63B1FF] max-md:w-full md:!w-[193px]"
+            />
 
-          <div className="relative mt-4 max-md:hidden">
-            <div className="absolute ju left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border border-border bg-black"></div>
+            <div className="relative mt-4 max-md:hidden">
+              <div className="absolute ju left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border border-border bg-black"></div>
+            </div>
           </div>
         </div>
+      </div>
+      <div className="sticky bottom-0 flex w-full justify-end gap-2">
+        <Button
+          title="Back"
+          className=" border-primary px-8 py-1.5 capitalize"
+          variant="outline"
+          onClick={() =>
+            setAllState((prev) => ({
+              ...prev,
+              activeStep: prev.activeStep - 1,
+            }))
+          }
+        />
+        <Button
+          title="Create"
+          className=" border-primary px-8 py-1.5 capitalize"
+          onClick={() => {}}
+        />
       </div>
     </div>
   );
