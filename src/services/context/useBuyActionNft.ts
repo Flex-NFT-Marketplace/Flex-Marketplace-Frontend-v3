@@ -42,7 +42,7 @@ export const useBuyActionNft = () => {
       signature?.signer, //   signer
       nft?.nftContract, //   collection
       convertEtherToWei(
-        (signature?.price * signature?.amount_sig).toString(),
+        (signature!.price * (signature!.amount_sig || 1)).toString(),
       ).toString(), //   price
       // signature.signer,
       num.hexToDecimalString(uint256.bnToUint256(nft?.tokenId).low.toString()), //   tokenId - low
@@ -67,6 +67,9 @@ export const useBuyActionNft = () => {
   const onBuy = async (signature: ISignature, nft: IStagingNft, amount: number) => {
     if (status == "connected") {
       try {
+        console.log(convertEtherToWei(
+          (signature?.price * amount).toString(),
+        ).toString(),);
         const result = await account?.execute([
           {
             contractAddress: signature?.currency,
@@ -85,12 +88,13 @@ export const useBuyActionNft = () => {
             calldata: callDataBuyNowSignature(signature, nft, amount),
           },
         ]);
-
+        console.log(result);
+        
         if (result?.transaction_hash) {
           const bodyData = {
-            signature_id: signature._id as string,
-            transaction_hash: result.transaction_hash || "",
-            buyer_address: address || "",
+            signatureId: signature._id as string,
+            transactionHash: result.transaction_hash || "",
+            buyerAddress: address || "",
             amount: amount,
           };
 
@@ -100,6 +104,8 @@ export const useBuyActionNft = () => {
           onShowToast("Buy NFT failed");
         }
       } catch (error) {
+        console.log(error);
+        
         onShowToast("Buy NFT failed");
       }
     } else {

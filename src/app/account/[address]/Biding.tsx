@@ -88,7 +88,7 @@ const Biding = () => {
                 </td>
                 <td className="text-start">{_?.amount}</td>
                 <td className="text-start">
-                  {timeElapsedFromTimestamp(_?.sell_end)}
+                  {timeElapsedFromTimestamp(_?.sellEnd)}
                 </td>
                 <td className="text-start">
                   <FormatAddress address={_?.signer} />

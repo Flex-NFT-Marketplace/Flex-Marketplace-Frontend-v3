@@ -38,19 +38,19 @@ const useAcceptBid = () => {
       "0", // params
       "0", //   makerBid.isOrderAsk
       signature.signer, //   signer
-      signature.contract_address, //   collection
+      signature.nftContract, //   collection
       convertEtherToWei(signature.price.toString()).toString(), //   price
       // signature.buyer_address,
       (typedDataValidate.message["tokenId.low"] = num.hexToDecimalString(
         uint256.bnToUint256(nft.tokenId).low.toString(),
       )), //   tokenId
       num.hexToDecimalString(uint256.bnToUint256(nft.tokenId).high.toString()), //   tokenId
-      signature.amount_sig, //   amount
+      signature.amountSig, //   amount
       addresses.strategyStandardSaleForFixedPrice.address, //   strategy
       signature.currency, //   currency
       signature.nonce.toString(), //   nonce
       "0", //   startTime
-      signature.sell_end, //   endTime
+      signature.sellEnd, //   endTime
       "8500", //   minPercentageToAsk
       "0", //   params
       handleSignature(signature).length.toString(), //   makerAskSignature_len
@@ -62,6 +62,7 @@ const useAcceptBid = () => {
   const onAcceptBid = async (
     signature: ISignature,
     nft: IStagingNft,
+    buyerAddress: string,
     amount: number,
   ) => {
     if (status == "connected") {
@@ -89,8 +90,10 @@ const useAcceptBid = () => {
 
         if (result?.transaction_hash) {
           const bodyData = {
-            signature_id: signature._id || "",
-            transaction_hash: result.transaction_hash || "",
+            signatureId: signature._id || "",
+            transactionHash: result.transaction_hash || "",
+            buyerAddress: buyerAddress,
+            amount: amount,
           };
           await _putTransaction.mutateAsync(bodyData);
           onShowNotify("Accept bid successfully");

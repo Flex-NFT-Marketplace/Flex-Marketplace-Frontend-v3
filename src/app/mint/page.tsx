@@ -74,14 +74,13 @@ const Mint = () => {
       const storefrontNFT = new Contract(
         storefrontErc721.abi,
         addresses.FlexStorefrontNFT.address,
-        provider,
+        provider
       );
 
       const mintPrice = await storefrontNFT.getMintPrice();
       const mintPriceAmount = uint256
         .uint256ToBN(mintPrice.mint_price_amount)
         .toString();
-
       setMintPriceInWei(mintPriceAmount);
     };
     handleCheckMintPrice();
@@ -100,7 +99,8 @@ const Mint = () => {
       formData.append("file", selectedFile);
 
       const res = await _postMetadata.mutateAsync(formData);
-      const uri = process.env.NEXT_PUBLIC_API_HOST_METADATA_URI + res.data;
+      const uri = process.env.NEXT_PUBLIC_API + "metadata/" + res.data;
+
       // execute minting
       try {
         const res: any = await account?.execute([

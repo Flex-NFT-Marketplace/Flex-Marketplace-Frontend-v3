@@ -23,14 +23,14 @@ const BidList = () => {
   const [signature, setSignature] = useState<ISignature>();
 
   const renderAction = (signature: ISignature) => {
-    if (!address) return <></>;
+    if (!address || !signature.buyer) return <></>;
 
     if (signature.status == SignStatusEnum.BIDDING) {
       return <p className="text-buy">Processing...</p>;
     }
 
     if (
-      formattedContractAddress(signature.buyer_address) ==
+      formattedContractAddress(signature.buyer) ==
       formattedContractAddress(address)
     ) {
       return (
@@ -63,6 +63,10 @@ const BidList = () => {
 
     return <></>;
   };
+
+  useEffect(() => {
+    console.log(listBid);
+  }, [listBid]);
 
   return (
     <div className="table-container w-full overflow-auto">
@@ -101,7 +105,7 @@ const BidList = () => {
                 <FormatPrice price={_.price} currency={_.currency} />
               </td>
               <td>{_.amount}</td>
-              <td>{timeElapsedFromTimestamp(_.sell_end)}</td>
+              <td>{timeElapsedFromTimestamp(_.sellEnd)}</td>
               <td>
                 <FormatAddress address={_.signer} />
               </td>

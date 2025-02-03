@@ -17,6 +17,7 @@ import { IoClose } from "react-icons/io5";
 import Input from "@/packages/@ui-kit/Input";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { IStagingNft } from "@/types/IStagingNft";
+import { useAccount } from "@starknet-react/core";
 
 dayjs.extend(utc);
 
@@ -40,7 +41,12 @@ const AcceptBidPopup: React.FC<IBuyPopupProps> = (props) => {
       if (isError || signature!.amount < amount) return;
       setLoading(true);
 
-      await onAcceptBid(signature as ISignature, nft as IStagingNft, amount);
+      await onAcceptBid(
+        signature as ISignature,
+        nft as IStagingNft,
+        signature!.signer,
+        amount
+      );
       toggleModal();
 
       setTimeout(() => {

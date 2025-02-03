@@ -96,7 +96,7 @@ const CollectionPage = () => {
           </div>
 
           <div className="flex items-center gap-4 py-2">
-            <Search />
+            {/* <Search /> */}
             <div className="flex items-center gap-0">
               <Icon
                 onClick={() => handleChangeViewList("card")}

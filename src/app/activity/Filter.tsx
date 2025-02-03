@@ -18,7 +18,6 @@ import {
 
 const Filter = () => {
   const [isShowPrice, setIsShowPrice] = useState(true);
-  const [isShowTraits, setIsShowTraits] = useState(false);
   const [isShowFilter, setIsShowFilter] = useState(true);
 
   const [_minPrice, _setMinPrice] = useState(0);

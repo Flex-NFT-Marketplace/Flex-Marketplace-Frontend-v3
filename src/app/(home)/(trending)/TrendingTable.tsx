@@ -44,7 +44,7 @@ const TrendingTable = () => {
               <td className="hidden text-center lg:table-cell">
                 <div className="flex items-center justify-evenly">
                   {/* <IoMdStarOutline /> */}
-                  <IoMdStar className="text-bid" />
+                  {/* <IoMdStar className="text-bid" /> */}
                   {index + 1}
                 </div>
               </td>
@@ -74,14 +74,14 @@ const TrendingTable = () => {
               </td>
               <td className="hidden sm:table-cell">
                 <FormatPrice
-                  price={item?.oneDayVol || 0}
+                  price={item?.oneDayVol / 1e18 || 0}
                   className="flex justify-end"
                 />
               </td>
               <td>
                 {/* {item?.totalVol} */}
                 <FormatPrice
-                  price={Number(item?.totalVol)}
+                  price={Number(item?.totalVol) / 1e18}
                   decimal={2}
                   className="flex justify-end"
                 />

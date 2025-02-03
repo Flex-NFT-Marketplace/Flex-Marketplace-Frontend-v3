@@ -11,7 +11,8 @@ import { IoClose } from "react-icons/io5";
 const TableCard = (props: any) => {
   const { isShowFilter, isShowActivity, nfts, isFetching } = props;
 
-  const { traitsActive, setTraitsActive } = useCollectionDetailContext();
+  const { traitsActive, setTraitsActive, getBestBid } =
+    useCollectionDetailContext();
 
   const onRemoveFilter = (trait: IAttributesCollection) => {
     const newTraitActive: IAttributesCollection[] = [];
@@ -29,14 +30,9 @@ const TableCard = (props: any) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const getBestBid = (nft: IStagingNftResponse): ISignature | undefined => {
-    if (nft.orderData.listBid.length > 0) {
-      return nft.orderData.listBid.reduce((maxBid, currentBid) => {
-        return currentBid.price > maxBid.price ? currentBid : maxBid;
-      }, nft.orderData.listBid[0]);
-    }
-    return undefined;
-  };
+  useEffect(() => {
+    console.log(nfts);
+  }, [nfts]);
 
   return (
     <div className="w-full">

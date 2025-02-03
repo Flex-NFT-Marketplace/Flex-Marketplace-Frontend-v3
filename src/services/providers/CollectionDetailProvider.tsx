@@ -16,8 +16,9 @@ import {
 } from "@/types/IStagingCollection";
 import { useGetCollectionEconomic } from "../api/collection/useGetCollectionEconomic";
 import { useGetCollectionCount } from "../api/collection/useGetNftCount";
-import { IStagingNftResponse } from "@/types/IStagingNft";
+import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
 import { useGetAttributesCollection } from "../api/collection/useGetAttributesCollection";
+import { ISignature } from "@/types/ISignature";
 
 interface CollectionDetailContextType {
   collectionCount?: ICollectionCounter;
@@ -58,6 +59,10 @@ interface CollectionDetailContextType {
 
   searchValue: string;
   setSearchValue: (value: string) => void;
+
+  getBestBid: (nft: IStagingNftResponse) => ISignature | undefined;
+
+  atemuPacks: IStagingNftResponse[];
 }
 
 export const CollectionDetailContext = createContext<
@@ -99,6 +104,7 @@ export const CollectionDetailProvider = ({
     IAttributesCollectionFilter[]
   >([]);
   const [nfts, setNfts] = useState<IStagingNftResponse[]>([]);
+  const [atemuPacks, setAtemuPacks] = useState<IStagingNftResponse[]>([]);
 
   const [priceSortType, setPriceSortType] = useState<PriceSortType>(
     PriceSortEnum.ASC
@@ -202,6 +208,20 @@ export const CollectionDetailProvider = ({
     }
   };
 
+  const { data: atemuPacksRes } = useGetNFTCollection(
+    process.env.NEXT_PUBLIC_ATEMU_CONTRACT as string,
+    priceSortType,
+    sortStatus
+  );
+
+  useEffect(() => {
+    if (atemuPacksRes) {
+      console.log(atemuPacksRes.pages[0].items);
+
+      setAtemuPacks(atemuPacksRes.pages[0].items);
+    }
+  }, [atemuPacksRes]);
+
   const isFiltered = (traitFilter: IAttributesCollection) => {
     let isKeyFiltered = false;
     traitsActive.forEach((traitActive) => {
@@ -213,6 +233,15 @@ export const CollectionDetailProvider = ({
       }
     });
     return isKeyFiltered;
+  };
+
+  const getBestBid = (nft: IStagingNftResponse): ISignature | undefined => {
+    if (nft.orderData.listBid.length > 0) {
+      return nft.orderData.listBid.reduce((maxBid, currentBid) => {
+        return currentBid.price > maxBid.price ? currentBid : maxBid;
+      }, nft.orderData.listBid[0]);
+    }
+    return undefined;
   };
 
   useEffect(() => {
@@ -322,6 +351,10 @@ export const CollectionDetailProvider = ({
 
     searchValue,
     setSearchValue,
+
+    getBestBid,
+
+    atemuPacks,
   };
 
   return (

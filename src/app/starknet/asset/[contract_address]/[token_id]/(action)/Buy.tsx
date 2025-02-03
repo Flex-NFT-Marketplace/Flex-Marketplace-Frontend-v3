@@ -40,6 +40,10 @@ const Buy: React.FC<BuyProps> = (props) => {
     await connect({ connector });
   };
 
+  useEffect(() => {
+    console.log(signature);
+  }, [signature]);
+
   return (
     <div className="flex flex-col justify-between gap-4 rounded-md border border-stroke px-4 py-4">
       <BuyPopup
@@ -70,7 +74,7 @@ const Buy: React.FC<BuyProps> = (props) => {
 
         <div className="flex items-center gap-1 font-normal">
           <p className="pr-2 uppercase text-grays">Time left</p>
-          <p>{timeElapsedFromTimestamp(signature?.sell_end)}</p>
+          <p>{timeElapsedFromTimestamp(signature.sell_end)}</p>
         </div>
       </div>
 

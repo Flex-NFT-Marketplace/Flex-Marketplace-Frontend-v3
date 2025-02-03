@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 
 const TableList = () => {
-  const { nfts, isLoading, fetchNextPage } = useCollectionDetailContext();
+  const { nfts, isLoading, fetchNextPage, getBestBid } =
+    useCollectionDetailContext();
 
   const scrollRef = useRef(null);
 
@@ -110,7 +111,10 @@ const TableList = () => {
               <FormatPrice price={0} />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
-              <FormatPrice price={0} />
+              <FormatPrice
+                price={getBestBid(_)?.price}
+                currency={getBestBid(_)?.currency}
+              />
             </div>
             <div className="flex min-w-[100px] items-center justify-end">
               <FormatAddress address={_?.nftData?.owner?.address} />

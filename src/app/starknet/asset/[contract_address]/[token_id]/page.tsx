@@ -28,6 +28,10 @@ const NFTDetail = () => {
     getNft();
   }, [address]);
 
+  useEffect(() => {
+    console.log(collection);
+  }, [collection]);
+
   const renderAction = () => {
     if (loadingStatus === NftLoadActionEnum.LOADED_IS_OWNER) {
       if (collection?.standard == SchemaTypeEnum.ERC721) {

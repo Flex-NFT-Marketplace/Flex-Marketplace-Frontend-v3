@@ -39,7 +39,7 @@ const ListingList = () => {
         <Button
           title="Edit"
           variant="outline"
-          className="border-cancel text-cancel"
+          className="border-cancel text-cancel !h-7"
           onClick={() => {
             onCancel(signature);
           }}
@@ -49,6 +49,7 @@ const ListingList = () => {
       return (
         <Button
           title="Buy"
+          className="!h-7"
           onClick={() => {
             onBuy(signature);
           }}
@@ -95,7 +96,7 @@ const ListingList = () => {
                 <FormatPrice price={_.price} currency={_.currency} />
               </td>
               <td>{_.amount}</td>
-              <td>{timeElapsedFromTimestamp(_.sell_end)}</td>
+              <td>{timeElapsedFromTimestamp(_.sellEnd)}</td>
               <td>
                 <FormatAddress address={_.signer} />
               </td>

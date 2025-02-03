@@ -42,6 +42,17 @@
 // };
 
 export const addresses = {
+  Factory: {
+    address:
+    "0x2fd45deb6bcac02c9b7bcea8e1e7d60b9b680f58d81f3e85b21c2343280a57c",
+  },
+  Pack: {
+    address: "0x5414877ce60fd9e6d5ebf29f820361bb8a5efe7ea1f180b323d94e8295ff069"
+  },
+  Collectible:  {
+    address: "0x012a02BA0C9D3B949F95aB42A27DDF82A12A6c48249E64740909783C374f7c2b"
+  },
+
   FlexStorefrontNFT: {
     address:
       "0x02e6c908da3d1ced80d81085ed9374b7c5048f86799e1f35e54daca4d70832d7",

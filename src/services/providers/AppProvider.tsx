@@ -10,6 +10,7 @@ import { StarknetProvider } from "./StarknetProvider";
 import TanstackProvider from "./TanstackProvider";
 import LoadingHeaderProvider from "./market/LoadingHeaderProvider";
 import { CollectionDetailProvider } from "./CollectionDetailProvider";
+import { PackCollectionProvider } from "./PackCollectionProvider";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -23,13 +24,15 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   <CartProvider>
                     <NftProvider>
                       <CollectionProvider>
-                        <ActivityProvider>
-                          <CollectionDetailProvider>
-                            <LoadingHeaderProvider>
-                              {children}
-                            </LoadingHeaderProvider>
-                          </CollectionDetailProvider>
-                        </ActivityProvider>
+                        <PackCollectionProvider>
+                          <ActivityProvider>
+                            <CollectionDetailProvider>
+                              <LoadingHeaderProvider>
+                                {children}
+                              </LoadingHeaderProvider>
+                            </CollectionDetailProvider>
+                          </ActivityProvider>
+                        </PackCollectionProvider>
                       </CollectionProvider>
                     </NftProvider>
                   </CartProvider>

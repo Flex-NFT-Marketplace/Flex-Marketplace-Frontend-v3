@@ -68,3 +68,25 @@
 .animate-show-loading {
   animation: show-loading 6s linear;
 }
+
+.rotating-card {
+  perspective: 1000px;
+}
+
+.rotating-card-inner {
+  transform-style: preserve-3d;
+  width: 100%;
+  height: 100%;
+}
+
+.rotating-card-front,
+.rotating-card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.rotating-card-back {
+  transform: rotateY(180deg);
+}

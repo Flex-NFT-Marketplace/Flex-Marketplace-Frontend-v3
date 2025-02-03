@@ -245,20 +245,21 @@ const useListActionNft = (): BuyActionNftType => {
       signature4 = stark.formatSignature(signature4);
 
       const sign: ISignature = {
-        contract_address,
-        token_id,
+        nftContract: contract_address,
+        tokenId: token_id,
         signature4: JSON.stringify(signature4),
         nonce: nonce,
         price: priceInEther,
         currency: currency,
         amount,
-        amount_sig: amount,
+        amountSig: amount,
         status: SignStatusEnum.LISTING,
-        transaction_hash: "",
-        transaction_status: "",
+        transactionHash: "",
+        transactionStatus: "",
+        sellEnd: timeEnd,
         sell_end: timeEnd,
         signer: address as string,
-        buyer_address: "",
+        buyerAddress: "",
         nft: {} as any,
       };
 
