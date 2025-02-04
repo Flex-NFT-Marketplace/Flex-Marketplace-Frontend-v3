@@ -7,7 +7,7 @@ export const useGetTotalLike = () => {
     mutationFn: async (collectionId: string) => {
       try {
         const { data } = await axios.get(
-          process.env.NEXT_PUBLIC_API_STAGING + "collectible/get-total-likes",
+          process.env.NEXT_PUBLIC_API + "collectible/get-total-likes",
           {
             params: {
               collectionId,

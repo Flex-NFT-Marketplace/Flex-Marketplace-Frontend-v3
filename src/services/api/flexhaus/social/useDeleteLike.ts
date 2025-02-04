@@ -7,7 +7,7 @@ export const useDeleteLike = () => {
     mutationFn: async (collectionId: string) => {
       try {
         const { data } = await axios.post(
-          process.env.NEXT_PUBLIC_API_STAGING + "collectible/unlike-collectible",
+          process.env.NEXT_PUBLIC_API + "collectible/unlike-collectible",
           collectionId,
         );
 

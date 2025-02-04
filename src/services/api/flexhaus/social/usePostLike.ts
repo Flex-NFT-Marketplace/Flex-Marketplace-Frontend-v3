@@ -7,7 +7,7 @@ export const usePostLike = () => {
     mutationFn: async (collectionId: string) => {
       try {
         const { data } = await axios.post(
-          process.env.NEXT_PUBLIC_API_STAGING + "collectible/like-collectible",
+          process.env.NEXT_PUBLIC_API + "collectible/like-collectible",
           collectionId,
         );
 

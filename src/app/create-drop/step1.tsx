@@ -10,20 +10,27 @@ import SuccessDeployed from "./SuccessDeployed";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
 import Select from "react-select";
+import { byteArray, CallData, RpcProvider, uint256 } from "starknet";
+import { useAccount } from "@starknet-react/core";
+import usePostMetadata from "@/services/api/usePostMetadata";
+import { getShortTraits, isDigit } from "@/utils/string";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateDrop();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { isShow: isShowSuccess, toggle: toggleSuccess } = useModal();
   const { onShowToast } = useToast();
+  const { account } = useAccount();
+  const [loadingDeploy, setLoadingDeploy] = useState(false);
+
+  const _postMetadata = usePostMetadata();
 
   const options = [
     { value: "", label: "Choose" },
-    { value: "Common", label: "Common" },
-    { value: "Uncommon", label: "Uncommon" },
-    { value: "Rare", label: "Rare" },
-    { value: "Epic", label: "Epic" },
-    { value: "Legendary", label: "Legendary" },
+    { value: "common", label: "Common" },
+    { value: "rare", label: "Rare" },
+    { value: "legendary", label: "Legendary" },
+    { value: "ultimate", label: "Ultimate" },
   ];
 
   const customStyles = {
@@ -111,8 +118,11 @@ const Step1 = () => {
     }
   };
 
-  const handleDeploy = () => {
-    console.log(123);
+  const handleDeploy = async () => {
+    if (!account) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
 
     const missingFields: string[] = [];
 
@@ -130,7 +140,85 @@ const Step1 = () => {
       return;
     }
 
-    toggleSuccess();
+    if (!isDigit(allState.metadata3)) {
+      onShowToast("Please enter a valid number");
+      return;
+    }
+
+    try {
+      setLoadingDeploy(true);
+
+      // const formData = new FormData();
+      // formData.append("name", allState.metadata1);
+      // formData.append("description", allState.nftDescription);
+      // formData.append("file", allState.fileNftImage!);
+
+      // const res = await _postMetadata.mutateAsync(formData);
+      // const uri = process.env.NEXT_PUBLIC_API + "metadata/" + res.data;
+
+      // setAllState((prev) => ({
+      //   ...prev,
+      //   base_uri: uri,
+      // }));
+
+      // console.log(uri);
+
+      const provider = new RpcProvider({
+        nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
+      });
+
+      // const execute = await account.execute([
+      //   {
+      //     contractAddress:
+      //       "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7", // ETH
+      //     entrypoint: "approve",
+      //     calldata: CallData.compile({
+      //       spender:
+      //         process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
+      //         "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
+      //       amount: uint256.bnToUint256("250000000000000"),
+      //     }),
+      //   },
+      //   {
+      //     contractAddress:
+      //       process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
+      //       "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
+      //     entrypoint: "create_collectible",
+
+      //     calldata: CallData.compile([
+      //       {
+      //         name: byteArray.byteArrayFromString(allState.tokenName),
+      //         symbol: byteArray.byteArrayFromString(allState.tokenSymbol),
+      //         base_uri: byteArray.byteArrayFromString(uri),
+      //         total_supply: uint256.bnToUint256(allState.metadata3),
+      //         ratity: allState.metadata2,
+      //       },
+      //     ]),
+      //   },
+      // ]);
+
+      // const result = await account.execute();
+
+      // console.log(execute.transaction_hash);
+
+      const txReceipt: any = await provider.waitForTransaction(
+        "0x037682ab40c80263db7ae2e777f9b570773e46e950d8fb73b1b8581bf23d4348"
+      );
+
+      console.log(txReceipt.events[3].from_address);
+
+      setAllState((prevState) => ({
+        ...prevState,
+        contractAddress: txReceipt.events[3].from_address,
+      }));
+
+      toggleSuccess();
+    } catch (error) {
+      console.log(error);
+      onShowToast("Failed to deploy Collection");
+    } finally {
+      setLoadingDeploy(false);
+    }
   };
 
   useEffect(() => {
@@ -228,7 +316,8 @@ const Step1 = () => {
               </p>
               {allState.fileNftImage && (
                 <p className="mt-2 text-green-500">
-                  Selected File: {allState.fileNftImage.name}
+                  Selected File:{" "}
+                  {getShortTraits(allState.fileNftImage.name, 20)}
                 </p>
               )}
               {invalidFields.includes("fileNftImage") && (
@@ -319,10 +408,11 @@ const Step1 = () => {
         </div>
       </div>
       <Button
+        loading={loadingDeploy}
         id="btnStep1"
         title="Deploy"
         onClick={handleDeploy}
-        className="hidden"
+        className="self-end !w-[150px]"
       />
     </div>
   );

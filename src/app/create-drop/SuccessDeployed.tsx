@@ -34,7 +34,7 @@ const SuccessDeployed = () => {
             <div className="flex w-full justify-between">
               <p className="text-[#9CA3AF]">Base URI:</p>
               <p className="max-w-[150px] truncate text-primary">
-                https://react-icons.github.io/react-icons/search/#q=arrow
+                {allState.base_uri}
               </p>
             </div>
           </div>

@@ -7,12 +7,14 @@ import React from "react";
 dayjs.extend(utc);
 
 interface DatePickupProps {
+  minDate?: Dayjs | null;
   timeEnd: Dayjs | null;
   handleDateChange: (date: Dayjs | null, dateString: string | string[]) => void;
   showTime?: boolean;
 }
 
 const DatePickup: React.FC<DatePickupProps> = ({
+  minDate,
   timeEnd,
   handleDateChange,
   showTime = true,
@@ -38,6 +40,7 @@ const DatePickup: React.FC<DatePickupProps> = ({
         }}
       >
         <DatePicker
+          minDate={minDate || undefined}
           className="h-full w-full border-none text-white shadow-none focus-within:border-none focus:border-transparent"
           value={timeEnd}
           format={showTime ? "YYYY-MM-DD HH:mm:ss" : "YYYY-MM-DD"}
