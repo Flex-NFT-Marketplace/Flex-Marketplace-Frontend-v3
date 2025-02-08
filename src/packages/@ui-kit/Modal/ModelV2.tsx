@@ -1,3 +1,4 @@
+"use client";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
@@ -49,7 +50,7 @@ const ModalV2: React.FC<IModalProps> = (props) => {
             {children}
           </div>
         </React.Fragment>,
-        document.body,
+        document.body
       )
     : null;
 };

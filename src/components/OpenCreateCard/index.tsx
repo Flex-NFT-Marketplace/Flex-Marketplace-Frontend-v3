@@ -9,41 +9,9 @@ import check from "@/assets/badge-check.svg";
 import Button from "@/packages/@ui-kit/Button";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import Input from "@/packages/@ui-kit/Input";
-import { usePostLike } from "@/services/api/flexhaus/social/usePostLike";
-import { useDeleteLike } from "@/services/api/flexhaus/social/useDeleteLike";
-import { useGetTotalLike } from "@/services/api/flexhaus/social/useGetTotalLike";
 import { useEffect } from "react";
 
 const OpenCreateCard = () => {
-  const _postLike = usePostLike();
-  const _deleteLike = useDeleteLike();
-  const _getTotalLike = useGetTotalLike();
-
-  const toggleLike = async () => {
-    const isLiked = true;
-    if (isLiked) {
-      await onLike();
-    } else {
-      await onUnLike();
-    }
-  };
-
-  const onUnLike = async () => {
-    try {
-      await _deleteLike.mutateAsync("1");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onLike = async () => {
-    try {
-      await _postLike.mutateAsync("1");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     // _getTotalLike.mutateAsync("1");
   }, []);
@@ -92,7 +60,7 @@ const OpenCreateCard = () => {
             <p>3</p>
           </div>
           <div
-            onClick={toggleLike}
+            // onClick={}
             className="cursor-pointer hover:bg-hover flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1"
           >
             <MdOutlineLocalFireDepartment />

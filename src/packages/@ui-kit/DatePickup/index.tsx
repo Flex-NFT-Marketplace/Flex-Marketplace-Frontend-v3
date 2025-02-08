@@ -11,6 +11,7 @@ interface DatePickupProps {
   timeEnd: Dayjs | null;
   handleDateChange: (date: Dayjs | null, dateString: string | string[]) => void;
   showTime?: boolean;
+  className?: string;
 }
 
 const DatePickup: React.FC<DatePickupProps> = ({
@@ -18,11 +19,12 @@ const DatePickup: React.FC<DatePickupProps> = ({
   timeEnd,
   handleDateChange,
   showTime = true,
+  className,
 }) => {
   const defaultCSS =
     "h-9 flex rounded-md border border-line bg-background font-medium text-text hover:border-primary focus:border-primary gap-2 items-center";
 
-  const classes = clsx(defaultCSS);
+  const classes = clsx(defaultCSS, className);
 
   return (
     <div className={classes}>

@@ -1,75 +1,101 @@
 import ImageKit from "@/packages/@ui-kit/Image";
 import Input from "@/packages/@ui-kit/Input";
 import { FaCalendarAlt, FaCheck } from "react-icons/fa";
-import { DropTypeEnum, SetsTypeEnum, useCreateDrop } from "./page";
-import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Button from "@/packages/@ui-kit/Button";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { IoIosArrowDown } from "react-icons/io";
-import { IDrop, IGroupMultiple } from "@/types/ICollection";
-import useModal from "@/hooks/useModal";
 import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
 import CreateGroup from "./CreateGroup";
+import {
+  DropTypeEnum,
+  SetsTypeEnum,
+  useCreateDrop,
+} from "@/services/providers/CreateDropProvider";
+import { RiShareBoxLine } from "react-icons/ri";
+import CollectiblesInGroup from "./CollectiblesInGroup";
+import { IDropGroup } from "@/types/Idrop";
+import { useAccount } from "@starknet-react/core";
+import { CallData, RpcProvider, uint256 } from "starknet";
+import useModal from "@/hooks/useModal";
+import SuccessCreated from "./SuccessCreated";
+import { formatTimestamp } from "@/utils/string";
+
+export const backgroundColors: { [key: string]: string } = {
+  common: "#d3d3d3",
+  rare: "#add8e6",
+  legendary: "#ffd700",
+  ultimate: "#ff4500",
+};
+
+export function getBackgroundColor(value: string) {
+  return backgroundColors[value] || "transparent";
+}
 
 const Step2 = () => {
-  const { allState, setAllState } = useCreateDrop();
+  const {
+    allState,
+    setAllState,
+    groupDrop,
+    handleAddCollectibleToGroup,
+    handleCreateNewGroup,
+  } = useCreateDrop();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
+  const [groupShowing, setGroupShowing] = useState<IDropGroup | undefined>(
+    undefined
+  );
   const { onShowToast } = useToast();
+  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
+  const { account } = useAccount();
 
   // interal state
   const [isShowMultiple, setIsShowMultiple] = useState(false);
   const { isOpen: isOpenCreateGroup, toggleModal: toggleCreateGroup } =
     useModal();
+  const {
+    isOpen: isOpenCollectiblesInGroup,
+    toggleModal: toggleCollectiblesInGroup,
+  } = useModal();
+  const { isOpen: isShowSuccess, toggleModal: toggleSuccess } = useModal();
 
-  const backgroundColors: { [key: string]: string } = {
-    common: "#d3d3d3",
-    rare: "#add8e6",
-    legendary: "#ffd700",
-    ultimate: "#ff4500",
-  };
-
-  function getBackgroundColor(value: string) {
-    return backgroundColors[value] || "transparent";
-  }
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const missingFields: string[] = [];
-
-    if (!allState.isCheckRandomly && !allState.isCheckSupporters) {
-      missingFields.push("distributionType");
-    }
-    if (allState.isCheckSupporters && allState.amountSupporters <= 0) {
-      missingFields.push("amountSupporters");
+    if (!account) {
+      onShowToast("Please connect your wallet");
+      return;
     }
 
-    // Validate Drop Type
-    if (!allState.dropType) {
-      missingFields.push("dropType");
-    }
-    if (
-      allState.dropType === DropTypeEnum.PROTECTED &&
-      allState.amountDrop <= 0
-    ) {
-      missingFields.push("amountDrop");
-    }
-
-    // Validate Sets
-    if (!allState.sets) {
-      missingFields.push("sets");
-    }
-    // if (
-    //   allState.sets === SetsTypeEnum.GROUP &&
-    //   !allState.multipleDrops.trim()
-    // ) {
-    //   missingFields.push("multipleDrops");
-    // }
-    if (
-      allState.sets === SetsTypeEnum.INDIVIDUAL &&
-      !allState.individualDrops.trim()
-    ) {
-      missingFields.push("individualDrops");
+    if (!allState.perksId) {
+      if (
+        allState.dropType === DropTypeEnum.PROTECTED &&
+        allState.protectedAmount <= 0
+      ) {
+        missingFields.push("protectedAmount");
+      }
+    } else {
+      if (allState.fromTopSupporters <= 0) {
+        missingFields.push("fromTopSupporters");
+      }
+      if (
+        allState.toTopSupporters <= 0 ||
+        allState.fromTopSupporters > allState.toTopSupporters
+      ) {
+        missingFields.push("toTopSupporters");
+      }
     }
 
-    console.log(missingFields);
+    if (allState.sets === SetsTypeEnum.GROUP && !allState.groupSelected) {
+      missingFields.push("groupSelected");
+    }
+
+    if (allState.sets === SetsTypeEnum.INDIVIDUAL) {
+      if (
+        !allState.individualDropsStartDate ||
+        !allState.individualDropsExpiryDate
+      ) {
+        missingFields.push("individualDropsDate");
+      }
+    }
 
     if (missingFields.length > 0) {
       setInvalidFields(missingFields);
@@ -77,8 +103,68 @@ const Step2 = () => {
       return;
     }
 
-    // If all validations pass, proceed with the creation logic
-    console.log("All validations passed. Proceeding with creation.");
+    try {
+      setIsLoadingCreate(true);
+
+      const callData: any = CallData.compile({
+        collectible: allState.contractAddress,
+        drop_type: allState.dropType == DropTypeEnum.FREE ? 1 : 2,
+        secure_amount: uint256.bnToUint256(
+          allState.dropType == DropTypeEnum.FREE ? 0 : allState.protectedAmount
+        ),
+        is_random_to_subscribers: allState.isCheckRandomly ? 1 : 0,
+        from_top_supporter: allState.fromTopSupporters,
+        to_top_supporter: allState.toTopSupporters,
+        start_time:
+          allState.sets == SetsTypeEnum.GROUP
+            ? allState.groupSelected!.startTime / 1000
+            : allState.individualDropsStartDate!.toDate().getTime() / 1000, // /1000 to convert to seconds
+        expire_time:
+          allState.sets == SetsTypeEnum.GROUP
+            ? allState.groupSelected!.expiryTime / 1000
+            : allState.individualDropsExpiryDate!.toDate().getTime() / 1000, // /1000 to convert to seconds
+      });
+
+      const tx = await account.execute([
+        {
+          contractAddress:
+            process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
+            "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
+          entrypoint: "create_drop",
+          calldata: callData,
+        },
+      ]);
+
+      const provider = new RpcProvider({
+        nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
+      });
+
+      const txHash = await provider.waitForTransaction(tx.transaction_hash);
+
+      if (txHash.isSuccess()) {
+        if (allState.sets == SetsTypeEnum.GROUP) {
+          await handleAddCollectibleToGroup(
+            allState.groupSelected!._id,
+            allState.contractAddress
+          );
+        }
+
+        if (allState.sets == SetsTypeEnum.INDIVIDUAL) {
+          await handleCreateNewGroup(
+            allState.contractAddress,
+            allState.individualDropsStartDate!.toDate().getTime(),
+            allState.individualDropsExpiryDate!.toDate().getTime()
+          );
+        }
+      }
+
+      toggleSuccess();
+    } catch (error) {
+      console.log(error);
+      onShowToast("Failed to create drop");
+    } finally {
+      setIsLoadingCreate(false);
+    }
   };
 
   useEffect(() => {
@@ -90,21 +176,46 @@ const Step2 = () => {
     }
   }, [invalidFields]);
 
-  const MultipleDropdown: React.FC<{ groups: IGroupMultiple[] }> = ({
-    groups,
-  }) => {
+  const MultipleDropdown = () => {
     return (
       <div className="select-none absolute flex flex-col mt-2 left-0 top-full border border-border rounded-md p-4 w-full bg-black z-10 gap-8">
-        {groups.length > 0 ? (
-          groups?.map((group) => {
+        {groupDrop.length > 0 ? (
+          groupDrop?.map((group, index) => {
             return (
-              <div className="flex justify-between items-center">
+              <div
+                onClick={() =>
+                  setAllState((prevState) => ({
+                    ...prevState,
+                    groupSelected: group,
+                  }))
+                }
+                key={index}
+                className="flex justify-between items-center"
+              >
                 <div className="flex items-center gap-2.5">
-                  <div className="h-4 w-4 bg-white rounded-full"></div>
-                  <p>{group.dateTime}</p>
+                  <div className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px] cursor-pointer">
+                    {allState.groupSelected?._id == group._id && (
+                      <div className="h-full w-full rounded-full bg-buy"></div>
+                    )}
+                  </div>
+                  <p>
+                    {formatTimestamp(group.startTime / 1000)} -{" "}
+                    {formatTimestamp(group.expiryTime / 1000)}
+                  </p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <p>{group.drops.length} Drops</p>
+                  <p>
+                    {group.collectibles.length} Drop
+                    {group.collectibles.length > 1 && "s"}
+                  </p>
+                  <RiShareBoxLine
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setGroupShowing(group);
+                      toggleCollectiblesInGroup();
+                    }}
+                    className="text-grays hover:text-white"
+                  />
                 </div>
               </div>
             );
@@ -112,22 +223,6 @@ const Step2 = () => {
         ) : (
           <p>There are no group!</p>
         )}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2.5">
-            <div className="h-4 w-4 bg-white rounded-full"></div>
-            <p>qưd</p>
-          </div>
-          <div className="flex items-center gap-1">
-            <p>qưdqwd</p>
-          </div>
-        </div>
-        <div onClick={toggleCreateGroup} className="group">
-          <Button
-            title="Create New"
-            variant="primary"
-            className="w-full pointer-events-none group-hover:bg-primary group-hover:text-black"
-          />
-        </div>
       </div>
     );
   };
@@ -136,6 +231,23 @@ const Step2 = () => {
     <>
       <ModelV2 isShow={isOpenCreateGroup} hide={toggleCreateGroup}>
         <CreateGroup hide={toggleCreateGroup} />
+      </ModelV2>
+      <ModelV2
+        isShow={isOpenCollectiblesInGroup}
+        hide={toggleCollectiblesInGroup}
+      >
+        <CollectiblesInGroup
+          hide={toggleCollectiblesInGroup}
+          collectibles={groupShowing?.collectibles || []}
+        />
+      </ModelV2>
+      <ModelV2
+        isShow={isShowSuccess}
+        hide={() => {
+          return;
+        }}
+      >
+        <SuccessCreated />
       </ModelV2>
       <div className="mx-auto flex max-w-[1200px] animate-fade flex-col gap-10 px-2">
         <div className="flex justify-between gap-10 max-md:flex-col max-md:items-center">
@@ -151,29 +263,87 @@ const Step2 = () => {
                   <span className="text-cancel">*</span>
                 </p>
 
-                <div
-                  className={`flex h-8 items-center gap-3 rounded-md border border-line px-5 ${invalidFields.includes("distributionType") && "animate-shake"}`}
-                >
+                {!allState.perksId && (
                   <div
-                    onClick={() => {
-                      setAllState((prevState) => ({
-                        ...prevState,
-                        isCheckRandomly: !allState.isCheckRandomly,
-                      }));
-                    }}
-                    className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 p-[1px] ${allState.isCheckRandomly ? "border-buy" : "border-grays"}`}
+                    className={`flex h-8 items-center gap-3 rounded-md border border-line px-5 ${invalidFields.includes("distributionType") && "animate-shake"}`}
                   >
-                    {allState.isCheckRandomly && (
-                      <FaCheck className="h-full w-full text-buy" />
-                    )}
-                  </div>
-                  <p className="font-bold">Randomly to subscribers</p>
-                </div>
-                <div
-                  className={`flex h-8 items-center justify-between rounded-md border border-line px-5 ${invalidFields.includes("distributionType") && "animate-shake"}`}
-                >
-                  <div className="flex items-center gap-3">
                     <div
+                      onClick={() => {
+                        setAllState((prevState) => ({
+                          ...prevState,
+                          isCheckRandomly: !allState.isCheckRandomly,
+                        }));
+                      }}
+                      className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 p-[1px] border-buy ${allState.dropType === DropTypeEnum.FREE && "opacity-50 pointer-events-none cursor-default"}`}
+                    >
+                      {allState.isCheckRandomly && (
+                        <FaCheck className="h-full w-full text-buy" />
+                      )}
+                    </div>
+                    <p
+                      className={`font-bold ${allState.dropType == DropTypeEnum.PROTECTED && allState.isCheckRandomly ? "text-white" : "text-grays"}`}
+                    >
+                      Randomly to subscribers
+                    </p>
+                  </div>
+                )}
+
+                {allState.perksId && (
+                  <div
+                    className={`flex h-8 items-center justify-between rounded-md border border-line px-5 ${invalidFields.includes("distributionType") && "animate-shake"}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      {/* <div
+                        onClick={() => {
+                          setAllState((prevState) => ({
+                            ...prevState,
+                            isCheckSupporters: !allState.isCheckSupporters,
+                          }));
+                        }}
+                        className={`grid aspect-square h-[15px] cursor-pointer place-items-center rounded-sm border-2 p-[1px] ${allState.isCheckSupporters ? "border-buy" : "border-grays"}`}
+                      >
+                        {allState.isCheckSupporters && (
+                          <FaCheck className="h-full w-full text-buy" />
+                        )}
+                      </div> */}
+                      <p className="font-bold text-grays">
+                        From top supporters
+                      </p>
+                    </div>
+                    <div
+                      className={`flex items-center ${invalidFields.includes("fromTopSupporters") && "animate-shake"}`}
+                    >
+                      <p className="text-grays">Amount: |</p>
+                      <Input
+                        placeholder="Input numbers"
+                        className="max-h-full w-[80px] border-none bg-transparent outline-none"
+                        value={allState.fromTopSupporters}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          // if not a number, set to 0
+                          if (isNaN(Number(e.target.value))) {
+                            setAllState((prevState) => ({
+                              ...prevState,
+                              fromTopSupporters: 0,
+                            }));
+                            return;
+                          }
+
+                          setAllState((prevState) => ({
+                            ...prevState,
+                            fromTopSupporters: Number(e.target.value),
+                          }));
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {allState.perksId && (
+                  <div
+                    className={`flex h-8 items-center justify-between rounded-md border border-line px-5 ${invalidFields.includes("distributionType") && "animate-shake"}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      {/* <div
                       onClick={() => {
                         setAllState((prevState) => ({
                           ...prevState,
@@ -185,102 +355,113 @@ const Step2 = () => {
                       {allState.isCheckSupporters && (
                         <FaCheck className="h-full w-full text-buy" />
                       )}
+                    </div> */}
+                      <p className="font-bold text-grays">To top supporters</p>
                     </div>
-                    <p className="font-bold text-grays">To top supporters</p>
-                  </div>
-                  <div
-                    className={`flex items-center ${allState.isCheckSupporters ? "opacity-100" : "opacity-0"} ${invalidFields.includes("amountSupporters") && "animate-shake"}`}
-                  >
-                    <p className="text-grays">Amount: |</p>
-                    <Input
-                      placeholder="Input numbers"
-                      className="max-h-full w-[50px] border-none bg-transparent outline-none"
-                      value={allState.amountSupporters}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        // if not a number, set to 0
-                        if (isNaN(Number(e.target.value))) {
+                    <div
+                      className={`flex items-center ${invalidFields.includes("toTopSupporters") && "animate-shake"}`}
+                    >
+                      <p className="text-grays">Amount: |</p>
+                      <Input
+                        placeholder="Input numbers"
+                        className="max-h-full w-[80px] border-none bg-transparent outline-none"
+                        value={allState.toTopSupporters}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          // if not a number, set to 0
+                          if (isNaN(Number(e.target.value))) {
+                            setAllState((prevState) => ({
+                              ...prevState,
+                              toTopSupporters: 0,
+                            }));
+                            return;
+                          }
+
                           setAllState((prevState) => ({
                             ...prevState,
-                            amountSupporters: 0,
+                            toTopSupporters: Number(e.target.value),
                           }));
-                          return;
-                        }
-
-                        setAllState((prevState) => ({
-                          ...prevState,
-                          amountSupporters: Number(e.target.value),
-                        }));
-                      }}
-                    />
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
+              {!allState.perksId && (
+                <div className="flex flex-1 flex-col gap-2">
+                  <p className="font-bold">
+                    Type of Drop <span className="text-cancel">*</span>
+                  </p>
 
-              <div className="flex flex-1 flex-col gap-2">
-                <p className="font-bold">
-                  Type of Drop <span className="text-cancel">*</span>
-                </p>
-
-                <div className="flex h-8 items-center gap-3 rounded-md border border-line px-5">
-                  <div
-                    onClick={() =>
-                      setAllState((prevState) => ({
-                        ...prevState,
-                        dropType: DropTypeEnum.FREE,
-                      }))
-                    }
-                    className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px] cursor-pointer"
-                  >
-                    {allState.dropType == DropTypeEnum.FREE && (
-                      <div className="h-full w-full rounded-full bg-buy"></div>
-                    )}
-                  </div>
-                  <p className="font-bold">Free</p>
-                </div>
-                <div className="flex h-8 items-center justify-between rounded-md border border-line px-5">
-                  <div className="flex items-center gap-3">
+                  <div className="flex h-8 items-center gap-3 rounded-md border border-line px-5">
                     <div
                       onClick={() =>
                         setAllState((prevState) => ({
                           ...prevState,
-                          dropType: DropTypeEnum.PROTECTED,
+                          dropType: DropTypeEnum.FREE,
+                          isCheckRandomly: true,
                         }))
                       }
                       className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px] cursor-pointer"
                     >
-                      {allState.dropType == DropTypeEnum.PROTECTED && (
+                      {allState.dropType == DropTypeEnum.FREE && (
                         <div className="h-full w-full rounded-full bg-buy"></div>
                       )}
                     </div>
-                    <p className="font-bold text-grays">Protected</p>
+                    <p
+                      className={`font-bold ${allState.dropType == DropTypeEnum.FREE ? "text-white" : "text-grays"}`}
+                    >
+                      Free
+                    </p>
                   </div>
-                  <div
-                    className={`flex items-center ${allState.dropType == DropTypeEnum.PROTECTED ? "opacity-100" : "opacity-0"} ${invalidFields.includes("amountDrop") && "animate-shake"}`}
-                  >
-                    <p className="text-grays">Amount: |</p>
-                    <Input
-                      placeholder="Input numbers"
-                      className="max-h-full w-[50px] border-none bg-transparent outline-none"
-                      value={allState.amountDrop}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        // if not a number, set to 0
-                        if (isNaN(Number(e.target.value))) {
+                  <div className="flex h-8 items-center justify-between rounded-md border border-line px-5">
+                    <div className="flex items-center gap-3">
+                      <div
+                        onClick={() =>
                           setAllState((prevState) => ({
                             ...prevState,
-                            amountDrop: 0,
-                          }));
-                          return;
+                            dropType: DropTypeEnum.PROTECTED,
+                          }))
                         }
+                        className="grid aspect-square h-[15px] place-items-center rounded-full border-2 border-buy p-[2px] cursor-pointer"
+                      >
+                        {allState.dropType == DropTypeEnum.PROTECTED && (
+                          <div className="h-full w-full rounded-full bg-buy"></div>
+                        )}
+                      </div>
+                      <p
+                        className={`font-bold ${allState.dropType == DropTypeEnum.PROTECTED ? "text-white" : "text-grays"}`}
+                      >
+                        Protected
+                      </p>
+                    </div>
+                    <div
+                      className={`flex items-center ${allState.dropType == DropTypeEnum.PROTECTED ? "opacity-100" : "opacity-0"} ${invalidFields.includes("protectedAmount") && "animate-shake"}`}
+                    >
+                      <p className="text-grays">Amount: |</p>
+                      <Input
+                        placeholder="Input numbers"
+                        className="max-h-full w-[50px] border-none bg-transparent outline-none"
+                        value={allState.protectedAmount}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          // if not a number, set to 0
+                          if (isNaN(Number(e.target.value))) {
+                            setAllState((prevState) => ({
+                              ...prevState,
+                              protectedAmount: 0,
+                            }));
+                            return;
+                          }
 
-                        setAllState((prevState) => ({
-                          ...prevState,
-                          amountDrop: Number(e.target.value),
-                        }));
-                      }}
-                    />
+                          setAllState((prevState) => ({
+                            ...prevState,
+                            protectedAmount: Number(e.target.value),
+                          }));
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="flex flex-1 flex-col gap-2">
                 <p className="font-bold">
@@ -302,20 +483,24 @@ const Step2 = () => {
                         <div className="h-full w-full rounded-full bg-buy"></div>
                       )}
                     </div>
-                    <p className="font-bold">Group multiple drops:</p>
+                    <p
+                      className={`font-bold ${allState.sets == SetsTypeEnum.GROUP ? "text-white" : "text-grays"}`}
+                    >
+                      Group multiple drops:
+                    </p>
                   </div>
                   <div
                     tabIndex={0}
                     onBlur={() => setIsShowMultiple(false)}
-                    className={`${allState.sets == SetsTypeEnum.INDIVIDUAL && "opacity-50 pointer-events-none"} flex border border-border flex-1 rounded-md items-center justify-between cursor-pointer relative`}
+                    className={`${allState.sets == SetsTypeEnum.INDIVIDUAL && "opacity-50 pointer-events-none"} flex border border-border flex-1 rounded-md items-center justify-between cursor-pointer relative ${invalidFields.includes("groupSelected") && "animate-shake"}`}
                   >
                     <div
                       onClick={() => setIsShowMultiple((prev) => !prev)}
                       className="flex items-center justify-between flex-1 px-3 py-2"
                     >
                       <p>
-                        {allState.multipleDropsSelected
-                          ? allState.multipleDropsSelected.dateTime
+                        {allState.groupSelected
+                          ? `${formatTimestamp(allState.groupSelected.startTime / 1000)} - ${formatTimestamp(allState.groupSelected.expiryTime / 1000)}`
                           : "Choose"}
                       </p>
                       <IoIosArrowDown
@@ -325,7 +510,7 @@ const Step2 = () => {
                     {/* DropDown */}
                     {isShowMultiple && (
                       <div className="absolute left-0 top-full w-full z-10">
-                        <MultipleDropdown groups={allState.multipleDrops} />
+                        <MultipleDropdown />
                       </div>
                     )}
                   </div>
@@ -345,13 +530,39 @@ const Step2 = () => {
                         <div className="h-full w-full rounded-full bg-buy"></div>
                       )}
                     </div>
-                    <p className="font-bold">Individually distribute:</p>
+                    <p
+                      className={`font-bold ${allState.sets == SetsTypeEnum.INDIVIDUAL ? "text-white" : "text-grays"}`}
+                    >
+                      Individually distribute:
+                    </p>
                   </div>
                   <div
-                    className={`flex h-9 flex-1 cursor-pointer items-center justify-between rounded-md border border-border px-3 py-2 hover:border-primary ${allState.sets != SetsTypeEnum.INDIVIDUAL && "pointer-events-none opacity-50"}`}
+                    className={`flex h-9 flex-1 cursor-pointer items-center justify-between rounded-md border border-border px-3 py-2 hover:border-primary ${allState.sets != SetsTypeEnum.INDIVIDUAL && "pointer-events-none opacity-50 "} ${invalidFields.includes("individualDropsDate") && "animate-shake"}`}
                   >
-                    <p className="font-normal text-white/50">Choose</p>
-                    <FaCalendarAlt className="text-grays" />
+                    {allState.individualDropsStartDate &&
+                    allState.individualDropsExpiryDate ? (
+                      <p className="font-normal">
+                        {formatTimestamp(
+                          allState.individualDropsStartDate.toDate().getTime() /
+                            1000
+                        )}{" "}
+                        -{" "}
+                        {formatTimestamp(
+                          allState.individualDropsExpiryDate
+                            .toDate()
+                            .getTime() / 1000
+                        )}
+                      </p>
+                    ) : (
+                      <p className="font-normal text-white/50">
+                        01/01/2025 - 00:00
+                      </p>
+                    )}
+
+                    <FaCalendarAlt
+                      onClick={toggleCreateGroup}
+                      className="text-grays"
+                    />
                   </div>
                 </div>
               </div>
@@ -400,6 +611,7 @@ const Step2 = () => {
           </div>
         </div>
         <Button
+          loading={isLoadingCreate}
           id="btnStep2"
           title="Create"
           onClick={handleCreate}

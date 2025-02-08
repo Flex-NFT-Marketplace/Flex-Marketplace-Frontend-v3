@@ -2,15 +2,15 @@ import Button from "@/packages/@ui-kit/Button";
 import DatePickup from "@/packages/@ui-kit/DatePickup";
 import { Dayjs } from "dayjs";
 import { useState } from "react";
-import { useCreateDrop } from "./page";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { useCreateDrop } from "@/services/providers/CreateDropProvider";
 
 const CreateGroup = ({ hide }: { hide: () => void }) => {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [expiryDate, setExpiryDate] = useState<Dayjs | null>(null);
   const { onShowToast } = useToast();
 
-  const { allState, handleCreateNewGroup } = useCreateDrop();
+  const { setAllState } = useCreateDrop();
 
   const createNewGroup = async () => {
     if (!startDate || !expiryDate) {
@@ -23,11 +23,12 @@ const CreateGroup = ({ hide }: { hide: () => void }) => {
       return;
     }
 
-    await handleCreateNewGroup(
-      allState.contractAddress,
-      startDate.toDate().getTime(),
-      expiryDate.toDate().getTime()
-    );
+    setAllState((prev) => ({
+      ...prev,
+      individualDropsStartDate: startDate,
+      individualDropsExpiryDate: expiryDate,
+    }));
+
     hide();
   };
 

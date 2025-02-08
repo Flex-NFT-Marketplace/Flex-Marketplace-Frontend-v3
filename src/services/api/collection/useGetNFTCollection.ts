@@ -40,7 +40,6 @@ export const useGetNFTCollection = (
       const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
             ...params
       })
-      console.log(params);
       
       return data.data;
     },

@@ -18,6 +18,7 @@ import { ISignature } from "./ISignature";
     isVerified: string;
     username: string;
     _id: boolean;
+    points: number;
   }
   
   // Define the main NFT item type.

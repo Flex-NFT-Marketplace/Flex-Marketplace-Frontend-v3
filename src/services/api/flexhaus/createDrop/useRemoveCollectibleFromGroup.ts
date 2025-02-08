@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosHausWithToken } from "@/axiosConfig/axiosConfig";
 
-export const useAddCollectibleToGroup = () => {
+export const useRemoveCollectibleFromGroup = () => {
   return useMutation({
-    mutationKey: ["ADD_COLLECTIBLE_TO_GROUP"],
+    mutationKey: ["REMOVE_COLLECTIBLE_FROM_GROUP"],
     mutationFn: async (body: { setId: string, collectible: string }) => {
       
-        const { data } = await axiosHausWithToken.post("flexhaus-drop/add-collectible",body);
+        const { data } = await axiosHausWithToken.post("flexhaus-drop/remove-collectible",body);
 
         return data;
-  
+   
     },
   });
 };

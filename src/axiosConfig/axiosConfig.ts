@@ -2,6 +2,10 @@ import { ACCESS_TOKEN } from '@/constants/cookies';
 import { getCookie } from '@/helpers/cookie';
 import axios from 'axios';
 
+export const axiosHausNoToken = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_HAUS_API,
+});
+
 export const axiosHausWithToken = axios.create({
   baseURL: process.env.NEXT_PUBLIC_HAUS_API,
 });

@@ -1,18 +1,19 @@
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useCreateDrop } from "@/services/providers/CreateDropProvider";
+import Link from "next/link";
 
-const SuccessDeployed = () => {
-  const { allState, setAllState } = useCreateDrop();
+const SuccessCreated = () => {
+  const { allState } = useCreateDrop();
 
   return (
     <div className="flex h-fit w-[700px] max-w-full flex-col gap-6 rounded-lg border-2 border-border px-5 py-8">
       <div className="flex flex-col text-center">
         <p className="text-[24px] font-bold uppercase leading-[30px]">
-          Successfully Deployed
+          Successfully Created
         </p>
         <p className="text-base leading-5 text-gray">
-          Your Drop has been deployed
+          Your Drop has been created
         </p>
       </div>
       <div className="flex flex-col gap-8">
@@ -59,19 +60,15 @@ const SuccessDeployed = () => {
             </div>
           </div>
         </div>
-        <Button
-          title="Next"
-          className="h-fit w-full rounded-none py-3 capitalize"
-          onClick={() =>
-            setAllState((prev) => ({
-              ...prev,
-              activeStep: prev.activeStep + 1,
-            }))
-          }
-        />
+        <Link href={`/drop-detail/${allState?.contractAddress}`}>
+          <Button
+            title="View"
+            className="h-fit w-full rounded-none py-3 capitalize"
+          />
+        </Link>
       </div>
     </div>
   );
 };
 
-export default SuccessDeployed;
+export default SuccessCreated;

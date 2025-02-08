@@ -12,7 +12,9 @@ const usePostMetadata = () => {
         );
 
         return data;
-      } catch (error) {}
+      } catch (error) {
+        throw error;
+      }
     },
   });
 };

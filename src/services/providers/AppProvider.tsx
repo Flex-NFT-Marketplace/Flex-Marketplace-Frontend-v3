@@ -11,6 +11,7 @@ import TanstackProvider from "./TanstackProvider";
 import LoadingHeaderProvider from "./market/LoadingHeaderProvider";
 import { CollectionDetailProvider } from "./CollectionDetailProvider";
 import { PackCollectionProvider } from "./PackCollectionProvider";
+import DropDetailProvider from "./DropDetailProvider";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -27,9 +28,11 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
                         <PackCollectionProvider>
                           <ActivityProvider>
                             <CollectionDetailProvider>
-                              <LoadingHeaderProvider>
-                                {children}
-                              </LoadingHeaderProvider>
+                              <DropDetailProvider>
+                                <LoadingHeaderProvider>
+                                  {children}
+                                </LoadingHeaderProvider>
+                              </DropDetailProvider>
                             </CollectionDetailProvider>
                           </ActivityProvider>
                         </PackCollectionProvider>

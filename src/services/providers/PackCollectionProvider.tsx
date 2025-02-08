@@ -195,7 +195,6 @@ export const PackCollectionProvider = ({
       contract_address,
       ownerAddress,
     });
-    console.log(res.items);
     setPackOfOwner(res.items);
   };
 
@@ -245,8 +244,6 @@ export const PackCollectionProvider = ({
 
   useEffect(() => {
     if (atemuPacksRes) {
-      console.log(atemuPacksRes.pages[0].items);
-
       setAtemuPacks(atemuPacksRes.pages[0].items);
     }
   }, [atemuPacksRes]);
@@ -295,7 +292,6 @@ export const PackCollectionProvider = ({
     map.forEach((values, trait) => {
       converted.push({ trait_type: trait, value: values });
     });
-    console.log(converted);
 
     return converted;
   };

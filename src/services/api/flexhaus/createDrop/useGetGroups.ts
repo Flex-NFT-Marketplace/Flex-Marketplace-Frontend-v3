@@ -15,7 +15,7 @@ export const useGetGroups = () => {
 
         const { data } = await axiosHausWithToken.post("flexhaus-drop/get-sets", payload);
 
-        return data;
+        return data.data;
       } catch (error) {}
     },
   });

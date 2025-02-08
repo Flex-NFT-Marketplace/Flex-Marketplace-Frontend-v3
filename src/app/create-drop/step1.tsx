@@ -4,7 +4,6 @@ import { FiUpload } from "react-icons/fi";
 import Input from "@/packages/@ui-kit/Input";
 import ImageKit from "@/packages/@ui-kit/Image";
 import Button from "@/packages/@ui-kit/Button";
-import { useCreateDrop } from "./page";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 import SuccessDeployed from "./SuccessDeployed";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
@@ -14,6 +13,7 @@ import { byteArray, CallData, RpcProvider, uint256 } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import usePostMetadata from "@/services/api/usePostMetadata";
 import { getShortTraits, isDigit } from "@/utils/string";
+import { useCreateDrop } from "@/services/providers/CreateDropProvider";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateDrop();
@@ -36,7 +36,7 @@ const Step1 = () => {
   const customStyles = {
     control: (provided: any, state: any) => ({
       ...provided,
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       boxShadow: state.isFocused ? "0 0 0 0px #FFE720" : "none",
       borderColor: state.isFocused ? "#FFE720" : "#3A3A3C",
       "&:hover": {
@@ -148,71 +148,68 @@ const Step1 = () => {
     try {
       setLoadingDeploy(true);
 
-      // const formData = new FormData();
-      // formData.append("name", allState.metadata1);
-      // formData.append("description", allState.nftDescription);
-      // formData.append("file", allState.fileNftImage!);
+      const formData = new FormData();
+      formData.append("name", allState.metadata1);
+      formData.append("description", allState.nftDescription);
+      formData.append("file", allState.fileNftImage!);
 
-      // const res = await _postMetadata.mutateAsync(formData);
-      // const uri = process.env.NEXT_PUBLIC_API + "metadata/" + res.data;
+      const res = await _postMetadata.mutateAsync(formData);
+      const uri = process.env.NEXT_PUBLIC_API + "metadata/" + res.data;
 
-      // setAllState((prev) => ({
-      //   ...prev,
-      //   base_uri: uri,
-      // }));
-
-      // console.log(uri);
+      setAllState((prev) => ({
+        ...prev,
+        base_uri: uri,
+      }));
 
       const provider = new RpcProvider({
         nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
       });
 
-      // const execute = await account.execute([
-      //   {
-      //     contractAddress:
-      //       "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7", // ETH
-      //     entrypoint: "approve",
-      //     calldata: CallData.compile({
-      //       spender:
-      //         process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
-      //         "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
-      //       amount: uint256.bnToUint256("250000000000000"),
-      //     }),
-      //   },
-      //   {
-      //     contractAddress:
-      //       process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
-      //       "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
-      //     entrypoint: "create_collectible",
+      const execute = await account.execute([
+        {
+          contractAddress:
+            "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7", // ETH
+          entrypoint: "approve",
+          calldata: CallData.compile({
+            spender:
+              process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
+              "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
+            amount: uint256.bnToUint256("250000000000000"),
+          }),
+        },
+        {
+          contractAddress:
+            process.env.NEXT_PUBLIC_FLEXHAUS_CONTRACT ||
+            "0x05be9d77cf191155fa6518751ff5e0f15256114134c8f313e91d9d72b2ad91bb",
+          entrypoint: "create_collectible",
 
-      //     calldata: CallData.compile([
-      //       {
-      //         name: byteArray.byteArrayFromString(allState.tokenName),
-      //         symbol: byteArray.byteArrayFromString(allState.tokenSymbol),
-      //         base_uri: byteArray.byteArrayFromString(uri),
-      //         total_supply: uint256.bnToUint256(allState.metadata3),
-      //         ratity: allState.metadata2,
-      //       },
-      //     ]),
-      //   },
-      // ]);
+          calldata: CallData.compile([
+            {
+              name: byteArray.byteArrayFromString(allState.tokenName),
+              symbol: byteArray.byteArrayFromString(allState.tokenSymbol),
+              base_uri: byteArray.byteArrayFromString(uri),
+              total_supply: uint256.bnToUint256(allState.metadata3),
+              ratity: allState.metadata2,
+            },
+          ]),
+        },
+      ]);
 
-      // const result = await account.execute();
+      const txHash = execute.transaction_hash;
 
-      // console.log(execute.transaction_hash);
+      const tx = await provider.waitForTransaction(txHash);
 
-      const txReceipt: any = await provider.waitForTransaction(
-        "0x037682ab40c80263db7ae2e777f9b570773e46e950d8fb73b1b8581bf23d4348"
-      );
+      if (tx.isSuccess()) {
+        const txReceipt: any = await provider.getTransactionTrace(
+          tx.transaction_hash
+        );
+        setAllState((prevState) => ({
+          ...prevState,
+          contractAddress: txReceipt.state_diff.deployed_contracts[0].address,
+        }));
 
-      console.log(txReceipt.events[3].from_address);
-
-      setAllState((prevState) => ({
-        ...prevState,
-        contractAddress: txReceipt.events[3].from_address,
-      }));
-
-      toggleSuccess();
+        toggleSuccess();
+      }
     } catch (error) {
       console.log(error);
       onShowToast("Failed to deploy Collection");
