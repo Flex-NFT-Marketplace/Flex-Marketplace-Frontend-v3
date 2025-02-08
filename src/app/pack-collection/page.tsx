@@ -252,6 +252,7 @@ const OnChain = () => {
               </div>
               <div className="flex overflow-auto gap-4 h-full flex-1 max-lg:w-full">
                 <PackCard />
+                {/* <PackCard /> */}
                 {/* <PackCard />
                 <PackCard />
                 <PackCard /> */}

@@ -48,7 +48,6 @@ interface Attribute {
 // Định nghĩa interface cho đối tượng dữ liệu (DataObject)
 export interface DataObject {
   description: string;
-  external_url: string;
   image: string;
   name: string;
   attributes: Attribute[];
@@ -119,25 +118,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
     tokenIds: number[],
     data: DataObject[]
   ): DataObject[] {
-    // Tạo một bản đồ để tra cứu nhanh các đối tượng theo TokenID
-    const tokenMap: Map<number, DataObject> = new Map();
-
-    data.forEach((obj) => {
-      // Tìm giá trị TokenID trong thuộc tính attributes
-      const tokenIdAttr = obj.attributes.find(
-        (attr) => attr.trait_type === "TokenID"
-      );
-      if (tokenIdAttr && typeof tokenIdAttr.value === "number") {
-        tokenMap.set(tokenIdAttr.value, obj);
-      }
-    });
-
-    // Lấy các đối tượng theo thứ tự của tokenIds
-    const result: DataObject[] = tokenIds
-      .map((id) => tokenMap.get(id))
-      .filter((obj): obj is DataObject => obj !== undefined);
-
-    return result;
+    return tokenIds.map((id) => data[id - 1]);
   }
 
   const open = async () => {

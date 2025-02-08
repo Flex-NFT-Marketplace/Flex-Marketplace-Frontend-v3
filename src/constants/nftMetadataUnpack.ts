@@ -1,1202 +1,2102 @@
 export const metadataUnpack = [
     {
-        "description": "Imhotep  from the Egypt class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Imhotep ",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "#REF!"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 1
-            }
-        ]
+      "description": "The Annihilation. After playing a spell, Abaddon gain 2 attack",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/1.png",
+      "name": "Abaddon",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Hell Born"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Dark"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Akhir from the Egypt class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Akhir",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 2
-            }
-        ]
+      "description": "The Cursed Heel. When Achiles is summoned, any target opponent's Champion  will be damaged by 1.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/2.png",
+      "name": "Achilles",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Warrior"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Light"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 2
+        }
+      ]
     },
     {
-        "description": "Nefru from the Egypt class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Nefru",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 3
-            }
-        ]
+      "description": "The Immortal Spirit. Immortal: at the start of your turn, Akhir is fully healed.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/3.png",
+      "name": "Akhir",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Caster"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Earth"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Nephthys from the Egypt class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Nephthys",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 4
-            }
-        ]
+      "description": "The Worthless One. After eliminating opponent's Champion, gain 2 mana",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/4.png",
+      "name": "Belial",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Hell Born"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Dark"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 2
+        }
+      ]
     },
     {
-        "description": "Bastet from the Egypt class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Bastet",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 5
-            }
-        ]
+      "description": "The Bloody Wolf. Ignore: Blódulf can attack without affected by the Protectors",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/5.png",
+      "name": "Blódulf",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Hell Born"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Fire"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 2
+        }
+      ]
     },
     {
-        "description": "Anmit from the Egypt class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Anmit",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 6
-            }
-        ]
+      "description": "The Master of Knowledge. Dantalion gain 2 attack during the opponent's turn",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/6.png",
+      "name": "Dantalion",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Hell Born"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Dark"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Sebek from the Egypt class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Sebek",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 7
-            }
-        ]
+      "description": "The Great Craftsman. Sacrifice: Target Champion gains Sacrify. Your other characters cannot be attacked.  ",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/7.png",
+      "name": "Imhotep ",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Caster"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Earth"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Horus from the Egypt class with a rarity of Legendary.",
-        "external_url": "",
-        "image": "",
-        "name": "Horus",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Legendary"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "6.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 8
-            }
-        ]
+      "description": "The Umbrella Monster. Shield: Kasa Obake is immuned from opponent attack in the first hit",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/8.png",
+      "name": "Kasa Obake",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Hell Born"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Water"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Horus from the Egypt class with a rarity of Mythical.",
-        "external_url": "",
-        "image": "",
-        "name": "Horus",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Mythical"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "4.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 9
-            }
-        ]
+      "description": "The Eyes. When this card is summoned, return one Champion from your graveyard to your hand",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/9.png",
+      "name": "Mokumokuren",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Hell Born"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Water"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 2
+        }
+      ]
     },
     {
-        "description": "Horus from the Egypt class with a rarity of Chaotic.",
-        "external_url": "",
-        "image": "",
-        "name": "Horus",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Egypt"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Chaotic"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "2.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 10
-            }
-        ]
+      "description": "The Daughter Of Nile. When Nefru is eliminated, draw a card",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/10.png",
+      "name": "Nefru",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Warrior"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Earth"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 1
+        }
+      ]
     },
     {
-        "description": "Achilles from the Greek class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Achilles",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 11
-            }
-        ]
+      "description": "The goddess of the air in the form of black panther. Sacrifice: Target Champion gains Sacrify. Your other characters cannot be attacked.  ",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/11.png",
+      "name": "Nephthys",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Minotaur from the Greek class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Minotaur",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 12
-            }
-        ]
+      "description": "The Great Father, commands the realms with wisdom and might. When Odin is summoned, he can attack immediately",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/12.png",
+      "name": "Odin",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Penthesilea from the Greek class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Penthesilea",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 13
-            }
-        ]
+      "description": "The Amazon Queen. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/13.png",
+      "name": "Phobosyn",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Chaotic"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Medusa from the Greek class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Medusa",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 14
-            }
-        ]
+      "description": "The enigmatic beings of ancient lore, wield supernatural power and shape-shifting abilities. Fate: roll a dice, boost Stheno attack by the result",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/14.png",
+      "name": "Stheno",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 0
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Zeus from the Greek class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Zeus",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 15
-            }
-        ]
+      "description": "The Secret Keeper. When another Champion is eliminated, draw a card",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/15.png",
+      "name": "Tengu",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Caster"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Water"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Athena from the Greek class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Athena",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 16
-            }
-        ]
+      "description": "The radiant sun goddess, illuminates the heavens with divine light. Target Champion's ability cannot be activated",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/16.png",
+      "name": "Amaterasu",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Apolo from the Greek class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Apolo",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 17
-            }
-        ]
+      "description": "The crocodile goddess, devours unworthy souls in the afterlife. When this card is summoned, return one Champion from your graveyard to your hand",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/17.png",
+      "name": "Anmit",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 2
+        }
+      ]
     },
     {
-        "description": "Phobosyn from the Greek class with a rarity of Legendary.",
-        "external_url": "",
-        "image": "",
-        "name": "Phobosyn",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Legendary"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "6.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 18
-            }
-        ]
+      "description": "The radiant warrior of the sun, commands light and divine mastery with unmatched prowess. Fate: select a champion, roll a dice, if the result is more than 3, return to its owner's hands. Cost 2 mana",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/18.png",
+      "name": "Apolo",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Phobosyn from the Greek class with a rarity of Mythical.",
-        "external_url": "",
-        "image": "",
-        "name": "Phobosyn",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Mythical"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "4.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 19
-            }
-        ]
+      "description": "A formidable demon of the night, wields dark seduction and malevolent power. When Asmodeus is summoned, all opponent's Champion take 2 damage",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/19.png",
+      "name": "Asmodeus",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 5
+        }
+      ]
     },
     {
-        "description": "Phobosyn from the Greek class with a rarity of Chaotic.",
-        "external_url": "",
-        "image": "",
-        "name": "Phobosyn",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Greek"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Chaotic"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "2.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 20
-            }
-        ]
+      "description": "The fierce goddess of wisdom and war, guiding with intellect and unmatched prowess in battle. Sacrifice: Target Champion gains Sacrify. Your other characters cannot be attacked.  \r\nDouble Stab: Attack twice per turn",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/20.png",
+      "name": "Athena",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 5
+        }
+      ]
     },
     {
-        "description": "Mokumokuren from the Shinto/Japan class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Mokumokuren",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 21
-            }
-        ]
+      "description": "The warrior goddess who is fiercely depicted as a lioness or fierce cat. When Bastet is eliminated, draw 2 cards",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/21.png",
+      "name": "Bastet",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 1
+        }
+      ]
     },
     {
-        "description": "Tengu from the Shinto/Japan class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Tengu",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 22
-            }
-        ]
+      "description": "The powerful demoness of infernal realms, commands seductive allure and arcane knowledge. When Gremory is summoned, selected target's attack is reduced to 1",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/22.png",
+      "name": "Gremory",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Kasa Obake from the Shinto/Japan class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Kasa Obake",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 23
-            }
-        ]
+      "description": "The demi-god, commands unmatched strength and bravery. When Hercules is summoned, each turn eliminate 1 Champion with the lowest attack (including yours)",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/23.png",
+      "name": "Hercules",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Izanami from the Shinto/Japan class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Izanami",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 24
-            }
-        ]
+      "description": "The primordial goddess of creation and death, commands the realms of life and the underworld. Role a dice before attacking, if the result is more than 4, gain 6 attack points until the end of the turn",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/24.png",
+      "name": "Izanami",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Amaterasu from the Shinto/Japan class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Amaterasu",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 25
-            }
-        ]
+      "description": "The primordial king of the night, commands dark allure and primal power. Use 2 mana, return a spell from your hand graveyard to your hand.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/25.png",
+      "name": "Jinn",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Raijin from the Shinto/Japan class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Raijin",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 26
-            }
-        ]
+      "description": "The formidable son of Thor, wields immense strength and power. When Magni is summoned, eliminate a Champion with 4 or less attack. Once done, draw a card.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/26.png",
+      "name": "Magni",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 5
+        }
+      ]
     },
     {
-        "description": "Susanoo from the Shinto/Japan class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Susanoo",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 27
-            }
-        ]
+      "description": "The celestial queen of love and beauty, enchants with divine allure and irresistible charm, commanding hearts and desires. Medusa cannot be targeted until her first attack",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/27.png",
+      "name": "Medusa",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 5
+        }
+      ]
     },
     {
-        "description": "Tsukoyomi from the Shinto/Japan class with a rarity of Legendary.",
-        "external_url": "",
-        "image": "",
-        "name": "Tsukoyomi",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Legendary"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "6.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 28
-            }
-        ]
+      "description": "The Soul Of Mazes. At the start of each turn, Minotaur gain 1 attack",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/28.png",
+      "name": "Minotaur",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Common"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Warrior"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Fire"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Tsukoyomi from the Shinto/Japan class with a rarity of Mythical.",
-        "external_url": "",
-        "image": "",
-        "name": "Tsukoyomi",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Mythical"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "4.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 29
-            }
-        ]
+      "description": "The colossal dragon, gnaws at the roots of Yggdrasil, embodying destruction and the relentless force of decay. Double Stab: Attack twice per turn\r\nScary Mode: At the start of each turn, gain 1 attack",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/29.png",
+      "name": "Nidhogg",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Dragon"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 5
+        }
+      ]
     },
     {
-        "description": "Tsukoyomi from the Shinto/Japan class with a rarity of Chaotic.",
-        "external_url": "",
-        "image": "",
-        "name": "Tsukoyomi",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Shinto/Japan"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Chaotic"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "2.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 30
-            }
-        ]
+      "description": "The Guardian Of Tombs. When Nidrmál attack, the target will lose 1 HP each turn.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/30.png",
+      "name": "Nidrmál ",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Warrior"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Fire"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 1
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 3
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 2
+        }
+      ]
     },
     {
-        "description": "Bl\u00f3dulf from the Viking class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Bl\u00f3dulf",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 31
-            }
-        ]
+      "description": "The Amazon Queen. All your Spells and Abilities gain 1 damage",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/31.png",
+      "name": "Penthesilea",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "Warrior"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Light"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Nidrm\u00e1l  from the Viking class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Nidrm\u00e1l ",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 32
-            }
-        ]
+      "description": "Commanding fear and dominance, Sebek reigns supreme in the heart of ancient Egypt. At the start of each turn, Sebek gain 1 attack",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/32.png",
+      "name": "Sebek",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 4
+        }
+      ]
     },
     {
-        "description": "Skog from the Viking class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Skog",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 33
-            }
-        ]
+      "description": "The Plant Eater. Skog cannot be targeted until his first attack",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/33.png",
+      "name": "Skog",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Fire"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Nidhogg from the Viking class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Nidhogg",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 34
-            }
-        ]
+      "description": "The tempestuous storm god, wields the power of storms and seas. Slaughter: if you have at least one creature in play, go in stealth",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/34.png",
+      "name": "Susanoo",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 5
+        }
+      ]
     },
     {
-        "description": "Hercules from the Viking class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Hercules",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 35
-            }
-        ]
+      "description": "The supreme Greek god, commands the heavens with thunderbolts. Thunder: excess damage will directly affect your opponent's HP",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/35.png",
+      "name": "Zeus",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Magni from the Viking class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Magni",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 36
-            }
-        ]
+      "description": "The Duke Of Hell, wields ancient wisdom and commanding power. Hell's flame: On play, give one allied creature +2 Attack and HP\r\nReborn: Return a creature to its owner's hand.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/36.png",
+      "name": "Barbatos",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Legendary"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Odin from the Viking class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Odin",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 37
-            }
-        ]
+      "description": "The mighty falcon deity, reigns supreme over kingship, sky, protection, vengeance. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/37.png",
+      "name": "Horus",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Legendary"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Tyr from the Viking class with a rarity of Legendary.",
-        "external_url": "",
-        "image": "",
-        "name": "Tyr",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Legendary"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "6.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 38
-            }
-        ]
+      "description": "The Fear and Panic. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/38.png",
+      "name": "Phobosyn",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Legendary"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Tyr from the Viking class with a rarity of Mythical.",
-        "external_url": "",
-        "image": "",
-        "name": "Tyr",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Mythical"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "4.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 39
-            }
-        ]
+      "description": "The Breath Of Moon, wields the serene yet formidable power of the night sky. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/39.png",
+      "name": "Tsukoyomi",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Legendary"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Tyr from the Viking class with a rarity of Chaotic.",
-        "external_url": "",
-        "image": "",
-        "name": "Tyr",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Viking"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Chaotic"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "2.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 40
-            }
-        ]
+      "description": "The resolute god of war and justice, commands with strategic brilliance and unwavering honor. Wicked: All enemy champions have -1 attack\r\nRally: All allied creatures gain +1 attack for 1 turn.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/40.png",
+      "name": "Tyr",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Legendary"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Abaddon from the Hell class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Abaddon",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 41
-            }
-        ]
+      "description": "The Duke Of Hell, wields ancient wisdom and commanding power. Hell's flame: On play, give one allied creature +2 Attack and HP\r\nReborn: Return a creature to its owner's hand.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/41.png",
+      "name": "Barbatos",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Mythical"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Belial from the Hell class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Belial",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 42
-            }
-        ]
+      "description": "The mighty falcon deity, reigns supreme over kingship, sky, protection, vengeance. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/42.png",
+      "name": "Horus",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Mythical"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Dantalion from the Hell class with a rarity of Common.",
-        "external_url": "",
-        "image": "",
-        "name": "Dantalion",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Common"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 43
-            }
-        ]
+      "description": "The Fear and Panic. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/43.png",
+      "name": "Phobosyn",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Mythical"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Greece"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Gremory from the Hell class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Gremory",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 44
-            }
-        ]
+      "description": "The Breath Of Moon, wields the serene yet formidable power of the night sky. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/44.png",
+      "name": "Tsukoyomi",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Mythical"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Asmodeus from the Hell class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Asmodeus",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 45
-            }
-        ]
+      "description": "The resolute god of war and justice, commands with strategic brilliance and unwavering honor. Wicked: All enemy champions have -1 attack\r\nRally: All allied creatures gain +1 attack for 1 turn.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/45.png",
+      "name": "Tyr",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Mythical"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Jinn from the Hell class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Jinn",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 46
-            }
-        ]
+      "description": "The Duke Of Hell, wields ancient wisdom and commanding power. Hell's flame: On play, give one allied creature +2 Attack and HP\r\nReborn: Return a creature to its owner's hand.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/46.png",
+      "name": "Barbatos",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Chaotic"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Hell"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 5
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 6
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     },
     {
-        "description": "Lilith from the Hell class with a rarity of Hero.",
-        "external_url": "",
-        "image": "",
-        "name": "Lilith",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Hero"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "1.14%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 47
-            }
-        ]
+      "description": "The mighty falcon deity, reigns supreme over kingship, sky, protection, vengeance. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/47.png",
+      "name": "Horus",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Chaotic"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Egypt"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Barbatos from the Hell class with a rarity of Legendary.",
-        "external_url": "",
-        "image": "",
-        "name": "Barbatos",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Legendary"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "6.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 48
-            }
-        ]
+      "description": "The thunder god, wields the raw power of storms and lightning. Lightning: Eliminated the Champion which Raijin damaged",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/48.png",
+      "name": "Raijin",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Hero"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 2
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 3
+        }
+      ]
     },
     {
-        "description": "Barbatos from the Hell class with a rarity of Mythical.",
-        "external_url": "",
-        "image": "",
-        "name": "Barbatos",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Mythical"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "4.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 49
-            }
-        ]
+      "description": "The Breath Of Moon, wields the serene yet formidable power of the night sky. Godbless: Cannot be targeted or damaged by Spells and Traps",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/49.png",
+      "name": "Tsukoyomi",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Chaotic"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Shinto"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 9
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 7
+        }
+      ]
     },
     {
-        "description": "Barbatos from the Hell class with a rarity of Chaotic.",
-        "external_url": "",
-        "image": "",
-        "name": "Barbatos",
-        "attributes": [
-            {
-                "trait_type": "Class",
-                "value": "Hell"
-            },
-            {
-                "trait_type": "Rarity",
-                "value": "Chaotic"
-            },
-            {
-                "trait_type": "DistributionRate",
-                "value": "2.00%"
-            },
-            {
-                "trait_type": "TokenID",
-                "value": 50
-            }
-        ]
+      "description": "The resolute god of war and justice, commands with strategic brilliance and unwavering honor. Wicked: All enemy champions have -1 attack\r\nRally: All allied creatures gain +1 attack for 1 turn.",
+      "image": "ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/50.png",
+      "name": "Tyr",
+      "attributes": [
+        {
+          "display_type": "string",
+          "trait_type": "Rarity",
+          "value": "Chaotic"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Class",
+          "value": "Viking"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Category",
+          "value": "God"
+        },
+        {
+          "display_type": "string",
+          "trait_type": "Element",
+          "value": "Legend"
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Attack",
+          "value": 4
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Defense",
+          "value": 7
+        },
+        {
+          "display_type": "number",
+          "trait_type": "Mana Cost",
+          "value": 6
+        }
+      ]
     }
-]
+  ]
