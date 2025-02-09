@@ -86,7 +86,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const currentAddress = getCookie(USER_ADDRESS);
     const accessToken = getCookie(ACCESS_TOKEN);
-    if (!address) return;
+    if (!address) {
+      setToken(null);
+      return;
+    }
     if (address && !accessToken) {
       signMessageValidate();
     } else if (address && accessToken && address != currentAddress) {

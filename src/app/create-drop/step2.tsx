@@ -103,6 +103,11 @@ const Step2 = () => {
       return;
     }
 
+    if (allState.toTopSupporters > Number(allState.metadata3)) {
+      onShowToast("To Top Supporters cannot be greater than the drop amount");
+      return;
+    }
+
     try {
       setIsLoadingCreate(true);
 
@@ -156,9 +161,8 @@ const Step2 = () => {
             allState.individualDropsExpiryDate!.toDate().getTime()
           );
         }
+        toggleSuccess();
       }
-
-      toggleSuccess();
     } catch (error) {
       console.log(error);
       onShowToast("Failed to create drop");
@@ -313,7 +317,7 @@ const Step2 = () => {
                     <div
                       className={`flex items-center ${invalidFields.includes("fromTopSupporters") && "animate-shake"}`}
                     >
-                      <p className="text-grays">Amount: |</p>
+                      <p className="text-grays">Rank: |</p>
                       <Input
                         placeholder="Input numbers"
                         className="max-h-full w-[80px] border-none bg-transparent outline-none"
@@ -361,7 +365,7 @@ const Step2 = () => {
                     <div
                       className={`flex items-center ${invalidFields.includes("toTopSupporters") && "animate-shake"}`}
                     >
-                      <p className="text-grays">Amount: |</p>
+                      <p className="text-grays">Rank: |</p>
                       <Input
                         placeholder="Input numbers"
                         className="max-h-full w-[80px] border-none bg-transparent outline-none"

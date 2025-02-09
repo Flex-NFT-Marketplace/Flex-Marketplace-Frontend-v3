@@ -12,7 +12,7 @@ import { useAccount } from "@starknet-react/core";
 import { ILeaderboardItem, IPerks } from "@/types/Iperks";
 import { useGetPeakByCreator } from "../api/flexhaus/social/useGetPeakByCreator";
 import { useUpdateEvent } from "../api/flexhaus/social/useUpdateEvent";
-import { IdropDetail } from "@/types/Idrop";
+import { ICollectible, ICreator, IdropDetail } from "@/types/Idrop";
 import { useParams } from "next/navigation";
 import { formattedContractAddress } from "@/utils/string";
 import { useSubcribe } from "../api/flexhaus/social/useSubcribe";
@@ -21,6 +21,11 @@ import { useCheckSubcribed } from "../api/flexhaus/social/useCheckSubcribed";
 import { useGetTotalSub } from "../api/flexhaus/social/useGetTotalSub";
 import useGetCollectibleByOwner from "../api/flexhaus/social/useGetCollectibleByOwner";
 import useGetLeaderboardByEvent from "../api/flexhaus/social/useGetLeaderboardByEvent";
+import { IProfileStaging } from "@/types/IStagingNft";
+import { useGetProfile } from "../api/useGetProfile";
+import useGetCreatorsSuggestion from "../api/flexhaus/social/useGetCreatorsSuggestion";
+import { IProfile } from "@/types/IProfile";
+import { useAuth } from "./AuthProvider";
 
 interface SocialContextProps {
   handleCreateNewEvent: (
@@ -41,6 +46,8 @@ interface SocialContextProps {
   totalSub: number;
   dropsByCreator: IdropDetail[];
   leaderboardByEvent: ILeaderboardItem[];
+  showProfile: IProfileStaging | null;
+  creatorsSuggestion: ICreator[];
 }
 
 const SocialContext = createContext<SocialContextProps>({
@@ -53,6 +60,8 @@ const SocialContext = createContext<SocialContextProps>({
   totalSub: 0,
   dropsByCreator: [],
   leaderboardByEvent: [],
+  showProfile: null,
+  creatorsSuggestion: [],
 });
 
 export const useSocial = () => useContext(SocialContext);
@@ -69,6 +78,9 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   const [leaderboardByEvent, setLeaderboardByEvent] = useState<
     ILeaderboardItem[]
   >([]);
+  const [showProfile, setShowProfile] = useState<IProfileStaging | null>(null);
+  const [creatorsSuggestion, setCreatorsSuggestion] = useState<ICreator[]>([]);
+  const { token } = useAuth();
 
   const {
     data: drops,
@@ -76,7 +88,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     fetchNextPage,
     isLoading,
     isFetching,
-  } = useGetCollectibleByOwner(userAddress as string);
+  } = useGetCollectibleByOwner((userAddress as string) || (address as string));
 
   const {
     data: leaderboard,
@@ -133,6 +145,11 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
 
   const _subScribe = useSubcribe();
   const handleSubcribe = async (creator: string) => {
+    if (!address) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+
     await _subScribe.mutateAsync(creator);
     await handleCheckSubcribed(creator);
     handleGetTotalSub(creator);
@@ -140,6 +157,11 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
 
   const _unSubcribe = useUnSubcribe();
   const handleUnSubcribe = async (creator: string) => {
+    if (!address) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+
     await _unSubcribe.mutateAsync(creator);
     await handleCheckSubcribed(creator);
     handleGetTotalSub(creator);
@@ -175,6 +197,18 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     handleGetPeakByCreator(address);
   };
 
+  const _getProfile = useGetProfile();
+  const handleGetProfile = async (address: string) => {
+    try {
+      const profile = await _getProfile.mutateAsync(address);
+      setShowProfile(profile);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const { data: creators } = useGetCreatorsSuggestion();
+
   useEffect(() => {
     let dropsArr: IdropDetail[] = [];
     drops?.pages.map((page) => {
@@ -194,28 +228,57 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   }, [leaderboard]);
 
   useEffect(() => {
-    console.log(leaderboardByEvent);
-  }, [leaderboardByEvent]);
-
-  useEffect(() => {
-    if (userAddress) {
-      try {
-        handleGetPeakByCreator(userAddress as string);
-        handleGetTotalSub(userAddress as string);
-      } catch (error) {}
-    } else {
-      setPerks(null);
-    }
-
+    setPerks(null);
     if (address && userAddress) {
-      handleCheckSubcribed(userAddress as string);
-
+      handleGetProfile(userAddress as string);
+      handleGetPeakByCreator(userAddress as string);
       setIsOwner(
         formattedContractAddress(address) ===
           formattedContractAddress(userAddress as string)
       );
+    } else if (address) {
+      handleGetProfile(address);
+      handleGetPeakByCreator(address);
+      setIsOwner(true);
+    } else if (userAddress) {
+      try {
+        handleGetProfile(userAddress as string);
+        handleGetPeakByCreator(userAddress as string);
+        handleGetTotalSub(userAddress as string);
+        setIsSubcribed(false);
+        setIsOwner(false);
+      } catch (error) {}
     }
   }, [userAddress, address]);
+
+  useEffect(() => {
+    if ((userAddress || token) && address) {
+      handleCheckSubcribed(userAddress as string);
+    } else {
+      setIsSubcribed(false);
+    }
+  }, [token, address]);
+
+  const _getCreatorFromCollectibles = (collectibles: IdropDetail[]) => {
+    const creatorMap: Map<string, ICreator> = new Map();
+    collectibles.map((collectible) => {
+      if (!creatorMap.has(collectible.creator.address)) {
+        creatorMap.set(collectible.creator.address, collectible.creator);
+      }
+    });
+    return Array.from(creatorMap.values());
+  };
+
+  useEffect(() => {
+    let creatorsArr: ICreator[] = [];
+    creators?.pages.map((page) => {
+      creatorsArr = creatorsArr.concat(
+        _getCreatorFromCollectibles(page.data.items)
+      );
+    });
+
+    setCreatorsSuggestion(creatorsArr);
+  }, [creators]);
 
   const value = {
     handleCreateNewEvent,
@@ -227,6 +290,8 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     totalSub,
     dropsByCreator,
     leaderboardByEvent,
+    showProfile,
+    creatorsSuggestion,
   };
 
   return (

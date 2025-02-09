@@ -140,6 +140,11 @@ const Step1 = () => {
       return;
     }
 
+    if (allState.fileNftImage && allState.fileNftImage.size > 1024 * 1024) {
+      onShowToast("File size is too large");
+      return;
+    }
+
     if (!isDigit(allState.metadata3)) {
       onShowToast("Please enter a valid number");
       return;
@@ -211,7 +216,6 @@ const Step1 = () => {
         toggleSuccess();
       }
     } catch (error) {
-      console.log(error);
       onShowToast("Failed to deploy Collection");
     } finally {
       setLoadingDeploy(false);
@@ -309,7 +313,8 @@ const Step1 = () => {
             <div>
               <p className="font-bold text-white">Click to upload</p>
               <p className="mt-2 text-grays">
-                Recommend size: 512 x 512. File types: JPEG, PNG, SVG, GIF
+                Recommend size: 512 x 512. File types: JPEG, PNG, SVG, GIF, Max
+                1MB.
               </p>
               {allState.fileNftImage && (
                 <p className="mt-2 text-green-500">

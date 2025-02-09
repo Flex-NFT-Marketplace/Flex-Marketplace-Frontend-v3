@@ -1,7 +1,7 @@
 import SocialProvider from "@/services/providers/SocialProvider";
-import Activities from "./Activities";
-import NewsFeed from "./NewsFeed";
-import Profile from "./Profile";
+import Profile from "./[userAddress]/Profile";
+import NewsFeed from "./[userAddress]/NewsFeed";
+import Activities from "./[userAddress]/Activities";
 
 const Social = () => {
   return (

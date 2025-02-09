@@ -25,17 +25,20 @@ import {
   strShortAddress,
   timeElapsedFromTimestamp,
 } from "@/utils/string";
+import { useAccount } from "@starknet-react/core";
 
 const Profile = () => {
   const { isShow: isShowCreateEditPerks, toggle: toggleCreateEditPerks } =
     useModal();
   const [perksEditing, setPerksEditing] = useState<IPerks | null>(null);
   const { userAddress } = useParams();
+  const { address } = useAccount();
   const { onShowToast } = useToast();
   const [timeLeft, setTimeLeft] = useState<string>("-");
   const [processTime, setProcessTime] = useState<string>("0%");
 
-  const { perks, isOwner, toggleSubcribe, isSubcribed, totalSub } = useSocial();
+  const { perks, isOwner, toggleSubcribe, isSubcribed, totalSub, showProfile } =
+    useSocial();
 
   const handleToggleSubcribe = async () => {
     try {
@@ -60,7 +63,7 @@ const Profile = () => {
     const miniSecOneDay = 1000 * 60 * 60 * 24;
     // cannot edit peaks before 24 hours
     if (perks.startTime < new Date().getTime() + miniSecOneDay) {
-      onShowToast("Peaks can be edited only after 24 hours");
+      onShowToast("Edit is not available");
       return;
     }
 
@@ -93,6 +96,14 @@ const Profile = () => {
     }
   };
 
+  const handleCreatePerks = () => {
+    if (!address) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+    toggleCreateEditPerks();
+  };
+
   useEffect(() => {
     if (perks) {
       calculateTimeAndProcess();
@@ -110,63 +121,69 @@ const Profile = () => {
         <CreateEditPerks hide={toggleCreateEditPerks} perks={perksEditing} />
       </ModalV2>
       <div className="fixed-height-under-header top-16 mt-0 flex flex-col border-r border-[#3A3A3C] xl:sticky xl:w-[447px] xl:overflow-auto">
-        <div className="flex w-full flex-col gap-6 pb-8 pl-8 pr-4 pt-4">
-          <div className="flex w-full flex-col gap-4">
-            <ImageKit src="" className="aspect-square w-[96px]" />
-            <div className="flex w-full flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <h4 className="text-[24px] font-bold uppercase leading-7">
-                  {strShortAddress(userAddress as string)}
-                </h4>
-                <TbRosetteDiscountCheckFilled className="text-[#63B1FF]" />
-                <VscArrowSwap className="text-white" />
-              </div>
-              <div className="divide-gray flex gap-4 divide-x">
-                <div className="flex gap-2">
-                  <p>{strShortAddress(userAddress as string)}</p>
-                  <MdOutlineContentCopy
-                    onClick={handleCopyAddress}
-                    className="text-gray text-base hover:text-white cursor-pointer"
-                  />
+        {(userAddress || address) && (
+          <div className="flex w-full flex-col gap-6 pb-8 pl-8 pr-4 pt-4">
+            <div className="flex w-full flex-col gap-4">
+              <ImageKit src="" className="aspect-square w-[96px]" />
+              <div className="flex w-full flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-[24px] font-bold uppercase leading-7">
+                    {strShortAddress(showProfile?.address as string)}
+                  </h4>
+                  <TbRosetteDiscountCheckFilled className="text-[#63B1FF]" />
+                  <VscArrowSwap className="text-white" />
                 </div>
-                <div className="flex gap-5 pl-4 font-bold">
+                <div className="divide-gray flex gap-4 divide-x">
                   <div className="flex gap-2">
-                    <p className="text-gray">Subs</p>
-                    <p>{totalSub}</p>
+                    <p>{strShortAddress(showProfile?.address as string)}</p>
+                    <MdOutlineContentCopy
+                      onClick={handleCopyAddress}
+                      className="text-gray text-base hover:text-white cursor-pointer"
+                    />
                   </div>
-                  {/* <div className="flex gap-2">
+                  <div className="flex gap-5 pl-4 font-bold">
+                    <div className="flex gap-2">
+                      <p className="text-gray">Subs</p>
+                      <p>{totalSub}</p>
+                    </div>
+                    {/* <div className="flex gap-2">
                     <p className="text-gray">Support</p>
                     <p>140K</p>
                   </div> */}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          {isOwner ? (
-            <Button title="Edit profile" variant="outline" className="w-full" />
-          ) : (
-            <div className="flex gap-2">
-              <div className="grid h-full aspect-square place-items-center border border-border rounded-md hover:bg-hover cursor-pointer">
-                <MdCardGiftcard />
+            {isOwner ? (
+              <Button
+                title="Edit profile"
+                variant="outline"
+                className="w-full"
+              />
+            ) : (
+              <div className="flex gap-2">
+                <div className="grid h-full aspect-square place-items-center border border-border rounded-md hover:bg-hover cursor-pointer">
+                  <MdCardGiftcard />
+                </div>
+                {isSubcribed ? (
+                  <Button
+                    onClick={handleToggleSubcribe}
+                    title="Unsubcribe"
+                    variant="outline"
+                    className="flex-1"
+                  />
+                ) : (
+                  <Button
+                    onClick={handleToggleSubcribe}
+                    title="Subscribe"
+                    variant="primary"
+                    className="flex-1"
+                  />
+                )}
               </div>
-              {isSubcribed ? (
-                <Button
-                  onClick={handleToggleSubcribe}
-                  title="Unsubcribe"
-                  variant="outline"
-                  className="flex-1"
-                />
-              ) : (
-                <Button
-                  onClick={handleToggleSubcribe}
-                  title="Subscribe"
-                  variant="primary"
-                  className="flex-1"
-                />
-              )}
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* About */}
         {/* <div className="flex w-full flex-col gap-4 border-b border-t border-[#3A3A3C] pb-8 pl-8 pr-4 pt-4">
@@ -218,7 +235,7 @@ const Profile = () => {
                   </Link>
                 ) : (
                   <Button
-                    onClick={toggleCreateEditPerks}
+                    onClick={handleCreatePerks}
                     title="Create Perks"
                     variant="outline"
                     className="border-white text-white"
@@ -268,18 +285,20 @@ const Profile = () => {
               </div>
             )}
           </div>
-          <div className="flex w-full flex-col gap-4">
-            <div className="flex w-full justify-between text-base font-bold leading-5">
-              <p className="uppercase">{timeLeft}</p>
-              <p className="text-gray uppercase">Till snapshot</p>
+          {perks && (
+            <div className="flex w-full flex-col gap-4">
+              <div className="flex w-full justify-between text-base font-bold leading-5">
+                <p className="uppercase">{timeLeft}</p>
+                <p className="text-gray uppercase">Till snapshot</p>
+              </div>
+              <div className="relative h-[2px] w-full bg-[#3A3A3C]">
+                <div
+                  style={{ width: processTime }}
+                  className="absolute left-0 top-0 h-[2px] bg-white "
+                ></div>
+              </div>
             </div>
-            <div className="relative h-[2px] w-full bg-[#3A3A3C]">
-              <div
-                style={{ width: processTime }}
-                className="absolute left-0 top-0 h-[2px] bg-white "
-              ></div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </>
