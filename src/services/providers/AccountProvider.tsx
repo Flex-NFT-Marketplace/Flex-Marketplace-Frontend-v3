@@ -12,6 +12,12 @@ import {
 } from "@/types/IStagingNft";
 import useGetListingsByOwner from "../api/account/useGetListingsByOwner";
 import useGetBidsByOwner from "../api/account/useGetBidsByOwners";
+import { useGetTotalSub } from "../api/flexhaus/social/useGetTotalSub";
+import { useSubcribe } from "../api/flexhaus/social/useSubcribe";
+import { useUnSubcribe } from "../api/flexhaus/social/useUnSubcribe";
+import { useCheckSubcribed } from "../api/flexhaus/social/useCheckSubcribed";
+import { formattedContractAddress } from "@/utils/string";
+import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 
 interface AccountContextType {
   nfts: IStagingNftResponse[];
@@ -26,6 +32,9 @@ interface AccountContextType {
   nftsOwner: IStagingNftResponse[];
   getProfileByAddressOwner: () => void;
   fetchNextPageInventory: () => void;
+  toggleSubcribe: (creator: string) => Promise<boolean>;
+  handleCheckSubcribed: (creator: string) => Promise<boolean>;
+  handleGetTotalSub: (creator: string) => Promise<number>;
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
@@ -47,6 +56,8 @@ export const AccountProvider = ({
 
   const [orders, setOrders] = useState<ISignature[]>([]);
   const [bids, setBids] = useState<ISignature[]>([]);
+
+  const { onShowToast } = useToast();
 
   const _getProfile = useGetProfile();
   // const _getNfts = useGetNftsByOwner(address);
@@ -100,6 +111,44 @@ export const AccountProvider = ({
     } catch (error) {}
   };
 
+  const _subScribe = useSubcribe();
+  const handleSubcribe = async (creator: string): Promise<boolean> => {
+    return await _subScribe.mutateAsync(creator);
+  };
+
+  const _unSubcribe = useUnSubcribe();
+  const handleUnSubcribe = async (creator: string): Promise<boolean> => {
+    return await _unSubcribe.mutateAsync(creator);
+  };
+
+  const _checkSubcribed = useCheckSubcribed();
+  const handleCheckSubcribed = async (creator: string): Promise<boolean> => {
+    if (!creator) return false;
+    if (
+      formattedContractAddress(creator) == formattedContractAddress(address)
+    ) {
+      return false;
+    }
+    return await _checkSubcribed.mutateAsync(creator);
+  };
+
+  const toggleSubcribe = async (creator: string): Promise<boolean> => {
+    if (!accountAddress) {
+      onShowToast("Please connect your wallet");
+      return false;
+    }
+    let canUnSubcribe = false; // if user is following -> true, if user is not following -> false
+    if (await handleCheckSubcribed(creator)) {
+      const res = await handleUnSubcribe(creator);
+      canUnSubcribe = res;
+    } else {
+      const res = await handleSubcribe(creator);
+      canUnSubcribe = res;
+    }
+
+    return canUnSubcribe;
+  };
+
   useEffect(() => {
     setLoading(true);
 
@@ -113,13 +162,12 @@ export const AccountProvider = ({
 
     if (accountAddress == undefined) return;
     getProfileByAddressOwner();
-  }, [accountAddress, accountAddress]);
+  }, [accountAddress]);
 
   useEffect(() => {
     setLoading(true);
     setNfts([]);
     getListingByOwner();
-
     getProfileByAddress(address);
   }, [address]);
 
@@ -178,6 +226,12 @@ export const AccountProvider = ({
     }
   };
 
+  const _getTotalSub = useGetTotalSub();
+  const handleGetTotalSub = async (creator: string): Promise<number> => {
+    if (!creator) return 0;
+    return await _getTotalSub.mutateAsync(creator);
+  };
+
   useEffect(() => {
     getNftsOfOwner();
   }, [nftsOwnerRepsonse]);
@@ -205,6 +259,9 @@ export const AccountProvider = ({
     profileOwner,
     nftsOwner,
     fetchNextPageInventory,
+    toggleSubcribe,
+    handleCheckSubcribed,
+    handleGetTotalSub,
   };
 
   return (

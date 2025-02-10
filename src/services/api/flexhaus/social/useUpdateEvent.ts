@@ -9,7 +9,7 @@ export const useUpdateEvent = () => {
         const { data } = await axiosHausWithToken.post("flexhaus-event/update-event",body,
         );
 
-        return data;
+        return data.data;
  
     },
   });

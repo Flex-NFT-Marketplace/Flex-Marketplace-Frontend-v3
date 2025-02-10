@@ -20,8 +20,8 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         <TanstackProvider>
           <StarknetProvider>
             <UIKitProvider>
-              <AccountProvider>
-                <AuthProvider>
+              <AuthProvider>
+                <AccountProvider>
                   <CartProvider>
                     <NftProvider>
                       <CollectionProvider>
@@ -39,8 +39,8 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
                       </CollectionProvider>
                     </NftProvider>
                   </CartProvider>
-                </AuthProvider>
-              </AccountProvider>
+                </AccountProvider>
+              </AuthProvider>
             </UIKitProvider>
           </StarknetProvider>
         </TanstackProvider>

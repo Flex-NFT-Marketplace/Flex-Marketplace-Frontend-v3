@@ -8,8 +8,8 @@ export const useCreateNewEvent = () => {
 
         const { data } = await axiosHausWithToken.post("flexhaus-event/create-new-event",body,
         );
-
-        return data;
+        
+        return data.data;
 
     },
   });

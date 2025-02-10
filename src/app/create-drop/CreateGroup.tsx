@@ -1,6 +1,6 @@
 import Button from "@/packages/@ui-kit/Button";
 import DatePickup from "@/packages/@ui-kit/DatePickup";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useCreateDrop } from "@/services/providers/CreateDropProvider";
@@ -45,6 +45,7 @@ const CreateGroup = ({ hide }: { hide: () => void }) => {
           Start Date <span className="text-cancel">*</span>
         </p>
         <DatePickup
+          minDate={dayjs()}
           timeEnd={startDate}
           handleDateChange={(
             date: Dayjs | null,

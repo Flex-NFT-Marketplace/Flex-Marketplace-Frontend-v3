@@ -12,8 +12,8 @@ export const useUnSubcribe = () => {
             }
         }
         );
-
-        return data;
+        
+        return data.data.isUnSubscribe;
 
     },
   });

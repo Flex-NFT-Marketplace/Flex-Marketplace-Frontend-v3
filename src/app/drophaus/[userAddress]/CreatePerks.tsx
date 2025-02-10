@@ -48,7 +48,7 @@ const CreateEditPerks: React.FC<CreateEditPerksProps> = ({ hide, perks }) => {
 
     try {
       setIsLoadingCreateEdit(true);
-      await handleCreateNewEvent(
+      const pearksCreated = await handleCreateNewEvent(
         startDate.toDate().getTime(),
         expiryDate.toDate().getTime(),
         perksHtml
@@ -94,7 +94,7 @@ const CreateEditPerks: React.FC<CreateEditPerksProps> = ({ hide, perks }) => {
 
     try {
       setIsLoadingCreateEdit(true);
-      await handleUpdateEvent(
+      const perksUpdated = await handleUpdateEvent(
         perks._id,
         startDate.toDate().getTime(),
         expiryDate.toDate().getTime(),

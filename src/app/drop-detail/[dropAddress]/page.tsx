@@ -18,6 +18,7 @@ import {
   timeElapsedFromTimestamp,
 } from "@/utils/string";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { DropTypeEnum } from "@/services/providers/CreateDropProvider";
 
 const Drop = () => {
   const srcList = [
@@ -32,10 +33,34 @@ const Drop = () => {
   const [mainColor, setMainColor] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { dropDetail } = useDropDetail();
   const { onShowToast } = useToast();
-  const { isLiked, toggleLike, totalLike, isSecured, secure } = useDropDetail();
+  const { isLiked, toggleLike, totalLike, isSecured, secure, dropDetail } =
+    useDropDetail();
   const [timeLeft, setTimeLeft] = useState<string>("-");
+  const [isLoadingSecure, setIsLoadingSecure] = useState(false);
+  const [isLoadingLike, setIsLoadingLike] = useState(false);
+
+  const handleSecure = async (collectible: string) => {
+    try {
+      setIsLoadingSecure(true);
+      await secure(collectible);
+    } catch (error) {
+      onShowToast("Something went wrong");
+    } finally {
+      setIsLoadingSecure(false);
+    }
+  };
+
+  const handleLike = async (collectible: string) => {
+    try {
+      setIsLoadingLike(true);
+      await toggleLike(collectible);
+    } catch (error) {
+      onShowToast("Something went wrong");
+    } finally {
+      setIsLoadingLike(false);
+    }
+  };
 
   const handleCopyAddress = () => {
     try {
@@ -152,15 +177,15 @@ const Drop = () => {
   useEffect(() => {
     if (dropDetail) {
       const intervalId = setInterval(() => {
-        if (new Date().getTime() < dropDetail.set.startTime) {
+        if (new Date().getTime() < dropDetail.set?.startTime) {
           setTimeLeft(
             "Starts in " +
-              timeElapsedFromTimestamp(dropDetail.set.startTime / 1000)
+              timeElapsedFromTimestamp(dropDetail.set?.startTime / 1000)
           );
-        } else if (new Date().getTime() < dropDetail.set.expiryTime) {
+        } else if (new Date().getTime() < dropDetail.set?.expiryTime) {
           setTimeLeft(
             "Ends in " +
-              timeElapsedFromTimestamp(dropDetail.set.expiryTime / 1000)
+              timeElapsedFromTimestamp(dropDetail.set?.expiryTime / 1000)
           );
         } else {
           setTimeLeft("Expired");
@@ -271,13 +296,15 @@ const Drop = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button className="h-fit !rounded-none px-4 py-[2px] text-base font-bold leading-5 text-black">
+                <Button
+                // className="h-fit !rounded-none px-4 py-[2px] text-base font-bold leading-5 text-black"
+                >
                   Support
                 </Button>
                 <Button
-                  onClick={() => toggleLike(dropDetail.collectible.nftContract)}
+                  loading={isLoadingLike}
+                  onClick={() => handleLike(dropDetail.collectible.nftContract)}
                   variant="outline"
-                  className="h-fit !rounded-none border border-white px-4 py-[2px] text-base font-bold leading-5 text-white"
                 >
                   {isLiked ? "Liked" : "Like"} - {totalLike}
                 </Button>
@@ -291,26 +318,33 @@ const Drop = () => {
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
-          <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
-            <p className="text-gray">Protect this collectible</p>
-            <p className="text-white">{timeLeft}</p>
-          </div>
-          <Button
-            onClick={() => secure(dropDetail.collectible.nftContract)}
-            disabled={
-              isSecured || new Date().getTime() > dropDetail.set.expiryTime
-            }
-            title={`${isSecured ? "Protected" : "Protect"} - ${dropDetail.secureAmount}`}
-            variant="primary"
-            className="w-full rounded-none py-3 capitalize"
-          />
-          {/* <div className="bg-conic-gradient w-full cursor-pointer p-[1px] duration-700 active:scale-95 disabled:pointer-events-none disabled:opacity-50">
+        {dropDetail.dropType.toLowerCase() ==
+          DropTypeEnum.PROTECTED.toLowerCase() && (
+          <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
+            <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
+              <p className="text-gray">Protect this collectible</p>
+              <p className="text-white">{timeLeft}</p>
+            </div>
+
+            <Button
+              loading={isLoadingSecure}
+              onClick={() => handleSecure(dropDetail.collectible.nftContract)}
+              disabled={
+                isSecured ||
+                !dropDetail.set ||
+                new Date().getTime() > dropDetail.set?.expiryTime
+              }
+              title={`${isSecured ? "Protected" : "Protect"} - ${dropDetail.secureAmount}`}
+              variant="primary"
+              className="w-full rounded-none py-3 capitalize"
+            />
+            {/* <div className="bg-conic-gradient w-full cursor-pointer p-[1px] duration-700 active:scale-95 disabled:pointer-events-none disabled:opacity-50">
             <div className="w-full rounded-none !bg-[#232733] py-1.5 text-center text-base font-bold capitalize leading-5 text-white">
               Protect - {dropDetail.secureAmount}
             </div>
           </div> */}
-        </div>
+          </div>
+        )}
 
         <div className="flex flex-col gap-4">
           <div className="flex gap-1 border-b border-[#3A3A3C] pb-3 text-[20px] font-bold uppercase leading-6">

@@ -1,5 +1,5 @@
 "use client";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -22,23 +22,28 @@ import { useAccountContext } from "./AccountProvider";
 
 interface DropDetailContextProps {
   dropDetail: IdropDetail | null;
-  toggleLike: (collectible: string) => void;
+  toggleLike: (collectible: string) => Promise<void>;
   isLiked: boolean;
   totalLike: number;
   isSecured: boolean;
-  secure: (collectible: string) => void;
+  secure: (collectible: string) => Promise<void>;
 }
 
-const DropDetailContext = createContext<DropDetailContextProps>({
-  dropDetail: null,
-  toggleLike: () => {},
-  isLiked: false,
-  totalLike: 0,
-  isSecured: false,
-  secure: () => {},
-});
+const DropDetailContext = createContext<DropDetailContextProps | undefined>(
+  undefined
+);
 
-export const useDropDetail = () => useContext(DropDetailContext);
+export const useDropDetail = () => {
+  const context = useContext(DropDetailContext);
+
+  if (context === undefined) {
+    throw new Error(
+      "useGetDropDetail must be used within an DropDetailProvider"
+    );
+  }
+
+  return context;
+};
 
 const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   const { dropAddress } = useParams();
@@ -48,7 +53,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   const [totalLike, setTotalLike] = useState<number>(0);
   const [isSecured, setIsSecured] = useState<boolean>(false);
   const { address } = useAccount();
-  const { profileOwner } = useAccountContext();
+  const { profileOwner, handleCheckSubcribed } = useAccountContext();
 
   const _getDropDetail = useGetDropDetail();
   const getDropDetail = async (dropAddress: string) => {
@@ -61,7 +66,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const _postLike = usePostLike();
-  const postLike = async (collectible: string) => {
+  const postLike = async (collectible: string): Promise<void> => {
     if (!address) {
       onShowToast("Please connect your wallet");
       return;
@@ -76,7 +81,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const _deleteLike = useDeleteLike();
-  const deleteLike = async (collectible: string) => {
+  const deleteLike = async (collectible: string): Promise<void> => {
     if (!address) {
       onShowToast("Please connect your wallet");
       return;
@@ -104,11 +109,11 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const toggleLike = async (collectible: string) => {
+  const toggleLike = async (collectible: string): Promise<void> => {
     if (isLiked) {
-      deleteLike(collectible);
+      await deleteLike(collectible);
     } else {
-      postLike(collectible);
+      await postLike(collectible);
     }
   };
 
@@ -125,7 +130,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const _secure = useSecure();
-  const secure = async (collectionAddress: string) => {
+  const secure = async (collectionAddress: string): Promise<void> => {
     if (!dropDetail) return;
     if (!address) {
       onShowToast("Please connect your wallet");
@@ -137,6 +142,22 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
       formattedContractAddress(address)
     ) {
       onShowToast("You can't secure your own drop");
+      return;
+    }
+
+    if (new Date().getTime() > dropDetail.set?.expiryTime) {
+      onShowToast("This drop has ended");
+      return;
+    }
+
+    if (new Date().getTime() < dropDetail.set?.startTime) {
+      onShowToast("This drop hasn't started yet");
+      return;
+    }
+
+    const isSubscribed = await handleCheckSubcribed(dropDetail.creator.address);
+    if (!isSubscribed) {
+      onShowToast("You need to subscribe to secure this drop");
       return;
     }
 

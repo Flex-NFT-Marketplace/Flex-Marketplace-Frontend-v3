@@ -32,10 +32,10 @@ const DropCard: React.FC<DropCardProps> = ({ drop }) => {
   };
 
   const getColorStatus = () => {
-    if (new Date().getTime() < drop.set.startTime) {
+    if (new Date().getTime() < drop.set?.startTime) {
       // primary
       return "#FFE720";
-    } else if (new Date().getTime() < drop.set.expiryTime) {
+    } else if (new Date().getTime() < drop.set?.expiryTime) {
       // green
       return "#30D158";
     } else {
@@ -52,13 +52,13 @@ const DropCard: React.FC<DropCardProps> = ({ drop }) => {
       }
 
       const intervalId = setInterval(() => {
-        if (new Date().getTime() < drop.set.startTime) {
+        if (new Date().getTime() < drop.set?.startTime) {
           setTimeLeft(
-            "Starts in " + timeElapsedFromTimestamp(drop.set.startTime / 1000)
+            "Starts in " + timeElapsedFromTimestamp(drop.set?.startTime / 1000)
           );
-        } else if (new Date().getTime() < drop.set.expiryTime) {
+        } else if (new Date().getTime() < drop.set?.expiryTime) {
           setTimeLeft(
-            "Ends in " + timeElapsedFromTimestamp(drop.set.expiryTime / 1000)
+            "Ends in " + timeElapsedFromTimestamp(drop.set?.expiryTime / 1000)
           );
         } else {
           setTimeLeft("Expired");
@@ -72,7 +72,7 @@ const DropCard: React.FC<DropCardProps> = ({ drop }) => {
   return (
     <Link
       href={`/drop-detail/${drop?.collectible?.nftContract}`}
-      className="flex flex-col gap-5 border border-dashed border-line bg-dark-black p-4"
+      className="flex flex-col gap-5 border border-dashed border-line bg-hover/50 hover:bg-hover p-4 transition-all"
     >
       <div className="relative">
         <ImageKit src="" alt="drop" />

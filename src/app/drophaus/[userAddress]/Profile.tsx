@@ -21,11 +21,12 @@ import { useParams } from "next/navigation";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import {
   copyToClipboard,
-  formattedContractAddress,
   strShortAddress,
   timeElapsedFromTimestamp,
 } from "@/utils/string";
 import { useAccount } from "@starknet-react/core";
+import { useAccountContext } from "@/services/providers/AccountProvider";
+import { useAuth } from "@/services/providers/AuthProvider";
 
 const Profile = () => {
   const { isShow: isShowCreateEditPerks, toggle: toggleCreateEditPerks } =
@@ -36,16 +37,26 @@ const Profile = () => {
   const { onShowToast } = useToast();
   const [timeLeft, setTimeLeft] = useState<string>("-");
   const [processTime, setProcessTime] = useState<string>("0%");
+  const [canUnSub, setCanUnSub] = useState(false);
+  const { token } = useAuth();
+  const [loadingSubcribe, setLoadingSubcribe] = useState(false);
+  const [totalSub, setTotalSub] = useState<number>(0);
 
-  const { perks, isOwner, toggleSubcribe, isSubcribed, totalSub, showProfile } =
-    useSocial();
+  const { toggleSubcribe, handleCheckSubcribed, handleGetTotalSub } =
+    useAccountContext();
+
+  const { perks, isOwner, showProfile } = useSocial();
 
   const handleToggleSubcribe = async () => {
     try {
-      await toggleSubcribe(userAddress as string);
+      setLoadingSubcribe(true);
+      const canUnSub = await toggleSubcribe(userAddress as string);
+      setCanUnSub(canUnSub);
+      await getTotalSub();
     } catch (error) {
       onShowToast("Something went wrong");
     } finally {
+      setLoadingSubcribe(false);
     }
   };
 
@@ -115,6 +126,25 @@ const Profile = () => {
     }
   }, [perks]);
 
+  const checkSubscription = async () => {
+    const isSubscribed = await handleCheckSubcribed(userAddress as string);
+    setCanUnSub(isSubscribed);
+  };
+
+  const getTotalSub = async () => {
+    if (!showProfile) return;
+    const totalSub = await handleGetTotalSub(userAddress as string);
+    setTotalSub(totalSub);
+  };
+
+  useEffect(() => {
+    checkSubscription();
+  }, [address, token, userAddress]);
+
+  useEffect(() => {
+    getTotalSub();
+  }, [showProfile]);
+
   return (
     <>
       <ModalV2 isShow={isShowCreateEditPerks} hide={toggleCreateEditPerks}>
@@ -165,21 +195,14 @@ const Profile = () => {
                 <div className="grid h-full aspect-square place-items-center border border-border rounded-md hover:bg-hover cursor-pointer">
                   <MdCardGiftcard />
                 </div>
-                {isSubcribed ? (
-                  <Button
-                    onClick={handleToggleSubcribe}
-                    title="Unsubcribe"
-                    variant="outline"
-                    className="flex-1"
-                  />
-                ) : (
-                  <Button
-                    onClick={handleToggleSubcribe}
-                    title="Subscribe"
-                    variant="primary"
-                    className="flex-1"
-                  />
-                )}
+
+                <Button
+                  loading={loadingSubcribe}
+                  onClick={handleToggleSubcribe}
+                  title={canUnSub ? "Unsubcribe" : "Subcribe"}
+                  variant={canUnSub ? "outline" : "primary"}
+                  className="flex-1"
+                />
               </div>
             )}
           </div>
