@@ -9,8 +9,13 @@ import check from "@/assets/badge-check.svg";
 import Button from "@/packages/@ui-kit/Button";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import Input from "@/packages/@ui-kit/Input";
+import { useEffect } from "react";
 
 const OpenCreateCard = () => {
+  useEffect(() => {
+    // _getTotalLike.mutateAsync("1");
+  }, []);
+
   return (
     <div className="flex gap-2 px-5 py-4">
       <ImageKit src="" alt="" className="aspect-square h-[52px] w-[52px]" />
@@ -50,15 +55,18 @@ const OpenCreateCard = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <div className="flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1">
+          <div className="cursor-pointer hover:bg-hover flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1">
             <MdOutlineInsertComment />
             <p>3</p>
           </div>
-          <div className="flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1">
+          <div
+            // onClick={}
+            className="cursor-pointer hover:bg-hover flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1"
+          >
             <MdOutlineLocalFireDepartment />
-            <p>3</p>
+            <p>4</p>
           </div>
-          <div className="flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1">
+          <div className="cursor-pointer hover:bg-hover flex w-[50px] items-center justify-center gap-2 rounded-lg border border-line py-1">
             <MdOutlineDownload />
             <p>3</p>
           </div>

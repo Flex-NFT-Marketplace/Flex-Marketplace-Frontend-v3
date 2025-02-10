@@ -216,8 +216,6 @@ export const CollectionDetailProvider = ({
 
   useEffect(() => {
     if (atemuPacksRes) {
-      console.log(atemuPacksRes.pages[0].items);
-
       setAtemuPacks(atemuPacksRes.pages[0].items);
     }
   }, [atemuPacksRes]);
@@ -266,7 +264,6 @@ export const CollectionDetailProvider = ({
     map.forEach((values, trait) => {
       converted.push({ trait_type: trait, value: values });
     });
-    console.log(converted);
 
     return converted;
   };

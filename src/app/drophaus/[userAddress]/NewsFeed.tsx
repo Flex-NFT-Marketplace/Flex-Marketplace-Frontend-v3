@@ -4,15 +4,16 @@ import DropsTab from "./Drops";
 import OpenCreateTab from "./OpenCreateTab";
 
 import Activities from "./Activities";
-import Profile from "./profile";
 import { FaUser } from "react-icons/fa";
 import { LuActivity } from "react-icons/lu";
 import { GoHomeFill } from "react-icons/go";
 import { MdLeaderboard } from "react-icons/md";
 import { TbNews } from "react-icons/tb";
+import Leaderboard from "./Leaderboard";
+import Profile from "./Profile";
 
 enum TabsEnum {
-  OPEN_CREATE = "Open-create",
+  // OPEN_CREATE = "Open-create",
   DROPS = "Drops",
   LEADERBOARD = "leaderboard",
   PROFILE = "profile",
@@ -20,8 +21,12 @@ enum TabsEnum {
 }
 
 const NewsFeed = () => {
-  const tabs = ["Open-create", "Drops", "leaderboard"];
-  const [activeTab, setActiveTab] = useState<string>(TabsEnum.OPEN_CREATE);
+  const tabs = [
+    // "Open-create",
+    "Drops",
+    "leaderboard",
+  ];
+  const [activeTab, setActiveTab] = useState<string>(TabsEnum.DROPS);
 
   return (
     <div className="flex-1">
@@ -49,10 +54,10 @@ const NewsFeed = () => {
         ))}
       </div>
       <div className="sticky top-16 z-[1] flex gap-6 border-b border-line bg-black px-5 py-4 md:hidden">
-        <GoHomeFill
+        {/* <GoHomeFill
           onClick={() => setActiveTab(TabsEnum.OPEN_CREATE)}
           className={`flex-1 text-xl ${activeTab == TabsEnum.OPEN_CREATE ? "text-white" : "text-grays"}`}
-        />
+        /> */}
         <TbNews
           onClick={() => setActiveTab(TabsEnum.DROPS)}
           className={`flex-1 text-xl ${activeTab == TabsEnum.DROPS ? "text-white" : "text-grays"}`}
@@ -71,10 +76,11 @@ const NewsFeed = () => {
           className={`flex-1 text-xl ${activeTab == TabsEnum.PROFILE ? "text-white" : "text-grays"}`}
         />
       </div>
-      {activeTab === TabsEnum.OPEN_CREATE && <OpenCreateTab />}
+      {/* {activeTab === TabsEnum.OPEN_CREATE && <OpenCreateTab />} */}
       {activeTab === TabsEnum.DROPS && <DropsTab />}
       {activeTab === TabsEnum.PROFILE && <Profile />}
       {activeTab === TabsEnum.ACTIVITIES && <Activities />}
+      {activeTab === TabsEnum.LEADERBOARD && <Leaderboard />}
     </div>
   );
 };

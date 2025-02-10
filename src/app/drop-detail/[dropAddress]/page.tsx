@@ -10,6 +10,15 @@ import { MdOutlineContentCopy } from "react-icons/md";
 import Button from "@/packages/@ui-kit/Button";
 import { useEffect, useRef, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
+import { useDropDetail } from "@/services/providers/DropDetailProvider";
+import { getBackgroundColor } from "@/app/create-drop/step2";
+import {
+  copyToClipboard,
+  strShortAddress,
+  timeElapsedFromTimestamp,
+} from "@/utils/string";
+import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { DropTypeEnum } from "@/services/providers/CreateDropProvider";
 
 const Drop = () => {
   const srcList = [
@@ -24,6 +33,43 @@ const Drop = () => {
   const [mainColor, setMainColor] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { onShowToast } = useToast();
+  const { isLiked, toggleLike, totalLike, isSecured, secure, dropDetail } =
+    useDropDetail();
+  const [timeLeft, setTimeLeft] = useState<string>("-");
+  const [isLoadingSecure, setIsLoadingSecure] = useState(false);
+  const [isLoadingLike, setIsLoadingLike] = useState(false);
+
+  const handleSecure = async (collectible: string) => {
+    try {
+      setIsLoadingSecure(true);
+      await secure(collectible);
+    } catch (error) {
+      onShowToast("Something went wrong");
+    } finally {
+      setIsLoadingSecure(false);
+    }
+  };
+
+  const handleLike = async (collectible: string) => {
+    try {
+      setIsLoadingLike(true);
+      await toggleLike(collectible);
+    } catch (error) {
+      onShowToast("Something went wrong");
+    } finally {
+      setIsLoadingLike(false);
+    }
+  };
+
+  const handleCopyAddress = () => {
+    try {
+      copyToClipboard(dropDetail?.creator?.address as string);
+      onShowToast("Copy address successfully");
+    } catch (error) {
+      onShowToast("Something went wrong");
+    }
+  };
 
   const handleScroll = (ref: React.RefObject<HTMLDivElement>) => {
     let isDown = false;
@@ -128,6 +174,30 @@ const Drop = () => {
     }
   }, [activeSrc]);
 
+  useEffect(() => {
+    if (dropDetail) {
+      const intervalId = setInterval(() => {
+        if (new Date().getTime() < dropDetail.set?.startTime) {
+          setTimeLeft(
+            "Starts in " +
+              timeElapsedFromTimestamp(dropDetail.set?.startTime / 1000)
+          );
+        } else if (new Date().getTime() < dropDetail.set?.expiryTime) {
+          setTimeLeft(
+            "Ends in " +
+              timeElapsedFromTimestamp(dropDetail.set?.expiryTime / 1000)
+          );
+        } else {
+          setTimeLeft("Expired");
+        }
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [dropDetail]);
+
+  if (!dropDetail) return <div></div>;
+
   return (
     <div className="fixed-height-under-header mx-auto flex w-full max-w-[1440px] gap-9 bg-opacity-85 pt-8">
       <div
@@ -167,25 +237,31 @@ const Drop = () => {
           ))}
         </div>
       </div>
-
       <div className="flex flex-1 flex-col gap-9">
         <div className="flex flex-col gap-5">
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-4 uppercase">
               <h3 className="text-[32px] font-bold leading-9">
-                Community is KING
+                {dropDetail?.collectible?.name}
               </h3>
-              <div className="h-fit rounded-sm border border-dark-black bg-secondary px-3 py-1 font-bold leading-4 text-black">
-                Legendary
+              <div
+                style={{
+                  backgroundColor: getBackgroundColor(
+                    dropDetail?.collectible?.rarity
+                  ),
+                }}
+                className="h-fit rounded-sm border border-dark-black px-3 py-1 font-bold leading-4 text-black"
+              >
+                {dropDetail?.collectible?.rarity}
               </div>
             </div>
-            <div className="flex gap-4 text-[20px]">
+            {/* <div className="flex gap-4 text-[20px]">
               <IoShareSocialOutline className="cursor-pointer" />
               <TbWorld className="cursor-pointer" />
               <FaSquareXTwitter className="cursor-pointer" />
               <SiFarcaster className="cursor-pointer" />
               <IoLogoDiscord className="cursor-pointer" />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col gap-6">
@@ -197,30 +273,40 @@ const Drop = () => {
                 />
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-1">
-                    <p className="text-base font-bold leading-6">Lavie.H</p>
+                    <p className="text-base font-bold leading-6">
+                      {strShortAddress(dropDetail?.creator?.address)}
+                    </p>
                     <TbRosetteDiscountCheckFilled className="text-base leading-4 text-[#63B1FF]" />
                   </div>
                   <div className="divide-gray flex items-center gap-4 divide-x">
                     <div className="flex items-center gap-2">
-                      <p className="">0x00dCE...DCGH</p>
-                      <MdOutlineContentCopy className="text-gray text-base leading-4" />
+                      <p className="">
+                        {strShortAddress(dropDetail?.creator?.address)}
+                      </p>
+                      <MdOutlineContentCopy
+                        onClick={handleCopyAddress}
+                        className="text-gray text-base leading-4 hover:text-white cursor-pointer"
+                      />
                     </div>
-                    <div className="flex items-center gap-2 pl-4 font-bold leading-4">
+                    {/* <div className="flex items-center gap-2 pl-4 font-bold leading-4">
                       <p className=" text-gray">Items</p>
                       <p className="text-white">19.9k</p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button className="h-fit !rounded-none bg-white px-4 py-[2px] text-base font-bold leading-5 text-black">
+                <Button
+                // className="h-fit !rounded-none px-4 py-[2px] text-base font-bold leading-5 text-black"
+                >
                   Support
                 </Button>
                 <Button
+                  loading={isLoadingLike}
+                  onClick={() => handleLike(dropDetail.collectible.nftContract)}
                   variant="outline"
-                  className="h-fit !rounded-none border border-white px-4 py-[2px] text-base font-bold leading-5 text-white"
                 >
-                  Like -24k
+                  {isLiked ? "Liked" : "Like"} - {totalLike}
                 </Button>
               </div>
             </div>
@@ -232,17 +318,33 @@ const Drop = () => {
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
-          <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
-            <p className="text-gray">Protect this collectible</p>
-            <p className="text-white">Time left: 1d 23h 32m</p>
-          </div>
-          <div className="bg-conic-gradient w-full cursor-pointer p-[1px] duration-700 active:scale-95 disabled:pointer-events-none disabled:opacity-50">
-            <div className="w-full rounded-none !bg-[#232733] py-1.5 text-center text-base font-bold capitalize leading-5 text-white">
-              Protect - 10
+        {dropDetail.dropType.toLowerCase() ==
+          DropTypeEnum.PROTECTED.toLowerCase() && (
+          <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
+            <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
+              <p className="text-gray">Protect this collectible</p>
+              <p className="text-white">{timeLeft}</p>
             </div>
+
+            <Button
+              loading={isLoadingSecure}
+              onClick={() => handleSecure(dropDetail.collectible.nftContract)}
+              disabled={
+                isSecured ||
+                !dropDetail.set ||
+                new Date().getTime() > dropDetail.set?.expiryTime
+              }
+              title={`${isSecured ? "Protected" : "Protect"} - ${dropDetail.secureAmount}`}
+              variant="primary"
+              className="w-full rounded-none py-3 capitalize"
+            />
+            {/* <div className="bg-conic-gradient w-full cursor-pointer p-[1px] duration-700 active:scale-95 disabled:pointer-events-none disabled:opacity-50">
+            <div className="w-full rounded-none !bg-[#232733] py-1.5 text-center text-base font-bold capitalize leading-5 text-white">
+              Protect - {dropDetail.secureAmount}
+            </div>
+          </div> */}
           </div>
-        </div>
+        )}
 
         <div className="flex flex-col gap-4">
           <div className="flex gap-1 border-b border-[#3A3A3C] pb-3 text-[20px] font-bold uppercase leading-6">
@@ -252,25 +354,21 @@ const Drop = () => {
           <div className="grid w-full grid-cols-3 gap-2">
             <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
               <p className="text-gray">Name</p>
-              <p className="text-white">Community is king</p>
+              <p className="text-white">{dropDetail.collectible.name}</p>
             </div>
             <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
               <p className="text-gray">Rarity</p>
-              <p className="text-white">Legendary</p>
+              <p className="text-white">{dropDetail.collectible.rarity}</p>
             </div>
             <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
               <p className="text-gray">Drop amount</p>
-              <p className="text-white">15</p>
-            </div>
-            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
-              <p className="text-gray">Name</p>
-              <p className="text-white">Community is king</p>
+              <p className="text-white">{dropDetail.collectible.dropAmount}</p>
             </div>
           </div>
         </div>
 
         {/* Listings, Bids, Activities */}
-        <div className="flex flex-col gap-4">
+        {/* <div className="flex flex-col gap-4">
           <div className="flex w-full justify-between border-b border-[#3A3A3C] pb-3">
             <div className="flex items-center gap-6 text-[20px] font-bold uppercase leading-6">
               <div className="flex cursor-pointer items-center gap-1 text-white transition-all hover:text-white">
@@ -360,7 +458,7 @@ const Drop = () => {
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
     </div>
   );

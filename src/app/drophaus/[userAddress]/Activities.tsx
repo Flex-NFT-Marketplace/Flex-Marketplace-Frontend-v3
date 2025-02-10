@@ -1,10 +1,61 @@
+"use client";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { FaEthereum } from "react-icons/fa";
 import ImageKit from "@/packages/@ui-kit/Image";
 import Button from "@/packages/@ui-kit/Button";
+import { ICreator } from "@/types/Idrop";
+import { useSocial } from "@/services/providers/SocialProvider";
+import { copyToClipboard, strShortAddress } from "@/utils/string";
+import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import Link from "next/link";
+
+const CreatorSuggestCard = ({ creator }: { creator: ICreator }) => {
+  const { onShowToast } = useToast();
+
+  const handleCopyAddress = (address: string) => {
+    try {
+      copyToClipboard(address);
+      onShowToast("Copy address successfully");
+    } catch (error) {
+      onShowToast("Something went wrong");
+    }
+  };
+
+  return (
+    <div className="flex w-full items-center justify-between">
+      <div className="flex items-center gap-3">
+        <ImageKit src="" className="aspect-square w-[52px] rounded-sm" />
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1">
+            <p className="text-base font-bold uppercase leading-5">
+              {strShortAddress(creator.address)}
+            </p>
+            <TbRosetteDiscountCheckFilled className="text-base text-[#63B1FF]" />
+          </div>
+          <div className="flex items-center gap-2">
+            <p>{strShortAddress(creator.address)}</p>
+            <MdOutlineContentCopy
+              onClick={() => handleCopyAddress(creator.address)}
+              className="text-gray text-base hover:text-white cursor-pointer"
+            />
+          </div>
+        </div>
+      </div>
+      <Link href={`/drophaus/${creator.address}`}>
+        <Button
+          title="Detail"
+          variant="outline"
+          className="border-primary text-primary"
+        />
+      </Link>
+    </div>
+  );
+};
 
 const Activities = () => {
+  const { creatorsSuggestion } = useSocial();
+
   return (
     <div className="fixed-height-under-header top-16 mt-0 flex flex-col divide-y divide-[#3A3A3C] overflow-auto border-l border-[#3A3A3C] md:sticky md:w-[362px]">
       <div className="flex w-full flex-col gap-6 pb-8 pl-5 pr-8 pt-4">
@@ -13,31 +64,9 @@ const Activities = () => {
         </h3>
         <div className="flex w-full flex-col gap-4">
           <div className="flex w-full flex-col gap-3">
-            <div className="flex w-full items-center justify-between">
-              <div className="flex items-center gap-3">
-                <ImageKit
-                  src=""
-                  className="aspect-square w-[52px] rounded-sm"
-                />
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-1">
-                    <p className="text-base font-bold uppercase leading-5">
-                      BEANZ Official
-                    </p>
-                    <TbRosetteDiscountCheckFilled className="text-base text-[#63B1FF]" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <p>0x00dCE...DCGH</p>
-                    <MdOutlineContentCopy className="text-gray text-base" />
-                  </div>
-                </div>
-              </div>
-              <Button
-                title="Subscribe"
-                variant="outline"
-                className="border-primary text-primary"
-              />
-            </div>
+            {creatorsSuggestion.map((creator, index) => (
+              <CreatorSuggestCard creator={creator} key={index} />
+            ))}
           </div>
           <p className="font-bold text-[#63B1FF] ">Show more</p>
         </div>

@@ -1,4 +1,5 @@
 import DropCard from "@/components/DropCard";
+import { useSocial } from "@/services/providers/SocialProvider";
 import { useState } from "react";
 
 enum DropsInventoryEnum {
@@ -9,11 +10,14 @@ enum DropsInventoryEnum {
 
 const DropsInventory = () => {
   const [activeTab, setActiveTab] = useState<string>(
-    DropsInventoryEnum.UNPROTECTED,
+    DropsInventoryEnum.UNPROTECTED
   );
+
+  const { dropsByCreator } = useSocial();
+
   return (
     <div>
-      <div className="flex items-center gap-2 font-bold uppercase">
+      {/* <div className="flex items-center gap-2 font-bold uppercase">
         <p className="text-3xl font-normal text-grays">{`<`}</p>
         <p
           onClick={() => setActiveTab(DropsInventoryEnum.UNPROTECTED)}
@@ -36,11 +40,14 @@ const DropsInventory = () => {
           All
         </p>
         <p className="text-3xl font-normal text-grays">{`>`}</p>
-      </div>
-      <div className="mt-6 flex flex-wrap justify-center gap-4">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <DropCard key={index} />
-        ))}
+      </div> */}
+      {dropsByCreator.length <= 0 && (
+        <p className="text-grays">No drops found</p>
+      )}
+      <div className="mt-6 gap-4 grid grid-cols-2 max-[1350px]:grid-cols-1 max-xl:grid-cols-2 max-[950px]:grid-cols-1 max-md:grid-cols-2 max-sm:grid-cols-1">
+        {dropsByCreator.map((drop, index) => {
+          return <DropCard drop={drop} key={index} />;
+        })}
       </div>
     </div>
   );

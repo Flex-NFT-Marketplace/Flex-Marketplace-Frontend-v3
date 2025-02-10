@@ -19,6 +19,7 @@ import { strShortAddress } from "@/utils/string";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { deleteCookie } from "@/helpers/cookie";
 import { ACCESS_TOKEN, USER_ADDRESS } from "@/constants/cookies";
+import { useAuth } from "@/services/providers/AuthProvider";
 
 const ConnectWallet = () => {
   const { address, status, account } = useAccount();

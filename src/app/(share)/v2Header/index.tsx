@@ -13,7 +13,8 @@ import { IoMenu } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
 const pages = {
-  "/launchpad": "Launchpad",
+  "/drophaus": "Drops",
+  // "/launchpad": "Launchpad",
   "/activity": "Activity",
   "/staking": "Staking",
   "/mint": "Mint",

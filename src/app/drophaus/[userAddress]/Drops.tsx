@@ -12,7 +12,7 @@ const DropsTab = () => {
 
   return (
     <div className="px-5 py-4">
-      <div className="flex gap-6 border-b border-line pb-4">
+      {/* <div className="flex gap-6 border-b border-line pb-4">
         {tabs.map((tab) => (
           <p
             onClick={() => setActiveTab(tab)}
@@ -22,7 +22,7 @@ const DropsTab = () => {
             {tab}
           </p>
         ))}
-      </div>
+      </div> */}
       {activeTab === DropsTabEnum.INVENTORY && <DropsInventory />}
       {activeTab === DropsTabEnum.CREATE && <div>Create</div>}
     </div>
