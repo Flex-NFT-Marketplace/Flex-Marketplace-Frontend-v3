@@ -21,6 +21,7 @@ import { strShortAddress } from "@/utils/string";
 import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
 import Activity from "../(home)/Activity";
 import launchpadBg1 from "@/assets/launchpad-bg1.png";
+import PaclCollectionCard from "@/components/AtemuCard/PaclCollectionCard";
 
 const OnChain = () => {
   const router = useRouter();
@@ -251,11 +252,7 @@ const OnChain = () => {
                 <ImageKit src={launchpadBg1.src} className="h-full" />
               </div>
               <div className="flex overflow-auto gap-4 h-full flex-1 max-lg:w-full">
-                <PackCard />
-                {/* <PackCard /> */}
-                {/* <PackCard />
-                <PackCard />
-                <PackCard /> */}
+                <PaclCollectionCard />
               </div>
             </div>
             {/* <div className="flex w-full gap-5 max-md:flex-col">
@@ -440,7 +437,6 @@ const OnChain = () => {
               })}
             </div>
           </div>
-          <Activity />
         </div>
       </div>
 

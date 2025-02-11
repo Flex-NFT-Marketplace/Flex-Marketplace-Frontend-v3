@@ -28,6 +28,59 @@ import { metadataUnpack } from "@/constants/nftMetadataUnpack";
 import UnpackAnimation from "./UnpackAnimation";
 import launchpadBg from "@/assets/launchpad-bg.png";
 
+// import 50 images
+import image1 from "@/assets/Atemu_Collection_Images/1.png";
+import image2 from "@/assets/Atemu_Collection_Images/2.png";
+import image3 from "@/assets/Atemu_Collection_Images/3.png";
+import image4 from "@/assets/Atemu_Collection_Images/4.png";
+import image5 from "@/assets/Atemu_Collection_Images/5.png";
+import image6 from "@/assets/Atemu_Collection_Images/6.png";
+import image7 from "@/assets/Atemu_Collection_Images/7.png";
+import image8 from "@/assets/Atemu_Collection_Images/8.png";
+import image9 from "@/assets/Atemu_Collection_Images/9.png";
+import image10 from "@/assets/Atemu_Collection_Images/10.png";
+import image11 from "@/assets/Atemu_Collection_Images/11.png";
+import image12 from "@/assets/Atemu_Collection_Images/12.png";
+import image13 from "@/assets/Atemu_Collection_Images/13.png";
+import image14 from "@/assets/Atemu_Collection_Images/14.png";
+import image15 from "@/assets/Atemu_Collection_Images/15.png";
+import image16 from "@/assets/Atemu_Collection_Images/16.png";
+import image17 from "@/assets/Atemu_Collection_Images/17.png";
+import image18 from "@/assets/Atemu_Collection_Images/18.png";
+import image19 from "@/assets/Atemu_Collection_Images/19.png";
+import image20 from "@/assets/Atemu_Collection_Images/20.png";
+import image21 from "@/assets/Atemu_Collection_Images/21.png";
+import image22 from "@/assets/Atemu_Collection_Images/22.png";
+import image23 from "@/assets/Atemu_Collection_Images/23.png";
+import image24 from "@/assets/Atemu_Collection_Images/24.png";
+import image25 from "@/assets/Atemu_Collection_Images/25.png";
+import image26 from "@/assets/Atemu_Collection_Images/26.png";
+import image27 from "@/assets/Atemu_Collection_Images/27.png";
+import image28 from "@/assets/Atemu_Collection_Images/28.png";
+import image29 from "@/assets/Atemu_Collection_Images/29.png";
+import image30 from "@/assets/Atemu_Collection_Images/30.png";
+import image31 from "@/assets/Atemu_Collection_Images/31.png";
+import image32 from "@/assets/Atemu_Collection_Images/32.png";
+import image33 from "@/assets/Atemu_Collection_Images/33.png";
+import image34 from "@/assets/Atemu_Collection_Images/34.png";
+import image35 from "@/assets/Atemu_Collection_Images/35.png";
+import image36 from "@/assets/Atemu_Collection_Images/36.png";
+import image37 from "@/assets/Atemu_Collection_Images/37.png";
+import image38 from "@/assets/Atemu_Collection_Images/38.png";
+import image39 from "@/assets/Atemu_Collection_Images/39.png";
+import image40 from "@/assets/Atemu_Collection_Images/40.png";
+import image41 from "@/assets/Atemu_Collection_Images/41.png";
+import image42 from "@/assets/Atemu_Collection_Images/42.png";
+import image43 from "@/assets/Atemu_Collection_Images/43.png";
+import image44 from "@/assets/Atemu_Collection_Images/44.png";
+import image45 from "@/assets/Atemu_Collection_Images/45.png";
+import image46 from "@/assets/Atemu_Collection_Images/46.png";
+import image47 from "@/assets/Atemu_Collection_Images/47.png";
+import image48 from "@/assets/Atemu_Collection_Images/48.png";
+import image49 from "@/assets/Atemu_Collection_Images/49.png";
+import image50 from "@/assets/Atemu_Collection_Images/50.png";
+import { StaticImageData } from "next/image";
+
 interface IBuyPackPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
@@ -51,6 +104,7 @@ export interface DataObject {
   image: string;
   name: string;
   attributes: Attribute[];
+  imageOffChain?: StaticImageData;
 }
 
 const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
@@ -63,16 +117,60 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
   const countRef = useRef(count);
   const [showAnimation, setShowAnimation] = useState(false);
   const [listSrcRecieved, setListSrcRecieved] = useState<DataObject[]>([]);
-
-  const handleIncrement = () => {
-    setCount((prevCount) => prevCount + 1);
-  };
-
-  const handleDecrement = () => {
-    if (countRef.current > 1) {
-      setCount((prevCount) => prevCount - 1);
-    }
-  };
+  const [listImagesOffChain, setListImagesOffChain] = useState<
+    StaticImageData[]
+  >([
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+    image6,
+    image7,
+    image8,
+    image9,
+    image10,
+    image11,
+    image12,
+    image13,
+    image14,
+    image15,
+    image16,
+    image17,
+    image18,
+    image19,
+    image20,
+    image21,
+    image22,
+    image23,
+    image24,
+    image25,
+    image26,
+    image27,
+    image28,
+    image29,
+    image30,
+    image31,
+    image32,
+    image33,
+    image34,
+    image35,
+    image36,
+    image37,
+    image38,
+    image39,
+    image40,
+    image41,
+    image42,
+    image43,
+    image44,
+    image45,
+    image46,
+    image47,
+    image48,
+    image49,
+    image50,
+  ]);
 
   function filterObjects(objects: Event[]): Event[] {
     return objects.filter((obj) => {
@@ -118,7 +216,13 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
     tokenIds: number[],
     data: DataObject[]
   ): DataObject[] {
-    return tokenIds.map((id) => data[id - 1]);
+    const dataReceived = tokenIds.map((id) => {
+      data[id - 1].imageOffChain = listImagesOffChain[id - 1];
+      return data[id - 1];
+    });
+    console.log(dataReceived);
+
+    return dataReceived;
   }
 
   const open = async () => {
@@ -133,39 +237,46 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
     //   return;
     // }
 
-    // const provider = new RpcProvider({
-    //   nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
-    // });
-
     const provider = new RpcProvider({
-      nodeUrl: "https://free-rpc.nethermind.io/sepolia-juno/v0_7",
+      nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
     });
+
+    // const provider = new RpcProvider({
+    //   nodeUrl: "https://free-rpc.nethermind.io/sepolia-juno/v0_7",
+    // });
 
     // https://free-rpc.nethermind.io/sepolia-juno/v0_7
 
     const ATEMU_PACK_ADDRESS_TESTNET =
       "0x017B1A4256932F9105696550438d2ce5c0D4d4378029aD9c8e8804ff5a958230";
+    const ATEMU_PACK_ADDRESS_MAINNET =
+      "0x4d6ccb91e90da63ab5c74841bc68cbbc0da6d221770aecf4d70d02b6bf41549";
+
     const ATEMU_COLLECTION_FACTORY_TESTNET =
       "0x02A64600CdC15F9a3d7376582f928AE85B43dD5880CaEf55C73418267dAf44c2";
+    const ATEMU_COLLECTION_FACTORY_MAINNET =
+      "0x63543acf69e059d989b5ebbca515a613be78f7152f525ecad50954e96179998";
+
     const ATEMU_COLLECTION_SAMPLE_TESTNET =
       "0x01b5758978572e24E9A8FB87C37F75F50787b3557C1551D03Fc561F9d24a8d30";
+
     try {
       const result = await account.execute([
         {
-          contractAddress: ATEMU_PACK_ADDRESS_TESTNET,
+          contractAddress: ATEMU_PACK_ADDRESS_MAINNET,
           entrypoint: "set_approval_for_all",
           calldata: CallData.compile({
-            operator: ATEMU_COLLECTION_FACTORY_TESTNET,
+            operator: ATEMU_COLLECTION_FACTORY_MAINNET,
             approved: true,
           }),
         },
         {
-          contractAddress: ATEMU_COLLECTION_FACTORY_TESTNET,
+          contractAddress: ATEMU_COLLECTION_FACTORY_MAINNET,
           entrypoint: "open_pack",
           calldata: CallData.compile({
-            pack_address: ATEMU_PACK_ADDRESS_TESTNET,
+            pack_address: ATEMU_PACK_ADDRESS_MAINNET,
             // token_id: cairo.uint256(packOpening.tokenId),
-            token_id: cairo.uint256(34),
+            token_id: cairo.uint256(10),
           }),
         },
       ]);
@@ -178,15 +289,14 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
         return;
       }
 
-      console.log(tx, tx.events);
-
       const filteredEvents = filterObjects(tx.events);
 
       const idReceived: number[] = extractFirstDataAsNumber(filteredEvents);
+      // const idReceived: number[] = [1, 2, 3, 4, 3];
 
       const dataObjects = getObjectsByTokenIds(idReceived, metadataUnpack);
 
-      console.log(filteredEvents, idReceived, dataObjects);
+      console.log(idReceived, dataObjects);
 
       setListSrcRecieved(dataObjects);
       setShowAnimation(true);

@@ -1,3 +1,5 @@
+// ipfs://QmPG4hAv4FwRaP1WG4ydsE2CEb3Tt2V1GRYZNW95TbHLmi/1.png
+"../assets/Atemu_Collection_Images/1.png"
 export const metadataUnpack = [
     {
       "description": "The Annihilation. After playing a spell, Abaddon gain 2 attack",

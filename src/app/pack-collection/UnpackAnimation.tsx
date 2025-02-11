@@ -1,11 +1,6 @@
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useEffect, useRef, useState } from "react";
 import background_unpack from "@/assets/social/bg-unpack.png";
-import atemu_1 from "@/assets/social/atemu_1.png";
-import atemu_2 from "@/assets/social/atemu_2.png";
-import atemu_3 from "@/assets/social/atemu_3.png";
-import atemu_4 from "@/assets/social/atemu_4.png";
-import atemu_5 from "@/assets/social/atemu_5.png";
 import Card from "./Card";
 import Button from "@/packages/@ui-kit/Button";
 import { DataObject } from "./UnpackPopup";
@@ -110,7 +105,7 @@ const UnpackAnimation: React.FC<UnpackAnimationProps> = (props) => {
           onClick={() => handleCardClick(index)} // Click để lật từng lá bài
           className={`absolute opacity-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
         >
-          <Card imageSrc={_.image} />
+          <Card imageSrc={_.imageOffChain?.src} />
         </div>
       ))}
       <div
