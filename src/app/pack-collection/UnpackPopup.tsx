@@ -80,6 +80,7 @@ import image48 from "@/assets/Atemu_Collection_Images/48.png";
 import image49 from "@/assets/Atemu_Collection_Images/49.png";
 import image50 from "@/assets/Atemu_Collection_Images/50.png";
 import { StaticImageData } from "next/image";
+import LoadingOverlay from "./LoadingOverlay";
 
 interface IBuyPackPopupProps {
   isOpen: boolean;
@@ -113,6 +114,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
 
   const { isOpen, toggleModal, packOpening } = props;
   const [count, setCount] = useState(1);
+  const [loadingOpenPack, setLoadingOpenPack] = useState(false);
 
   const countRef = useRef(count);
   const [showAnimation, setShowAnimation] = useState(false);
@@ -261,6 +263,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
       "0x01b5758978572e24E9A8FB87C37F75F50787b3557C1551D03Fc561F9d24a8d30";
 
     try {
+      setLoadingOpenPack(true);
       const result = await account.execute([
         {
           contractAddress: ATEMU_PACK_ADDRESS_MAINNET,
@@ -276,7 +279,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
           calldata: CallData.compile({
             pack_address: ATEMU_PACK_ADDRESS_MAINNET,
             // token_id: cairo.uint256(packOpening.tokenId),
-            token_id: cairo.uint256(10),
+            token_id: cairo.uint256(11),
           }),
         },
       ]);
@@ -292,7 +295,6 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
       const filteredEvents = filterObjects(tx.events);
 
       const idReceived: number[] = extractFirstDataAsNumber(filteredEvents);
-      // const idReceived: number[] = [1, 2, 3, 4, 3];
 
       const dataObjects = getObjectsByTokenIds(idReceived, metadataUnpack);
 
@@ -305,6 +307,8 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
 
       onShowToast(error.message);
       return;
+    } finally {
+      setLoadingOpenPack(false);
     }
   };
 
@@ -320,6 +324,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
           hide={() => setShowAnimation(false)}
         />
       )}
+      <LoadingOverlay isLoading={loadingOpenPack} />
       <Modal isShow={isOpen} hide={toggleModal}>
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-center flex-col">
