@@ -21,7 +21,6 @@ const DropCard: React.FC<DropCardProps> = ({ drop }) => {
   const getCollectionDetail = async (contractAddress: string) => {
     const collectionDetail =
       await _getCollectionDetail.mutateAsync(contractAddress);
-    console.log(collectionDetail);
   };
   const [totalLike, setTotalLike] = useState<number>(0);
 

@@ -1,5 +1,5 @@
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
-import { IDropGroup } from "@/types/Idrop";
+import { IDropGroup, ISet } from "@/types/Idrop";
 import { useAccount } from "@starknet-react/core";
 import {
   createContext,
@@ -82,38 +82,43 @@ const initialState: AllStateProps = {
   individualDropsExpiryDate: null,
 };
 
-const CreateDropContext = createContext<{
-  allState: AllStateProps;
-  setAllState: React.Dispatch<React.SetStateAction<AllStateProps>>;
-  handleCreateNewGroup: (
-    collectible: string,
-    startDate: number,
-    expiryDate: number
-  ) => void;
-  handleAddCollectibleToGroup: (setId: string, collectible: string) => void;
-  handleRemoveCollectibleFromGroup: (
-    setId: string,
-    collectible: string
-  ) => void;
-  reloadGroups: (address: string) => void;
-  groupDrop: IDropGroup[];
-}>({
-  allState: initialState,
-  setAllState: () => {},
-  handleCreateNewGroup: () => {},
-  handleAddCollectibleToGroup: () => {},
-  handleRemoveCollectibleFromGroup: () => {},
-  reloadGroups: () => {},
-  groupDrop: [],
-});
+const CreateDropContext = createContext<
+  | {
+      allState: AllStateProps;
+      setAllState: React.Dispatch<React.SetStateAction<AllStateProps>>;
+      handleCreateNewGroup: (
+        collectible: string,
+        startDate: number,
+        expiryDate: number
+      ) => Promise<ISet>;
+      handleAddCollectibleToGroup: (
+        setId: string,
+        collectible: string
+      ) => Promise<ISet>;
+      handleRemoveCollectibleFromGroup: (
+        setId: string,
+        collectible: string
+      ) => Promise<void>;
+      reloadGroups: (address: string) => void;
+      groupDrop: IDropGroup[];
+    }
+  | undefined
+>(undefined);
 
-export const useCreateDrop = () => useContext(CreateDropContext);
+export const useCreateDrop = () => {
+  const context = useContext(CreateDropContext);
+  if (!context) {
+    throw new Error(
+      "useCreateDropContext must be used within a CreateDropProvider"
+    );
+  }
+  return context;
+};
 
 const CreateDropProvider = ({ children }: { children: ReactNode }) => {
   const [allState, setAllState] = useState<AllStateProps>(initialState);
   const { address } = useAccount();
   const [groupDrop, setGroupDrop] = useState<IDropGroup[]>([]);
-  const { onShowToast } = useToast();
   const searchParams = useSearchParams();
   const perks = searchParams.get("perks");
 
@@ -122,16 +127,19 @@ const CreateDropProvider = ({ children }: { children: ReactNode }) => {
     collectible: string,
     startDate: number,
     expiryDate: number
-  ) => {
+  ): Promise<ISet> => {
     try {
-      await _createNewGroup.mutateAsync({
+      const set = await _createNewGroup.mutateAsync({
         collectible: collectible,
         startDate: startDate,
         expiryDate: expiryDate,
       });
+      console.log(set);
+
       if (address) {
         await reloadGroups(address);
       }
+      return set;
     } catch (error) {
       throw error;
     }
@@ -141,11 +149,16 @@ const CreateDropProvider = ({ children }: { children: ReactNode }) => {
   const handleAddCollectibleToGroup = async (
     setId: string,
     collectible: string
-  ) => {
-    await _addCollectibleToGroup.mutateAsync({
-      setId: setId,
-      collectible: collectible,
-    });
+  ): Promise<ISet> => {
+    try {
+      const set = await _addCollectibleToGroup.mutateAsync({
+        setId: setId,
+        collectible: collectible,
+      });
+      return set;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const _getGroups = useGetGroups();
@@ -158,7 +171,7 @@ const CreateDropProvider = ({ children }: { children: ReactNode }) => {
   const handleRemoveCollectibleFromGroup = async (
     setId: string,
     collectible: string
-  ) => {
+  ): Promise<void> => {
     await _removeCollectibleFromGroup.mutateAsync({
       setId: setId,
       collectible: collectible,

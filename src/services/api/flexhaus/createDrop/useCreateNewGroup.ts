@@ -13,7 +13,7 @@ export const useCreateNewGroup = () => {
           expiryTime: body.expiryDate,
         });
 
-        return data;
+        return data.data;
       
     },
   });

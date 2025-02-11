@@ -14,7 +14,7 @@ import {
 } from "@/services/providers/CreateDropProvider";
 import { RiShareBoxLine } from "react-icons/ri";
 import CollectiblesInGroup from "./CollectiblesInGroup";
-import { IDropGroup } from "@/types/Idrop";
+import { IDropGroup, ISet } from "@/types/Idrop";
 import { useAccount } from "@starknet-react/core";
 import { CallData, RpcProvider, uint256 } from "starknet";
 import useModal from "@/hooks/useModal";
@@ -39,6 +39,7 @@ const Step2 = () => {
     groupDrop,
     handleAddCollectibleToGroup,
     handleCreateNewGroup,
+    handleRemoveCollectibleFromGroup,
   } = useCreateDrop();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const [groupShowing, setGroupShowing] = useState<IDropGroup | undefined>(
@@ -107,9 +108,24 @@ const Step2 = () => {
       onShowToast("To Top Supporters cannot be greater than the drop amount");
       return;
     }
-
+    let setCreated: ISet | undefined;
     try {
       setIsLoadingCreate(true);
+
+      if (allState.sets == SetsTypeEnum.GROUP) {
+        setCreated = await handleAddCollectibleToGroup(
+          allState.groupSelected!._id,
+          allState.contractAddress
+        );
+      }
+
+      if (allState.sets == SetsTypeEnum.INDIVIDUAL) {
+        setCreated = await handleCreateNewGroup(
+          allState.contractAddress,
+          allState.individualDropsStartDate!.toDate().getTime(),
+          allState.individualDropsExpiryDate!.toDate().getTime()
+        );
+      }
 
       const callData: any = CallData.compile({
         collectible: allState.contractAddress,
@@ -147,25 +163,24 @@ const Step2 = () => {
       const txHash = await provider.waitForTransaction(tx.transaction_hash);
 
       if (txHash.isSuccess()) {
-        if (allState.sets == SetsTypeEnum.GROUP) {
-          await handleAddCollectibleToGroup(
-            allState.groupSelected!._id,
-            allState.contractAddress
-          );
-        }
-
-        if (allState.sets == SetsTypeEnum.INDIVIDUAL) {
-          await handleCreateNewGroup(
-            allState.contractAddress,
-            allState.individualDropsStartDate!.toDate().getTime(),
-            allState.individualDropsExpiryDate!.toDate().getTime()
-          );
-        }
         toggleSuccess();
+      } else {
+        throw new Error("Contract execution failed");
       }
     } catch (error) {
       console.log(error);
-      onShowToast("Failed to create drop");
+      if (error instanceof Error) {
+        if (error.message === "Contract execution failed") {
+          await handleRemoveCollectibleFromGroup(
+            setCreated!._id,
+            allState.contractAddress
+          );
+          onShowToast("Contract execution failed");
+          return;
+        }
+      } else {
+        onShowToast("Failed to create drop");
+      }
     } finally {
       setIsLoadingCreate(false);
     }
