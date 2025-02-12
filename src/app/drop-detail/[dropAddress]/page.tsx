@@ -8,7 +8,7 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { MdOutlineContentCopy } from "react-icons/md";
 import Button from "@/packages/@ui-kit/Button";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
 import { useDropDetail } from "@/services/providers/DropDetailProvider";
 import { getBackgroundColor } from "@/app/create-drop/step2";
@@ -19,6 +19,12 @@ import {
 } from "@/utils/string";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { DropTypeEnum } from "@/services/providers/CreateDropProvider";
+import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
+import HausDonate from "@/app/drophaus/HausDonate";
+import { useModal } from "@/packages/@ui-kit/Modal/useModal";
+import { useAccount } from "@starknet-react/core";
+import Link from "next/link";
+import avtDefault from "@/assets/avtDefault.webp";
 
 const Drop = () => {
   const srcList = [
@@ -34,11 +40,20 @@ const Drop = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { onShowToast } = useToast();
-  const { isLiked, toggleLike, totalLike, isSecured, secure, dropDetail } =
-    useDropDetail();
+  const {
+    isLiked,
+    toggleLike,
+    totalLike,
+    isSecured,
+    secure,
+    dropDetail,
+    collectionDetail,
+    claim,
+  } = useDropDetail();
   const [timeLeft, setTimeLeft] = useState<string>("-");
   const [isLoadingSecure, setIsLoadingSecure] = useState(false);
   const [isLoadingLike, setIsLoadingLike] = useState(false);
+  const [isLoadingClaim, setIsLoadingClaim] = useState(false);
 
   const handleSecure = async (collectible: string) => {
     try {
@@ -148,6 +163,17 @@ const Drop = () => {
     }
   };
 
+  const handleClaimCollectible = async () => {
+    try {
+      setIsLoadingClaim(true);
+      await claim(dropDetail!.collectible.nftContract);
+    } catch (error: any) {
+      onShowToast(error.response.data.message);
+    } finally {
+      setIsLoadingClaim(false);
+    }
+  };
+
   useEffect(() => {
     startInterval();
 
@@ -212,11 +238,11 @@ const Drop = () => {
           ></div>
           <ImageKit
             className="aspect-square rounded-lg"
-            src={srcList[activeSrc]}
+            src={collectionDetail?.avatar}
           />
         </div>
 
-        <div
+        {/* <div
           ref={scrollRef}
           className="no-scrollbar grid w-full grid-flow-col gap-4 overflow-x-auto scroll-smooth"
         >
@@ -235,7 +261,7 @@ const Drop = () => {
               <div className="absolute left-0 top-0 z-[1] h-full w-full bg-transparent"></div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-1 flex-col gap-9">
         <div className="flex flex-col gap-5">
@@ -269,9 +295,12 @@ const Drop = () => {
               <div className="flex items-center gap-3">
                 <ImageKit
                   className="aspect-square w-full max-w-[52px] rounded-sm"
-                  src="https://s3-alpha-sig.figma.com/img/0271/2576/db54e48be34970895bdc776931ad8ee9?Expires=1729468800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=c7ow2DDOT6FzNNu8xFavdyJh2s~OAfbgfHXvCXk694fPtSCDwcCiR9GKDxMoE-rQ6wB7qHdcSCGLaniz-qPVASP8nYDGox7rJTXrMM1LAAZGdeJNs6c2T~53lK8pns-h~XzUBH-fApVJlxpLhgc3c~thZqz7Mn9n0iLecqYtUwqe4yAZ7eKB~VT0zL9dQBBmh2WUL7letcK-WZjXTymenRrmC6ggoyVPk0Ky-AyWtYrwy4DR6eDu2L4QE5KWNBw5~6JhgrHJnWt6yccbd5esy9cfI9OBMPn9KByBfpg1-Kv3HQLAj4kZb0C5rtzKlnIxRR2-yHJ77-uD~mhxURxzmg__"
+                  src={avtDefault.src}
                 />
-                <div className="flex flex-col gap-1">
+                <Link
+                  href={`/drophaus/${dropDetail.creator.address}`}
+                  className="flex flex-col gap-1"
+                >
                   <div className="flex items-center gap-1">
                     <p className="text-base font-bold leading-6">
                       {strShortAddress(dropDetail?.creator?.address)}
@@ -293,14 +322,14 @@ const Drop = () => {
                       <p className="text-white">19.9k</p>
                     </div> */}
                   </div>
-                </div>
+                </Link>
               </div>
               <div className="flex gap-2">
-                <Button
-                // className="h-fit !rounded-none px-4 py-[2px] text-base font-bold leading-5 text-black"
-                >
-                  Support
-                </Button>
+                {/* <Button
+                 
+                  >
+                    Support
+                  </Button> */}
                 <Button
                   loading={isLoadingLike}
                   onClick={() => handleLike(dropDetail.collectible.nftContract)}
@@ -345,6 +374,32 @@ const Drop = () => {
           </div> */}
           </div>
         )}
+
+        {dropDetail.dropType.toLowerCase() == DropTypeEnum.FREE.toLowerCase() &&
+          // drop is expiryTime
+          (new Date().getTime() > dropDetail.set?.expiryTime ? (
+            <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
+              <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
+                <p className="text-gray">Free claim</p>
+                <Button
+                  loading={isLoadingClaim}
+                  onClick={handleClaimCollectible}
+                  className="px-10"
+                  title="Claim"
+                />
+              </div>
+            </div>
+          ) : (
+            // drop is not expiryTime
+            <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
+              <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
+                <p className="text-gray">
+                  Subcribe creator for a chance to get this NFT
+                </p>
+                <p className="text-white">{timeLeft}</p>
+              </div>
+            </div>
+          ))}
 
         <div className="flex flex-col gap-4">
           <div className="flex gap-1 border-b border-[#3A3A3C] pb-3 text-[20px] font-bold uppercase leading-6">

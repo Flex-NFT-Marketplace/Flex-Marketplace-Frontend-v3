@@ -21,6 +21,8 @@ import { IProfileStaging } from "@/types/IStagingNft";
 import { useGetProfile } from "../api/useGetProfile";
 import useGetCreatorsSuggestion from "../api/flexhaus/social/useGetCreatorsSuggestion";
 import { useAuth } from "./AuthProvider";
+import { useDonate } from "../api/flexhaus/social/useDonate";
+import { useAccountContext } from "./AccountProvider";
 
 interface SocialContextProps {
   handleCreateNewEvent: (
@@ -39,7 +41,8 @@ interface SocialContextProps {
   dropsByCreator: IdropDetail[];
   leaderboardByEvent: ILeaderboardItem[];
   showProfile: IProfileStaging | null;
-  creatorsSuggestion: ICreator[];
+  creatorsSuggestion: IProfileStaging[];
+  handleDonate: (creator: string, amount: number) => Promise<void>;
 }
 
 const SocialContext = createContext<SocialContextProps | undefined>(undefined);
@@ -63,8 +66,10 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     ILeaderboardItem[]
   >([]);
   const [showProfile, setShowProfile] = useState<IProfileStaging | null>(null);
-  const [creatorsSuggestion, setCreatorsSuggestion] = useState<ICreator[]>([]);
-  const { token } = useAuth();
+  const [creatorsSuggestion, setCreatorsSuggestion] = useState<
+    IProfileStaging[]
+  >([]);
+  const { profileOwner } = useAccountContext();
 
   const {
     data: drops,
@@ -72,7 +77,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     fetchNextPage,
     isLoading,
     isFetching,
-  } = useGetCollectibles();
+  } = useGetCollectibles(userAddress as string);
 
   const {
     data: leaderboard,
@@ -147,6 +152,60 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const _donate = useDonate();
+  const handleDonate = async (
+    creator: string,
+    amount: number
+  ): Promise<void> => {
+    if (!address) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+
+    if (!perks) {
+      onShowToast("There is no event yet");
+      return;
+    }
+
+    if (new Date().getTime() < perks.startTime) {
+      onShowToast("Perks is not started");
+      return;
+    }
+
+    if (new Date().getTime() > perks.snapshotTime) {
+      onShowToast("Perks is not finished");
+      return;
+    }
+
+    if (!profileOwner) {
+      onShowToast("Something went wrong");
+      return;
+    }
+
+    if (
+      formattedContractAddress(address) == formattedContractAddress(creator)
+    ) {
+      onShowToast("You can't donate to yourself");
+      return;
+    }
+
+    if (profileOwner.points < amount) {
+      onShowToast("You don't have enough points");
+      return;
+    }
+
+    try {
+      const donate = await _donate.mutateAsync({
+        creator: creator,
+        amount: amount,
+      });
+
+      onShowToast("Successfully donated");
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const { data: creators } = useGetCreatorsSuggestion();
 
   useEffect(() => {
@@ -190,7 +249,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   }, [userAddress, address]);
 
   const _getCreatorFromCollectibles = (collectibles: IdropDetail[]) => {
-    const creatorMap: Map<string, ICreator> = new Map();
+    const creatorMap: Map<string, IProfileStaging> = new Map();
     collectibles.map((collectible) => {
       if (!creatorMap.has(collectible.creator.address)) {
         creatorMap.set(collectible.creator.address, collectible.creator);
@@ -200,7 +259,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    let creatorsArr: ICreator[] = [];
+    let creatorsArr: IProfileStaging[] = [];
     creators?.pages.map((page) => {
       creatorsArr = creatorsArr.concat(
         _getCreatorFromCollectibles(page.data.items)
@@ -219,6 +278,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     leaderboardByEvent,
     showProfile,
     creatorsSuggestion,
+    handleDonate,
   };
 
   return (

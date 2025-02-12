@@ -6,14 +6,17 @@ import Steps from "./Steps";
 import CreateDropProvider, {
   useCreateDrop,
 } from "@/services/providers/CreateDropProvider";
+import { useSearchParams } from "next/navigation";
 
 const CreateDropContent = () => {
   const { allState } = useCreateDrop();
+  const searchParams = useSearchParams();
+  const perks = searchParams.get("perks");
   return (
     <div className="fixed-height-under-header relative">
       <div className="border-b border-line py-4">
         <p className="mx-auto max-w-[1200px] px-2 font-bold uppercase text-grays">
-          Create DROP
+          {perks ? "Create Reward" : "Create DROP"}
         </p>
       </div>
 

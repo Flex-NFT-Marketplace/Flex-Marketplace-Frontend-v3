@@ -44,9 +44,14 @@ const DropsInventory = () => {
       {dropsByCreator.length <= 0 && (
         <p className="text-grays">No drops found</p>
       )}
-      <div className="mt-6 gap-4 grid grid-cols-2 max-[1350px]:grid-cols-1 max-xl:grid-cols-2 max-[950px]:grid-cols-1 max-md:grid-cols-2 max-sm:grid-cols-1">
+      <div className="mt-6 gap-4 grid grid-cols-3 max-[1350px]:grid-cols-2 max-xl:grid-cols-3 max-[950px]:grid-cols-2 max-md:grid-cols-3 max-sm:grid-cols-2 [@media_(max-width:500px)]:grid-cols-1">
         {dropsByCreator.map((drop, index) => {
-          return <DropCard drop={drop} key={index} />;
+          return (
+            <DropCard
+              contractAddress={drop.collectible.nftContract}
+              key={index}
+            />
+          );
         })}
       </div>
     </div>

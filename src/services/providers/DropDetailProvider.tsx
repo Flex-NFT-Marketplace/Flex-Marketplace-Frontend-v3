@@ -19,14 +19,19 @@ import { useCheckSecured } from "../api/flexhaus/dropDetail/useCheckSecured";
 import { useSecure } from "../api/flexhaus/dropDetail/useSecure";
 import { formattedContractAddress } from "@/utils/string";
 import { useAccountContext } from "./AccountProvider";
+import { IStagingCollection } from "@/types/IStagingCollection";
+import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
+import { useClaim } from "../api/flexhaus/dropDetail/useClaim";
 
 interface DropDetailContextProps {
   dropDetail: IdropDetail | null;
+  collectionDetail: IStagingCollection | null;
   toggleLike: (collectible: string) => Promise<void>;
   isLiked: boolean;
   totalLike: number;
   isSecured: boolean;
   secure: (collectible: string) => Promise<void>;
+  claim: (collectible: string) => Promise<any>;
 }
 
 const DropDetailContext = createContext<DropDetailContextProps | undefined>(
@@ -54,6 +59,24 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   const [isSecured, setIsSecured] = useState<boolean>(false);
   const { address } = useAccount();
   const { profileOwner, handleCheckSubcribed } = useAccountContext();
+  const [collectionDetail, setCollectionDetail] =
+    useState<IStagingCollection | null>(null);
+
+  const _claim = useClaim();
+  const claim = async (collectible: string): Promise<any> => {
+    try {
+      await _claim.mutateAsync(collectible);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const _getCollectionDetail = useGetCollectionDetail();
+  const getCollectionDetail = async (contractAddress: string) => {
+    const collectionDetail =
+      await _getCollectionDetail.mutateAsync(contractAddress);
+    setCollectionDetail(collectionDetail);
+  };
 
   const _getDropDetail = useGetDropDetail();
   const getDropDetail = async (dropAddress: string) => {
@@ -181,6 +204,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (dropAddress) {
       getDropDetail(dropAddress as string);
+      getCollectionDetail(dropAddress as string);
       getTotalLike(dropAddress as string);
 
       if (address) {
@@ -192,11 +216,13 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     dropDetail,
+    collectionDetail,
     toggleLike,
     isLiked,
     totalLike,
     isSecured,
     secure,
+    claim,
   };
 
   return (

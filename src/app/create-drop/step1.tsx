@@ -14,6 +14,7 @@ import { useAccount } from "@starknet-react/core";
 import usePostMetadata from "@/services/api/usePostMetadata";
 import { getShortTraits, isDigit } from "@/utils/string";
 import { useCreateDrop } from "@/services/providers/CreateDropProvider";
+import { useSearchParams } from "next/navigation";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateDrop();
@@ -22,6 +23,8 @@ const Step1 = () => {
   const { onShowToast } = useToast();
   const { account } = useAccount();
   const [loadingDeploy, setLoadingDeploy] = useState(false);
+  const searchParams = useSearchParams();
+  const perks = searchParams.get("perks");
 
   const _postMetadata = usePostMetadata();
 
@@ -242,7 +245,9 @@ const Step1 = () => {
         <SuccessDeployed />
       </ModelV2>
       <div>
-        <p className="text-[32px] font-bold uppercase">{`Let's Deploy the Drop`}</p>
+        <p className="text-[32px] font-bold uppercase">
+          {perks ? "let's Create reward" : "Let's Deploy the Drop"}
+        </p>
         <p className="text-grays">
           {`You’ll need to deploy an ERC-1155 contract onto the blockchain before you can create a drop`}
         </p>
