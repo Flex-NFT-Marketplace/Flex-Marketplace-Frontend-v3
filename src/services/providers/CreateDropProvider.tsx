@@ -1,4 +1,3 @@
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { IDropGroup, ISet } from "@/types/Idrop";
 import { useAccount } from "@starknet-react/core";
 import {

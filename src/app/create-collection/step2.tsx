@@ -1,7 +1,7 @@
 import React, { useEffect, ChangeEvent, useState } from "react";
 import Input from "@/packages/@ui-kit/Input";
 import Button from "@/packages/@ui-kit/Button";
-import { useCreateCollection } from "./page";
+import { useCreateCollection } from "@/services/providers/CreateCollectionProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { isValidURL } from "@/utils/string";
 

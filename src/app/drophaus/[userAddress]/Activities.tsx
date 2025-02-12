@@ -9,8 +9,9 @@ import { useSocial } from "@/services/providers/SocialProvider";
 import { copyToClipboard, strShortAddress } from "@/utils/string";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import Link from "next/link";
+import { IProfileStaging } from "@/types/IStagingNft";
 
-const CreatorSuggestCard = ({ creator }: { creator: ICreator }) => {
+const CreatorSuggestCard = ({ creator }: { creator: IProfileStaging }) => {
   const { onShowToast } = useToast();
 
   const handleCopyAddress = (address: string) => {

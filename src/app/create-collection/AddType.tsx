@@ -1,10 +1,10 @@
 import TextArea from "@/lib/@core/TextArea";
 import Button from "@/packages/@ui-kit/Button";
 import Input from "@/packages/@ui-kit/Input";
-import { useCreateCollection } from "./page";
 import { useState } from "react";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { SPLIT_SYMBOL } from "@/constants/symbol";
+import { useCreateCollection } from "@/services/providers/CreateCollectionProvider";
 
 interface AddTypeProps {
   hide: () => void;

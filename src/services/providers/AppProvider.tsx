@@ -12,6 +12,7 @@ import LoadingHeaderProvider from "./market/LoadingHeaderProvider";
 import { CollectionDetailProvider } from "./CollectionDetailProvider";
 import { PackCollectionProvider } from "./PackCollectionProvider";
 import DropDetailProvider from "./DropDetailProvider";
+import CreateDropProvider from "./CreateDropProvider";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -2,12 +2,15 @@ import Button from "@/packages/@ui-kit/Button";
 import Input from "@/packages/@ui-kit/Input";
 import { FaCheck } from "react-icons/fa6";
 import { PiWarningCircle } from "react-icons/pi";
-import { Phase, useCreateCollection } from "./page";
 import { ChangeEvent, useEffect } from "react";
 import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import DatePickup from "@/packages/@ui-kit/DatePickup";
 import dayjs, { Dayjs } from "dayjs";
+import {
+  Phase,
+  useCreateCollection,
+} from "@/services/providers/CreateCollectionProvider";
 
 const PhaseItem = ({ phase }: { phase: Phase }) => {
   const { allState, setAllState } = useCreateCollection();

@@ -1,15 +1,9 @@
 import { MdOutlineDescription } from "react-icons/md";
-import FlexLogo from "@/assets/not-found.jpeg";
 import { useNftContext } from "@/services/providers/NFTProvider";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { IoMdShare } from "react-icons/io";
-import { TbReload } from "react-icons/tb";
-import { FaRegFlag } from "react-icons/fa";
 import ImageKit from "@/packages/@ui-kit/Image";
-import { useEffect, useState } from "react";
-import { useGetNft } from "@/services/api/nft/useGetNft";
-import { IStagingNft } from "@/types/IStagingNft";
 
 const Profile = () => {
   const router = useRouter();
