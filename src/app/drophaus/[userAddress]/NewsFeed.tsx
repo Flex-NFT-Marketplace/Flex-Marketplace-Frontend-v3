@@ -8,9 +8,10 @@ import { FaUser } from "react-icons/fa";
 import { LuActivity } from "react-icons/lu";
 import { GoHomeFill } from "react-icons/go";
 import { MdLeaderboard } from "react-icons/md";
-import { TbNews } from "react-icons/tb";
+import { TbLayoutDistributeHorizontalFilled, TbNews } from "react-icons/tb";
 import Leaderboard from "./Leaderboard";
 import Profile from "./Profile";
+import Distributed from "./Distributed";
 
 enum TabsEnum {
   // OPEN_CREATE = "Open-create",
@@ -18,6 +19,7 @@ enum TabsEnum {
   LEADERBOARD = "leaderboard",
   PROFILE = "profile",
   ACTIVITIES = "activities",
+  DISTRIBUTED = "my distributed",
 }
 
 const NewsFeed = () => {
@@ -25,6 +27,7 @@ const NewsFeed = () => {
     // "Open-create",
     "Drops",
     "leaderboard",
+    "my distributed",
   ];
   const [activeTab, setActiveTab] = useState<string>(TabsEnum.DROPS);
 
@@ -62,15 +65,21 @@ const NewsFeed = () => {
           onClick={() => setActiveTab(TabsEnum.DROPS)}
           className={`flex-1 text-xl ${activeTab == TabsEnum.DROPS ? "text-white" : "text-grays"}`}
         />
-        <LuActivity
+        {/* <LuActivity
           onClick={() => setActiveTab(TabsEnum.ACTIVITIES)}
           className={`flex-1 text-xl ${activeTab == TabsEnum.ACTIVITIES ? "text-white" : "text-grays"}`}
-        />
+        /> */}
 
         <MdLeaderboard
           onClick={() => setActiveTab(TabsEnum.LEADERBOARD)}
           className={`flex-1 text-xl ${activeTab == TabsEnum.LEADERBOARD ? "text-white" : "text-grays"}`}
         />
+
+        <TbLayoutDistributeHorizontalFilled
+          onClick={() => setActiveTab(TabsEnum.DISTRIBUTED)}
+          className={`flex-1 text-xl ${activeTab == TabsEnum.DISTRIBUTED ? "text-white" : "text-grays"}`}
+        />
+
         <FaUser
           onClick={() => setActiveTab(TabsEnum.PROFILE)}
           className={`flex-1 text-xl ${activeTab == TabsEnum.PROFILE ? "text-white" : "text-grays"}`}
@@ -81,6 +90,7 @@ const NewsFeed = () => {
       {activeTab === TabsEnum.PROFILE && <Profile />}
       {activeTab === TabsEnum.ACTIVITIES && <Activities />}
       {activeTab === TabsEnum.LEADERBOARD && <Leaderboard />}
+      {activeTab === TabsEnum.DISTRIBUTED && <Distributed />}
     </div>
   );
 };

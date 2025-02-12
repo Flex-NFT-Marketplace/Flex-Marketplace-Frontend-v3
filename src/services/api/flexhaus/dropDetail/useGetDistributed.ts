@@ -1,20 +1,16 @@
-import { axiosHausNoToken } from "@/axiosConfig/axiosConfig";
+import { axiosHausNoToken, axiosHausWithToken } from "@/axiosConfig/axiosConfig";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useGetCollectibles = (creator: string) => {  
+const useGetDistributed = () => {  
     return useInfiniteQuery({
-      queryKey: ["GET_COLLECTIBLE_DROPES"],
+      queryKey: ["GET_DISTRIBUTED"],
       queryFn:  async ({ pageParam }) => {
       
         const params: any = {
           page: pageParam,
           size: 50,
         }
-
-        if(creator) {
-          params.creator = creator;
-        }
-        const { data } = await axiosHausNoToken.post("collectible/get-collectible-dropes", params)
+        const { data } = await axiosHausWithToken.post("collectible/get-distribution-collectibles", params)
         return data;
       },
       // enabled: !!creator,
@@ -25,4 +21,4 @@ const useGetCollectibles = (creator: string) => {
     })
   };
   
-  export default useGetCollectibles;  
+  export default useGetDistributed;  

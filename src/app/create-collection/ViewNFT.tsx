@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { getShortTraits } from "@/utils/string";
-import { NftTrait } from "./page";
+import { NftTrait } from "@/services/providers/CreateCollectionProvider";
 
 interface ViewNFTProps {
   hide: () => void;

@@ -1,10 +1,13 @@
 import TextArea from "@/lib/@core/TextArea";
 import Button from "@/packages/@ui-kit/Button";
 import Input from "@/packages/@ui-kit/Input";
-import { TraitManager, useCreateCollection } from "./page";
 import { useState } from "react";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { SPLIT_SYMBOL } from "@/constants/symbol";
+import {
+  TraitManager,
+  useCreateCollection,
+} from "@/services/providers/CreateCollectionProvider";
 
 interface EditTypeProps {
   hide: () => void;

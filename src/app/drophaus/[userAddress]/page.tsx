@@ -11,9 +11,9 @@ const SocialWithProfile = () => {
           <Profile />
         </div>
         <NewsFeed />
-        <div className="max-md:hidden">
+        {/* <div className="max-md:hidden">
           <Activities />
-        </div>
+        </div> */}
       </div>
     </SocialProvider>
   );

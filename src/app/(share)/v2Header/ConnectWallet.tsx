@@ -20,6 +20,11 @@ import ImageKit from "@/packages/@ui-kit/Image";
 import { deleteCookie } from "@/helpers/cookie";
 import { ACCESS_TOKEN, USER_ADDRESS } from "@/constants/cookies";
 import { useAuth } from "@/services/providers/AuthProvider";
+import avtDefault from "@/assets/avtDefault.webp";
+import { Divider } from "antd";
+import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
+import DepositPoints from "./DepositPoints";
+import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 
 const ConnectWallet = () => {
   const { address, status, account } = useAccount();
@@ -27,6 +32,8 @@ const ConnectWallet = () => {
   const { disconnect } = useDisconnect();
   const { onShowToast } = useToast();
   const { profileOwner } = useAccountContext();
+  const { isShow: isShowDepositPoints, toggle: toggleDepositPoints } =
+    useModal();
 
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
     connectors: connectors as any,
@@ -43,6 +50,14 @@ const ConnectWallet = () => {
     deleteCookie(USER_ADDRESS);
     deleteCookie(ACCESS_TOKEN);
     onShowToast("Disconnected successfully ", MessageTypeEnum.INFO);
+  };
+
+  const handleOpenDepositPoints = () => {
+    if (!address) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+    toggleDepositPoints();
   };
 
   const [isShowDropdown, setIsShowDropdown] = useState(false);
@@ -86,7 +101,7 @@ const ConnectWallet = () => {
   }, [pathName]);
 
   const defaultCSS =
-    "relative inline-flex h-10 gap-2 uppercase cursor-pointer items-center justify-center whitespace-nowrap rounded-md hover:bg-line px-3 py-2 text-sm ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50";
+    "relative inline-flex h-10 gap-2 uppercase cursor-pointer items-center justify-center whitespace-nowrap rounded-md hover:bg-line p-2 text-sm ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50";
   const classes = clsx(defaultCSS);
 
   const defaultCSSElement =
@@ -97,46 +112,60 @@ const ConnectWallet = () => {
   const renderAccountConnect = () => {
     if (status === "connected") {
       return (
-        <div className="relative">
-          <button
-            className={classes}
-            onClick={() => setIsShowDropdown(!isShowDropdown)}
-          >
-            <p className="lowercase">
-              {
-                // profileOwner != undefined && profileOwner.username != ""
-                //   ? profileOwner?.username
-                //   :
-                strShortAddress(address as string)
-              }
+        <>
+          <ModelV2 isShow={isShowDepositPoints} hide={toggleDepositPoints}>
+            <DepositPoints hide={toggleDepositPoints} />
+          </ModelV2>
+          <div className="flex items-center">
+            <p
+              onClick={handleOpenDepositPoints}
+              className="p-2 hover:bg-line bg-transparent rounded-md cursor-pointer"
+            >
+              {profileOwner?.points} BYTE
             </p>
-            {/* <FormatAddress address={address} /> */}
-            <ImageKit
-              // src={profileOwner?.avatar || profileOwner?.image }
-              src={""}
-              width={40}
-              height={40}
-              alt="Flex"
-              className="h-6 w-6 rounded-full"
-            />
-          </button>
+            <Divider type="vertical" className="bg-grays" />
+            <div className="relative">
+              <button
+                className={classes}
+                onClick={() => setIsShowDropdown(!isShowDropdown)}
+              >
+                <p className="lowercase">
+                  {
+                    // profileOwner != undefined && profileOwner.username != ""
+                    //   ? profileOwner?.username
+                    //   :
+                    strShortAddress(address as string)
+                  }
+                </p>
+                {/* <FormatAddress address={address} /> */}
+                <ImageKit
+                  // src={profileOwner?.avatar || profileOwner?.image }
+                  src={avtDefault.src}
+                  width={40}
+                  height={40}
+                  alt="Flex"
+                  className="h-6 w-6 rounded-full"
+                />
+              </button>
 
-          {isShowDropdown && (
-            <div ref={dropdownRef} className={classesElement}>
-              <DropdownItem
-                title="Inventory"
-                icon={<MdInventory />}
-                onClick={() => navigateToInventory()}
-              />
-              <div className="mx-1 h-[1px] bg-line"></div>
-              <DropdownItem
-                title="Disconect"
-                icon={<VscDebugDisconnect />}
-                onClick={onDisconnect}
-              />
+              {isShowDropdown && (
+                <div ref={dropdownRef} className={classesElement}>
+                  <DropdownItem
+                    title="Inventory"
+                    icon={<MdInventory />}
+                    onClick={() => navigateToInventory()}
+                  />
+                  <div className="mx-1 h-[1px] bg-line"></div>
+                  <DropdownItem
+                    title="Disconect"
+                    icon={<VscDebugDisconnect />}
+                    onClick={onDisconnect}
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        </>
       );
     }
 

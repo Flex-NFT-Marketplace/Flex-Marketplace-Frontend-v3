@@ -3,6 +3,7 @@ import { useSocial } from "@/services/providers/SocialProvider";
 import { ILeaderboardItem } from "@/types/Iperks";
 import { strShortAddress } from "@/utils/string";
 import { useState } from "react";
+import avtDefault from "@/assets/avtDefault.webp";
 
 interface RankCardProps {
   leaderboardItem: ILeaderboardItem;
@@ -44,7 +45,7 @@ const RankCard: React.FC<RankCardProps> = ({ leaderboardItem }) => {
       <div className="flex items-center gap-4">
         {getRank(leaderboardItem.rank)}
         <div className="flex items-center gap-3">
-          <ImageKit src="" className="w-12 h-12" />
+          <ImageKit src={avtDefault.src} className="w-12 h-12" />
           <div className="flex flex-col">
             <p className="font-bold">
               {strShortAddress(leaderboardItem.user.address)}

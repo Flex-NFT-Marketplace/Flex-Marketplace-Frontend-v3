@@ -1,15 +1,9 @@
-import ActionNFT from "@/components/ActionNFT";
 import ActionNFT2 from "@/components/ActionNFT/Action2";
 import FormatAddress from "@/components/FormatAddress";
 import FormatPrice from "@/components/FormatPrice";
-import FormatTime from "@/components/FormatTime";
 import TxHash from "@/components/TxHash";
 import { useGetActivity } from "@/services/api/useGetActivity";
-import {
-  calculateDaysElapsed,
-  calculateTimeDifferenceShort,
-  convertWeiToEther,
-} from "@/utils/string";
+import { calculateDaysElapsed, convertWeiToEther } from "@/utils/string";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 

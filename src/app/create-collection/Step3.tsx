@@ -1,7 +1,7 @@
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { PiArrowsVerticalFill } from "react-icons/pi";
-import { NftTrait, TraitManager, useCreateCollection } from "./page";
+
 import { ChangeEvent, useState } from "react";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { IoClose, IoCloseCircleOutline } from "react-icons/io5";
@@ -12,6 +12,11 @@ import EditType from "./EditType";
 import { GoCheckCircle } from "react-icons/go";
 import ViewNFT from "./ViewNFT";
 import EditNFT from "./EditNFT";
+import {
+  NftTrait,
+  TraitManager,
+  useCreateCollection,
+} from "@/services/providers/CreateCollectionProvider";
 
 const Step3 = () => {
   const { allState, setAllState } = useCreateCollection();

@@ -242,7 +242,9 @@ const Step1 = () => {
         <SuccessDeployed />
       </ModelV2>
       <div>
-        <p className="text-[32px] font-bold uppercase">{`Let's Deploy the Drop`}</p>
+        <p className="text-[32px] font-bold uppercase">
+          {allState.perksId ? "let's Create reward" : "Let's Deploy the Drop"}
+        </p>
         <p className="text-grays">
           {`You’ll need to deploy an ERC-1155 contract onto the blockchain before you can create a drop`}
         </p>

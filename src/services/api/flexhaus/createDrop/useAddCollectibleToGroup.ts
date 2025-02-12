@@ -8,7 +8,7 @@ export const useAddCollectibleToGroup = () => {
       
         const { data } = await axiosHausWithToken.post("flexhaus-drop/add-collectible",body);
 
-        return data;
+        return data.data;
   
     },
   });

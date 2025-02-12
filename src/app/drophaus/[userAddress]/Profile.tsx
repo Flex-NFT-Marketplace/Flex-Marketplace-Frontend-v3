@@ -27,10 +27,15 @@ import {
 import { useAccount } from "@starknet-react/core";
 import { useAccountContext } from "@/services/providers/AccountProvider";
 import { useAuth } from "@/services/providers/AuthProvider";
+import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
+import HausDonate from "../HausDonate";
+import avtDefault from "@/assets/avtDefault.webp";
+import { Divider } from "antd";
 
 const Profile = () => {
   const { isShow: isShowCreateEditPerks, toggle: toggleCreateEditPerks } =
     useModal();
+  const { isShow: isShowDonate, toggle: toggleDonate } = useModal();
   const [perksEditing, setPerksEditing] = useState<IPerks | null>(null);
   const { userAddress } = useParams();
   const { address } = useAccount();
@@ -90,9 +95,7 @@ const Profile = () => {
         "Starts in " + timeElapsedFromTimestamp(perks.startTime / 1000)
       );
       setProcessTime("0%");
-    }
-
-    if (new Date().getTime() < perks.snapshotTime) {
+    } else if (new Date().getTime() < perks.snapshotTime) {
       setTimeLeft(
         "Snapshot in " + timeElapsedFromTimestamp(perks.snapshotTime / 1000)
       );
@@ -115,6 +118,14 @@ const Profile = () => {
     toggleCreateEditPerks();
   };
 
+  const handleOpenDonate = () => {
+    if (!address) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+    toggleDonate();
+  };
+
   useEffect(() => {
     if (perks) {
       calculateTimeAndProcess();
@@ -133,7 +144,7 @@ const Profile = () => {
 
   const getTotalSub = async () => {
     if (!showProfile) return;
-    const totalSub = await handleGetTotalSub(userAddress as string);
+    const totalSub = await handleGetTotalSub(showProfile.address as string);
     setTotalSub(totalSub);
   };
 
@@ -147,21 +158,32 @@ const Profile = () => {
 
   return (
     <>
+      {showProfile && (
+        <ModelV2 isShow={isShowDonate} hide={toggleDonate}>
+          <HausDonate hide={toggleDonate} creator={showProfile} />
+        </ModelV2>
+      )}
       <ModalV2 isShow={isShowCreateEditPerks} hide={toggleCreateEditPerks}>
         <CreateEditPerks hide={toggleCreateEditPerks} perks={perksEditing} />
       </ModalV2>
       <div className="fixed-height-under-header top-16 mt-0 flex flex-col border-r border-[#3A3A3C] xl:sticky xl:w-[447px] xl:overflow-auto">
         {(userAddress || address) && (
           <div className="flex w-full flex-col gap-6 pb-8 pl-8 pr-4 pt-4">
-            <div className="flex w-full flex-col gap-4">
-              <ImageKit src="" className="aspect-square w-[96px]" />
-              <div className="flex w-full flex-col gap-1">
+            <div className="flex w-full items-center gap-4">
+              <ImageKit
+                src={avtDefault.src}
+                className="aspect-square w-[96px]"
+              />
+              <Link
+                href={`/drophaus/${showProfile?.address}`}
+                className="flex w-full flex-col gap-1"
+              >
                 <div className="flex items-center gap-2">
                   <h4 className="text-[24px] font-bold uppercase leading-7">
                     {strShortAddress(showProfile?.address as string)}
                   </h4>
                   <TbRosetteDiscountCheckFilled className="text-[#63B1FF]" />
-                  <VscArrowSwap className="text-white" />
+                  {/* <VscArrowSwap className="text-white" /> */}
                 </div>
                 <div className="divide-gray flex gap-4 divide-x">
                   <div className="flex gap-2">
@@ -182,17 +204,14 @@ const Profile = () => {
                   </div> */}
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
-            {isOwner ? (
-              <Button
-                title="Edit profile"
-                variant="outline"
-                className="w-full"
-              />
-            ) : (
+            {!isOwner && (
               <div className="flex gap-2">
-                <div className="grid h-full aspect-square place-items-center border border-border rounded-md hover:bg-hover cursor-pointer">
+                <div
+                  onClick={handleOpenDonate}
+                  className="grid h-full aspect-square place-items-center border border-border rounded-md hover:bg-hover cursor-pointer"
+                >
                   <MdCardGiftcard />
                 </div>
 
@@ -231,7 +250,7 @@ const Profile = () => {
             <p className="font-bold text-[#63B1FF] ">Read more</p>
           </div>
         </div> */}
-
+        <Divider className="bg-border m-0" />
         <div className="flex w-full flex-col gap-8 pb-8 pl-8 pr-4 pt-4">
           <div className="flex w-full flex-col gap-4">
             <div className="flex w-full items-center justify-between">

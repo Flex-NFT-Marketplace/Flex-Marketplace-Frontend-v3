@@ -6,6 +6,7 @@ import Steps from "./Steps";
 import CreateDropProvider, {
   useCreateDrop,
 } from "@/services/providers/CreateDropProvider";
+import { Suspense } from "react";
 
 const CreateDropContent = () => {
   const { allState } = useCreateDrop();
@@ -13,7 +14,7 @@ const CreateDropContent = () => {
     <div className="fixed-height-under-header relative">
       <div className="border-b border-line py-4">
         <p className="mx-auto max-w-[1200px] px-2 font-bold uppercase text-grays">
-          Create DROP
+          {allState.perksId ? "Create Reward" : "Create DROP"}
         </p>
       </div>
 
@@ -30,9 +31,11 @@ const CreateDropContent = () => {
 
 const CreateDrop = () => {
   return (
-    <CreateDropProvider>
-      <CreateDropContent />
-    </CreateDropProvider>
+    <Suspense>
+      <CreateDropProvider>
+        <CreateDropContent />
+      </CreateDropProvider>
+    </Suspense>
   );
 };
 

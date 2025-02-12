@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 import { useGetProfile } from "../api/useGetProfile";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
 import useGetNftsByOwner from "../api/account/useGetNftsByOwner";
@@ -18,6 +18,8 @@ import { useUnSubcribe } from "../api/flexhaus/social/useUnSubcribe";
 import { useCheckSubcribed } from "../api/flexhaus/social/useCheckSubcribed";
 import { formattedContractAddress } from "@/utils/string";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { ICollectibleState, IdropDetail } from "@/types/Idrop";
+import useGetDistributed from "../api/flexhaus/dropDetail/useGetDistributed";
 
 interface AccountContextType {
   nfts: IStagingNftResponse[];
@@ -35,6 +37,7 @@ interface AccountContextType {
   toggleSubcribe: (creator: string) => Promise<boolean>;
   handleCheckSubcribed: (creator: string) => Promise<boolean>;
   handleGetTotalSub: (creator: string) => Promise<number>;
+  dropsDistributed: ICollectibleState[];
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
@@ -56,6 +59,9 @@ export const AccountProvider = ({
 
   const [orders, setOrders] = useState<ISignature[]>([]);
   const [bids, setBids] = useState<ISignature[]>([]);
+  const [dropsDistributed, setDropsDistributed] = useState<ICollectibleState[]>(
+    []
+  );
 
   const { onShowToast } = useToast();
 
@@ -64,6 +70,20 @@ export const AccountProvider = ({
   const _getNft = useGetNftByOwner();
   const _getListing = useGetListingsByOwner();
   const _getBid = useGetBidsByOwner();
+  const {
+    data: userDropsDistributed,
+    isLoading: isLoadingDistributed,
+    fetchNextPage: fetchNextPageDistributed,
+  } = useGetDistributed();
+
+  useEffect(() => {
+    let distributedDrops: ICollectibleState[] = [];
+    userDropsDistributed?.pages.map((page) => {
+      distributedDrops = [...distributedDrops, ...page.data.items];
+    });
+
+    setDropsDistributed(distributedDrops);
+  }, [userDropsDistributed]);
 
   const {
     data: nftsOwnerRepsonse,
@@ -262,6 +282,7 @@ export const AccountProvider = ({
     toggleSubcribe,
     handleCheckSubcribed,
     handleGetTotalSub,
+    dropsDistributed,
   };
 
   return (

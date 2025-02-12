@@ -2,13 +2,14 @@
 import React, { useEffect, ChangeEvent, useState } from "react";
 import Input from "@/packages/@ui-kit/Input";
 import Button from "@/packages/@ui-kit/Button";
-import { useCreateCollection } from "./page";
+
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { FiUpload } from "react-icons/fi";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { PiWarningCircle } from "react-icons/pi";
 import { FaCheck } from "react-icons/fa";
 import { useAccount } from "@starknet-react/core";
+import { useCreateCollection } from "@/services/providers/CreateCollectionProvider";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateCollection();

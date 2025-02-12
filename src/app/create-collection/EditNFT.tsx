@@ -1,8 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
-import { NftTrait, TraitManager, useCreateCollection } from "./page";
+
 import { IAttributesCollection } from "@/types/INft";
+import {
+  NftTrait,
+  useCreateCollection,
+} from "@/services/providers/CreateCollectionProvider";
 
 interface EditNFTProps {
   hide: () => void;

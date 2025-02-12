@@ -1,3 +1,5 @@
+import { IProfileStaging } from "./IStagingNft";
+
 export type IDropGroup = {
     _id: string,
     isDistributed: boolean,
@@ -33,7 +35,7 @@ export type IdropDetail = {
 
     _id: string;
     collectible: ICollectible;
-    creator: ICreator;
+    creator: IProfileStaging;
     dropType: string;
     fromTopSupporter: number;
     toTopSupporter: number;
@@ -52,4 +54,13 @@ export type ISet = {
     event: string | null;
     isDistributed: boolean;
     collectibles: string[];
+}
+
+export type ICollectibleState = {
+    _id: string,
+    user: string,
+    collectible: ICollectible
+    isSecured: boolean,
+    isDistributed: boolean,
+    isClaimed: boolean,
 }
