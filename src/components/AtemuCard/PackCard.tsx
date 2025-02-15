@@ -14,9 +14,9 @@ import BidPopup from "../Popup/BidPopup";
 import clsx from "clsx";
 import FormatPrice, { FormatPriceWithIcon } from "../FormatPrice";
 import ImageKit from "@/packages/@ui-kit/Image";
-import { IStagingNft } from "@/types/IStagingNft";
+import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
 import Button from "@/packages/@ui-kit/Button";
-import { formattedContractAddress } from "@/utils/string";
+import { formattedContractAddress, strShortAddress } from "@/utils/string";
 import UnpackPopup from "@/app/pack-collection/UnpackPopup";
 import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
@@ -30,19 +30,18 @@ enum PackCardStatus {
 }
 interface PackCardProps {
   canOpen?: boolean;
+  pack: IStagingNftResponse;
 }
 
 const PackCard: React.FC<PackCardProps> = (props) => {
-  const { canOpen = false } = props;
+  const { canOpen = false, pack } = props;
 
   const { isOpen, toggleModal } = useModal();
   const [isHover, setIsHover] = useState(false);
   const [status, setStatus] = useState(PackCardStatus.COMMON);
-  const { packOfOwner } = usePackCollectionContext();
   const { onShowToast } = useToast();
   const baseClasses =
     " border border-stroke hover:border-white select-none rounded relative flex flex-col transition-all duration-100 ease-in-out group";
-  const [packOpening, setPackOpening] = useState<IStagingNft | null>(null);
   const classes = clsx(baseClasses);
 
   const toggleOpenPack = () => {
@@ -60,7 +59,7 @@ const PackCard: React.FC<PackCardProps> = (props) => {
   return (
     <>
       <UnpackPopup
-        packOpening={packOpening}
+        packOpening={pack}
         isOpen={isOpen}
         toggleModal={toggleModal}
       />
@@ -88,16 +87,12 @@ const PackCard: React.FC<PackCardProps> = (props) => {
             {status}
           </div>
         </div>
-        <div className="relative flex flex-col gap-1 px-3 py-2 flex-1 ">
+        <div className="relative flex flex-col gap-1 px-3 py-2 flex-1">
           <div>
             <p className="line-clamp-1 truncate text-lg font-normal">
-              {"ATEMU PACK"}
+              {pack?.nftData?.nftCollection?.name} #{pack?.nftData?.tokenId}
             </p>
-            {packOfOwner.length > 0 && (
-              <p className="line-clamp-1 truncate text-sm font-normal">
-                x{packOfOwner.length}
-              </p>
-            )}
+
             <div className="h-7">
               <FormatPriceWithIcon
                 price={0}
@@ -107,6 +102,7 @@ const PackCard: React.FC<PackCardProps> = (props) => {
                   "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
                 }
               />
+              {strShortAddress(pack?.nftData?.owner?.address)}
             </div>
           </div>
         </div>

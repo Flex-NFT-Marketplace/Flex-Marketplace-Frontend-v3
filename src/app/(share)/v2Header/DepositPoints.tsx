@@ -3,15 +3,7 @@ import { copyToClipboard, isDigit, strShortAddress } from "@/utils/string";
 import { Divider, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import flex_logo from "@/assets/logo-flex.svg";
-import ImageKit from "@/packages/@ui-kit/Image";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import Button from "@/packages/@ui-kit/Button";
-import { IProfileStaging } from "@/types/IStagingNft";
-import { MdOutlineContentCopy } from "react-icons/md";
-import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
-import { VscArrowSwap } from "react-icons/vsc";
-import { useSocial } from "@/services/providers/SocialProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useAccount } from "@starknet-react/core";
 import { PiApproximateEqualsBold } from "react-icons/pi";
@@ -19,6 +11,8 @@ import QRCode from "react-qr-code";
 import { useGetPaymentWallet } from "@/services/api/flexhaus/social/useGetPaymentWallet";
 import { useGetTokenPerPoints } from "@/services/api/flexhaus/social/useGetTokenPerPoints";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { CallData, RpcProvider, uint256 } from "starknet";
+import Button from "@/packages/@ui-kit/Button";
 
 interface DepositPointsProps {
   hide: () => void;
@@ -32,21 +26,20 @@ export type IPaymentAddress = {
 
 const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
   const [amount, setAmount] = useState<number>(50);
-  const [suggestedAmount, setSuggestedAmount] = useState<number[]>([
-    500, 1000, 2000, 5000,
-  ]);
   const { profileOwner } = useAccountContext();
-  const [isLoadingDonate, setIsLoadingDonate] = useState<boolean>(false);
   const { onShowToast } = useToast();
-  const { address } = useAccount();
+  const { address, account } = useAccount();
   const [paymentAddress, setPaymentAddress] = useState<string>("");
   const [tokenPerPoints, setTokenPerPoints] = useState<{
-    strkPerPoint: string;
-    ethPerPoint: string;
-  }>({ strkPerPoint: "0", ethPerPoint: "0" });
+    strkPerPoint: number;
+    ethPerPoint: number;
+  }>({ strkPerPoint: 0, ethPerPoint: 0 });
+  const [loadingSentETH, setLoadingSentETH] = useState<boolean>(false);
+  const [loadingSentSTRK, setLoadingSentSTRK] = useState<boolean>(false);
 
-  const bytePerEth = 1000;
-  const bytePerStrk = 10;
+  const provider = new RpcProvider({
+    nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
+  });
 
   const _getPaymentWallet = useGetPaymentWallet();
   const getPaymentWallet = async () => {
@@ -71,20 +64,12 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
     }
   };
 
-  const convertEthtoByte = (eth: number) => {
-    return eth * Number(tokenPerPoints.ethPerPoint);
+  const convertByteToEth = (byte: number): number => {
+    return byte * tokenPerPoints.ethPerPoint;
   };
 
-  const convertByteToEth = (byte: number) => {
-    return byte / bytePerEth;
-  };
-
-  const convertStrkToByte = (strk: number) => {
-    return strk * bytePerStrk;
-  };
-
-  const convertByteToStrk = (byte: number) => {
-    return byte / bytePerStrk;
+  const convertByteToStrk = (byte: number): number => {
+    return byte * tokenPerPoints.strkPerPoint;
   };
 
   const handleCopyAddress = (address: string) => {
@@ -93,6 +78,84 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
       onShowToast("Copy address successfully");
     } catch (error) {
       onShowToast("Something went wrong");
+    }
+  };
+
+  const quickSentEth = async (points: number) => {
+    if (!account) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+
+    if (!paymentAddress) {
+      onShowToast("Error while getting payment address");
+      return;
+    }
+
+    const ethByPoint = convertByteToEth(points);
+
+    try {
+      setLoadingSentETH(true);
+
+      const execute = await account.execute([
+        {
+          contractAddress:
+            "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7", // ETH
+          entrypoint: "transfer",
+          calldata: CallData.compile({
+            recipient: paymentAddress,
+            amount: uint256.bnToUint256(BigInt(Math.floor(ethByPoint * 1e18))),
+          }),
+        },
+      ]);
+
+      const tx = await provider.waitForTransaction(execute.transaction_hash);
+
+      if (tx.isSuccess()) {
+        onShowToast("Successfully sent");
+      } else {
+        onShowToast("Error while sending");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingSentETH(false);
+    }
+  };
+
+  const quickSentStrk = async (points: number) => {
+    if (!account) {
+      onShowToast("Please connect your wallet");
+      return;
+    }
+    if (!paymentAddress) {
+      onShowToast("Error while getting payment address");
+      return;
+    }
+    const strkByPoint = convertByteToStrk(points);
+    try {
+      setLoadingSentSTRK(true);
+      const execute = await account.execute([
+        {
+          contractAddress:
+            "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // STRK
+          entrypoint: "transfer",
+          calldata: CallData.compile({
+            recipient: paymentAddress,
+            amount: uint256.bnToUint256(BigInt(Math.floor(strkByPoint * 1e18))),
+          }),
+        },
+      ]);
+      const tx = await provider.waitForTransaction(execute.transaction_hash);
+      if (tx.isSuccess()) {
+        onShowToast("Successfully sent");
+      } else {
+        onShowToast("Error while sending");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingSentSTRK(false);
     }
   };
 
@@ -169,19 +232,29 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <p>Example</p>
+        <p>Get BYTE</p>
         <Input
           classContainer="!max-w-full"
           value={amount}
           onChange={handleChangeAmount}
         />
         <div className="flex items-center gap-4">
-          <div className="flex-1 text-center flex items-center gap-2 justify-center border border-border rounded-md py-2">
-            {amount * Number(tokenPerPoints.ethPerPoint)} ETH
-          </div>
-          <div className="flex-1 text-center flex items-center gap- justify-center border border-border rounded-md py-2">
-            {amount * Number(tokenPerPoints.strkPerPoint)} STRK
-          </div>
+          <Button
+            loading={loadingSentETH}
+            onClick={() => quickSentEth(amount)}
+            className="flex-1"
+            variant="primary"
+          >
+            <p>{convertByteToEth(amount)} ETH</p>
+          </Button>
+          <Button
+            loading={loadingSentSTRK}
+            onClick={() => quickSentStrk(amount)}
+            className="flex-1"
+            variant="primary"
+          >
+            {convertByteToStrk(amount)} STRK
+          </Button>
         </div>
       </div>
       {/* <div>

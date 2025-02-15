@@ -1,29 +1,13 @@
 "use client";
 import Button from "@/packages/@ui-kit/Button";
 import ImageKit from "@/packages/@ui-kit/Image";
-import ethSVG from "@/assets/EthereumBadge.svg";
 
-import { IoIosAdd, IoIosRemove } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import Modal from "@/packages/@ui-kit/Modal";
-import Card from "./Card";
 import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
-import { addresses } from "@/services/context/address";
-import {
-  cairo,
-  CallData,
-  Contract,
-  provider,
-  RpcProvider,
-  uint256,
-} from "starknet";
-import { PRAGMA_VRF_FEE } from "@/constants/pragmaVrfFee";
-import { IStagingNft } from "@/types/IStagingNft";
-
-import { erc721Abi } from "@/constants/erc721";
-import { erc1155Abi } from "@/constants/erc1155";
-import { atemuFatoryABI } from "@/types/abi/atemuFatoryABI";
+import { cairo, CallData, RpcProvider } from "starknet";
+import { IStagingNftResponse } from "@/types/IStagingNft";
 import { metadataUnpack } from "@/constants/nftMetadataUnpack";
 import UnpackAnimation from "./UnpackAnimation";
 import launchpadBg from "@/assets/launchpad-bg.png";
@@ -85,7 +69,7 @@ import LoadingOverlay from "./LoadingOverlay";
 interface IBuyPackPopupProps {
   isOpen: boolean;
   toggleModal: () => void;
-  packOpening: IStagingNft | null;
+  packOpening: IStagingNftResponse;
 }
 
 interface Event {
@@ -234,10 +218,10 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
       return;
     }
 
-    // if (!packOpening) {
-    //   onShowToast("Please select a pack");
-    //   return;
-    // }
+    if (!packOpening) {
+      onShowToast("Please select a pack");
+      return;
+    }
 
     const provider = new RpcProvider({
       nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
@@ -278,8 +262,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
           entrypoint: "open_pack",
           calldata: CallData.compile({
             pack_address: ATEMU_PACK_ADDRESS_MAINNET,
-            // token_id: cairo.uint256(packOpening.tokenId),
-            token_id: cairo.uint256(11),
+            token_id: cairo.uint256(packOpening.nftData.tokenId),
           }),
         },
       ]);
@@ -343,7 +326,10 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
               className="aspect-square w-[75px] rounded-none"
             />
             <div className="flex flex-1 flex-col gap-2 font-bold text-base leading-5 items-centers ">
-              <p className="uppercase">{packOpening?.name}</p>
+              <p className="">
+                {packOpening?.nftData?.nftCollection?.name} #
+                {packOpening?.nftData?.tokenId}
+              </p>
               <div className="flex flex-col gap-2">
                 {/* <div className="w-full flex justify-between">
                   <p className="text-gray">Price:</p>

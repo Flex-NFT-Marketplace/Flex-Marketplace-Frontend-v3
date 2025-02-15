@@ -5,6 +5,7 @@ import Card from "./Card";
 import Button from "@/packages/@ui-kit/Button";
 import { DataObject } from "./UnpackPopup";
 import gsap from "gsap";
+import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
 
 interface UnpackAnimationProps {
   listSrc: DataObject[];
@@ -15,21 +16,28 @@ const UnpackAnimation: React.FC<UnpackAnimationProps> = (props) => {
   const { listSrc, hide } = props;
   const unpackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<HTMLDivElement[]>([]);
-  //   const [triggerAnimation, setTriggerAnimation] = useState(false);
-  //   const listSrc = [atemu_1, atemu_2, atemu_3, atemu_4, atemu_5];
   const [clickedCards, setClickedCards] = useState<boolean[]>(
     Array(listSrc.length).fill(false)
   );
+  const [isLoadingClaim, setIsLoadingClaim] = useState(false);
   const [unPackCount, setUnPackCount] = useState(0);
   const buttonClaim = useRef<HTMLDivElement>(null);
+  const { reloadPackOfOwner } = usePackCollectionContext();
 
   const resetCards = () => {
     setClickedCards(Array(listSrc.length).fill(false));
   };
 
-  const claimSuccess = () => {
-    // unpackRef.current && unpackRef.current.classList.add("hidden");
-    hide();
+  const claimSuccess = async () => {
+    try {
+      setIsLoadingClaim(true);
+      await reloadPackOfOwner();
+      hide();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadingClaim(false);
+    }
   };
 
   const handleCardClick = (index: number) => {
@@ -117,10 +125,11 @@ const UnpackAnimation: React.FC<UnpackAnimationProps> = (props) => {
         className="absolute top-[80%] w-full flex justify-center hidden"
       >
         <Button
+          loading={isLoadingClaim}
           title="Claim"
           className="!w-[150px]"
-          onClick={() => {
-            claimSuccess();
+          onClick={async () => {
+            await claimSuccess();
             resetCards();
           }}
         />

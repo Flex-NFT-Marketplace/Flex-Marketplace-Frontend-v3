@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
-import { useParams } from "next/navigation";
 import { useGetNFTCollection } from "../api/collection/useGetNFTCollection";
 import {
   IAttributesCollection,
@@ -22,11 +21,12 @@ import {
 } from "@/types/IStagingCollection";
 import { useGetCollectionEconomic } from "../api/collection/useGetCollectionEconomic";
 import { useGetCollectionCount } from "../api/collection/useGetNftCount";
-import { IStagingNft, IStagingNftResponse } from "@/types/IStagingNft";
+import { IStagingNftResponse } from "@/types/IStagingNft";
 import { useGetAttributesCollection } from "../api/collection/useGetAttributesCollection";
 import { ISignature } from "@/types/ISignature";
 import { useGetPackOfOwner } from "../api/nft/useGetPackOfOwner";
 import { useAccount } from "@starknet-react/core";
+import { useParams } from "next/navigation";
 
 interface PackCollectionContextType {
   collectionCount?: ICollectionCounter;
@@ -75,6 +75,7 @@ interface PackCollectionContextType {
   setIsMarket: (isMarket: boolean) => void;
 
   packOfOwner: IStagingNftResponse[];
+  reloadPackOfOwner: () => Promise<void>;
 }
 
 export const PackCollectionContext = createContext<
@@ -105,12 +106,10 @@ export const PackCollectionProvider = ({
   children: React.ReactNode;
 }) => {
   const queryClient = useQueryClient();
-
-  //   const { contract_address } = useParams();
-  const contract_address = process.env.NEXT_PUBLIC_ATEMU_CONTRACT as string;
   const [collection, setCollection] = useState<IStagingCollection>();
   const [collectionEconomic, setCollectionEconomic] =
     useState<ICollectionEconomic>();
+  const { pack_address } = useParams();
 
   const [collectionCount, setCollectionCount] = useState<ICollectionCounter>();
   const [collectionAttributes, setCollectionAtributes] = useState<
@@ -140,19 +139,19 @@ export const PackCollectionProvider = ({
   const [packOfOwner, setPackOfOwner] = useState<IStagingNftResponse[]>([]);
 
   useEffect(() => {
-    if (contract_address) {
-      getCollectionData(contract_address as string);
-      getCollectionEconomic(contract_address as string);
-      getCollectionCount(contract_address as string);
-      getAttributesCollection(contract_address as string);
+    if (pack_address) {
+      getCollectionData(pack_address as string);
+      getCollectionEconomic(pack_address as string);
+      getCollectionCount(pack_address as string);
+      getAttributesCollection(pack_address as string);
     }
-  }, [contract_address]);
+  }, [pack_address]);
 
   const _getCollectionDetail = useGetCollectionDetail();
   const _getCollectionEconomic = useGetCollectionEconomic();
   const _getCollectionCount = useGetCollectionCount();
   const _getCollectionAttributes = useGetAttributesCollection(
-    contract_address as string
+    pack_address as string
   );
   const _getPackOfOwner = useGetPackOfOwner();
   const { address } = useAccount();
@@ -164,7 +163,7 @@ export const PackCollectionProvider = ({
     isLoading,
     isFetching,
   } = useGetNFTCollection(
-    contract_address as string,
+    pack_address as string,
     priceSortType,
     sortStatus,
     minPrice,
@@ -191,11 +190,19 @@ export const PackCollectionProvider = ({
     contract_address: string,
     ownerAddress: string
   ) => {
+    if (!contract_address || !ownerAddress) {
+      return;
+    }
+
     const res = await _getPackOfOwner.mutateAsync({
       contract_address,
       ownerAddress,
     });
     setPackOfOwner(res.items);
+  };
+
+  const reloadPackOfOwner = async () => {
+    await getPackOfOwner(pack_address as string, address as string);
   };
 
   const getCollectionData = async (contract_address: string) => {
@@ -331,13 +338,14 @@ export const PackCollectionProvider = ({
   // ]
 
   useEffect(() => {
-    if (address) {
+    if (address && pack_address) {
       getPackOfOwner(
-        process.env.NEXT_PUBLIC_ATEMU_CONTRACT as string,
+        // process.env.NEXT_PUBLIC_ATEMU_CONTRACT as string,
+        pack_address as string,
         address as string
       );
     }
-  }, [address]);
+  }, [address, pack_address]);
 
   useEffect(() => {
     setTraitsActive([]);
@@ -394,6 +402,7 @@ export const PackCollectionProvider = ({
     setIsMarket,
 
     packOfOwner,
+    reloadPackOfOwner,
   };
 
   return (

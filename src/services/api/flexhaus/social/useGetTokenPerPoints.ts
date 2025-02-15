@@ -7,7 +7,7 @@ export const useGetTokenPerPoints = () => {
     mutationFn: async () => {
    
         const { data } = await axiosHausNoToken.post(`system/get-point-price`);
-        return data.data as { strkPerPoint: string, ethPerPoint: string };
+        return data.data as { strkPerPoint: number, ethPerPoint: number };
 
     },
   });

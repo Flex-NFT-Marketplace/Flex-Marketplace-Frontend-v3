@@ -1,82 +1,24 @@
 "use client";
-import avt from "@/assets/social/avatar.png";
 import live from "@/assets/social/live.svg";
-import background_atemu_lite from "@/assets/social/bg-atemu-lite.png";
 import background from "@/assets/social/atemu.png";
 import ImageKit from "@/packages/@ui-kit/Image";
-import { TbRosetteDiscountCheckFilled, TbWorld } from "react-icons/tb";
-import { FaTelegram } from "react-icons/fa";
+import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoLogoDiscord } from "react-icons/io5";
 import Link from "next/link";
-import { SiFarcaster } from "react-icons/si";
-
-import CardNFT from "@/components/CardNFT";
-import useModal from "@/hooks/useModal";
-import { useState } from "react";
-import UnpackPopup from "../UnpackPopup";
 import PackCard from "@/components/AtemuCard/PackCard";
 import Activity from "@/app/(home)/Activity";
 import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
 import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import launchpadBg1 from "@/assets/launchpad-bg1.png";
+import poster from "@/assets/posterAtemuDetail.png";
 
 const PackDetail = () => {
-  const recentActivities = ["All", "Sales", "Bids", "listings", "Opens"];
-  const [activeActivity, setActiveActivity] = useState<string>("All");
-  const { isOpen, toggleModal } = useModal();
-  const { collection, isMarket, setIsMarket, packOfOwner } =
+  const { collection, nfts, isMarket, setIsMarket, packOfOwner } =
     usePackCollectionContext();
   const { address } = useAccount();
   const { onShowToast } = useToast();
-
-  const nftMockup: any = {
-    amount: 1,
-    attributes: [],
-    blockTime: 1721218436,
-    burnedAt: null,
-    chain: "6604ef9082c9669beb15ce87",
-    createdAt: "2024-06-27T22:57:10.872Z",
-    creator:
-      "0x0007e17ab90d2abf29b1a2b418567067d7f1ce49602feb29ac11901e35fb965e",
-    description: "Flex EVO is set to become the cornerstone...",
-    image:
-      "https://ipfs.io/ipfs/QmaXMk4MQVh5uwbPq1tg8daUGtnJjgTokiN282wzGbC2so",
-    isBurned: false,
-    marketType: "NotForSale",
-    name: "Flex EVO Official",
-    nftCollection: {
-      _id: "667dd2ec06e6c47eb12173db",
-      key: "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd",
-      name: "Flex Evo",
-      standard: "ERC-721",
-      symbol: "FEV",
-      avatar: "",
-      description: "string",
-      verified: true,
-    },
-    nftContract:
-      "0x04546729db564bb29a9e1e215463f41bc53116ac75eeb8e029b8a87fee7d85fd",
-    owner: {
-      _id: true,
-      username:
-        "0x014f337b7e30e74827a22ba497b90d011efb57d16553ddc9cd10d0d3ecc5a106",
-      address:
-        "0x014f337b7e30e74827a22ba497b90d011efb57d16553ddc9cd10d0d3ecc5a106",
-      isVerified: "false",
-    },
-    royaltyRate: 0,
-    tokenId: "1233",
-    tokenUri:
-      "https://ipfs.io/ipfs/QmfXBqEzgfJK6rJHZZzHHW8hxyqyNVVsYobqtFH1WRU6oR/1.json",
-    _id: "667dee4606e6c47eb13260a5",
-    orderData: {
-      bestAsk: {},
-      listAsk: [],
-      listBid: [],
-    },
-  };
 
   return (
     <>
@@ -241,11 +183,34 @@ const PackDetail = () => {
               </div> */}
 
               <div className="flex gap-5 items-center max-lg:flex-col lg:h-[384px]">
-                <div className="max-w-full lg:max-w-[50%] h-full">
-                  <ImageKit src={launchpadBg1.src} className="h-full" />
+                <div className="h-full aspect-[2/3]">
+                  <ImageKit src={poster.src} className="h-full" />
                 </div>
                 <div className="flex overflow-auto gap-4 h-full flex-1 max-lg:w-full">
-                  <PackCard canOpen={!isMarket} />
+                  {isMarket
+                    ? nfts.map((pack, index) => {
+                        return (
+                          <PackCard
+                            key={index}
+                            pack={pack}
+                            canOpen={!isMarket}
+                          />
+                        );
+                      })
+                    : packOfOwner.map((pack, index) => {
+                        return (
+                          <PackCard
+                            key={index}
+                            pack={pack}
+                            canOpen={!isMarket}
+                          />
+                        );
+                      })}
+
+                  {!isMarket && packOfOwner.length <= 0 && (
+                    <p>You don't have any packs</p>
+                  )}
+
                   {/* <PackCard />
                 <PackCard />
                 <PackCard /> */}
