@@ -25,7 +25,7 @@ export type IPaymentAddress = {
 };
 
 const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
-  const [amount, setAmount] = useState<number>(50);
+  const [amount, setAmount] = useState<number>(500);
   const { profileOwner } = useAccountContext();
   const { onShowToast } = useToast();
   const { address, account } = useAccount();
@@ -149,6 +149,7 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
       const tx = await provider.waitForTransaction(execute.transaction_hash);
       if (tx.isSuccess()) {
         onShowToast("Successfully sent");
+        hide();
       } else {
         onShowToast("Error while sending");
       }

@@ -1,5 +1,5 @@
 "use client";
-import live from "@/assets/social/live.svg";
+
 import background from "@/assets/social/atemu.png";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
@@ -13,6 +13,7 @@ import { useAccount } from "@starknet-react/core";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import launchpadBg1 from "@/assets/launchpad-bg1.png";
 import poster from "@/assets/posterAtemuDetail.png";
+import LiveData from "./Livedata";
 
 const PackDetail = () => {
   const { collection, nfts, isMarket, setIsMarket, packOfOwner } =
@@ -33,9 +34,9 @@ const PackDetail = () => {
               />
               <div className="absolute h-full w-screen left-0 bottom-0 bg-gradient-to-t from-black to-transparent via-transparent"></div>
               <div className="absolute bottom-6 w-full">
-                <div className=" max-w-[1440px] max-sm:px-4 px-8 mx-auto w-full flex flex-col gap-2">
+                <div className=" max-w-[1440px] px-20 max-xl:px-5 mx-auto w-full flex flex-col gap-2">
                   <ImageKit
-                    src={collection?.avatar}
+                    src={launchpadBg1.src}
                     width={72}
                     className="aspect-square rounded-sm"
                     alt=""
@@ -57,7 +58,7 @@ const PackDetail = () => {
                           </p>
                           <TbRosetteDiscountCheckFilled className="text-[#63B1FF] " />
                         </div>
-                        <svg
+                        {/* <svg
                           width="24"
                           height="24"
                           viewBox="0 0 24 24"
@@ -90,7 +91,7 @@ const PackDetail = () => {
                             height="2"
                             fill="white"
                           />
-                        </svg>
+                        </svg> */}
                       </div>
                       <p className="text-base leading-5 max-w-[537px]">
                         {collection?.description}
@@ -130,7 +131,7 @@ const PackDetail = () => {
               </div>
             </div>
           </div>
-          <div className="w-full flex justify-center items-center py-[14px] gap-6 font-bold text-base leading-5 text-gray uppercase border-b border-border">
+          {/* <div className="w-full flex justify-center items-center py-[14px] gap-6 font-bold text-base leading-5 text-gray uppercase border-b border-border">
             <div className="cursor-pointer drop-shadow-active-text py-1 px-3 text-shadow text-white filter  transition-all inline-block">
               Common
             </div>
@@ -146,14 +147,14 @@ const PackDetail = () => {
             <p className="cursor-pointer hover:text-white transition-all">
               Supreme
             </p>
-          </div>
-          <div className="max-sm:px-4 mt-9 mb-[72px] px-8 max-w-[1440px] mx-auto w-full flex flex-col gap-[84px] max-md:gap-[40px] max-md:mb-[112px]">
-            <div className="flex flex-col gap-8 w-full">
+          </div> */}
+          <div className="mx-auto w-full max-w-[1440px] pb-20 px-20 max-xl:px-5 font-bold mt-4">
+            <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col max-w-[537px] w-full">
                 {/* <div className=" text-[#30D158] border border-[#30D158] bg-[#30D158]/15 font-bold text-[14px] leading-5 rounded-sm h-fit uppercase py-[2px] px-2 w-fit text-center">
                   common
                 </div> */}
-                <p className="mt-1 w-fit mb-3 font-bold text-[32px] leading-9 uppercase">
+                <p className="mt-1 w-fit font-bold text-[32px] leading-9 uppercase">
                   PACK COLLECTION
                 </p>
                 {/* <p className="text-base leading-5">
@@ -258,44 +259,7 @@ const PackDetail = () => {
           <Activity />
         </div>
 
-        <div className="w-full fixed z-10 bg-black bottom-0 left-0 border-t border-gray">
-          <div className=" flex justify-between items-center max-sm:px-4 px-8 max-w-[1440px] mx-auto w-full max-md:flex-col max-md:gap-1">
-            <div className="flex items-center gap-4">
-              <div className="flex gap-1 items-center">
-                <ImageKit src={live.src} className="w-3 h-3" />
-                <p className="font-bold text-[14px] leading-5">LIVE DATA</p>
-              </div>
-              <div className="h-8 w-[1px] bg-gray max-md:hidden "></div>
-              <div className="flex gap-4 items-center">
-                <Link href={"#"}>
-                  <FaSquareXTwitter
-                    className={`aspect-square h-5 cursor-pointer text-gray`}
-                  />
-                </Link>
-                <Link href={"#"}>
-                  <IoLogoDiscord className={`aspect-square h-5 text-gray`} />
-                </Link>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="h-8 w-[1px] bg-gray max-md:hidden"></div>
-              <div className=" border-gray pl-6 items-center flex gap-6 flex-wrap gap-y-[2px] ">
-                <div className="flex gap-1 text-gray font-bold text-[14px] leading-5">
-                  <p>Starknet network:</p>
-                  <p className="text-green uppercase">150 TPS</p>
-                </div>
-                <div className="flex gap-1 text-gray font-bold text-[14px] leading-5">
-                  <p>STRK/USDT:</p>
-                  <p className="text-green uppercase">$0.6</p>
-                </div>
-                <div className="flex gap-1 text-gray font-bold text-[14px] leading-5">
-                  <p>ETH/USDT:</p>
-                  <p className="text-green uppercase">$3,500</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LiveData />
       </div>
     </>
   );
