@@ -11,13 +11,13 @@ import { usePostSignature } from "../api/usePostSignature";
 import { useCancelOrder } from "../api/nft/useCancelOrder";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useGetNft } from "../api/nft/useGetNft";
+import { toast } from "react-toastify";
 
 dayjs.extend(utc);
 
 const useBidActionNft = () => {
   const { account, address, status } = useAccount();
 
-  const { onShowToast } = useToast();
 
   const _postSignature = usePostSignature();
   const _cancelOrder = useCancelOrder();
@@ -143,12 +143,12 @@ const useBidActionNft = () => {
           token_id,
           currency,
         );
-        onShowToast("Bid successfully");
+        toast("Bid successfully");
       } catch (err) {
-        onShowToast("Bid failed");
+        toast("Bid failed");
       }
     } else {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
     }
   };
 

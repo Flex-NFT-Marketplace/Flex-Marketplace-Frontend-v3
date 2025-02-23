@@ -133,7 +133,6 @@ const CreateDropProvider = ({ children }: { children: ReactNode }) => {
         startDate: startDate,
         expiryDate: expiryDate,
       });
-      console.log(set);
 
       if (address) {
         await reloadGroups(address);
@@ -171,10 +170,12 @@ const CreateDropProvider = ({ children }: { children: ReactNode }) => {
     setId: string,
     collectible: string
   ): Promise<void> => {
-    await _removeCollectibleFromGroup.mutateAsync({
-      setId: setId,
-      collectible: collectible,
-    });
+    try {
+      await _removeCollectibleFromGroup.mutateAsync({
+        setId: setId,
+        collectible: collectible,
+      });
+    } catch (error) {}
   };
 
   const reloadGroups = async (address: string) => {

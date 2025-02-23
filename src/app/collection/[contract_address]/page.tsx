@@ -84,7 +84,7 @@ const CollectionPage = () => {
         </div>
         <div
           id="filter-bar"
-          className={`sticky top-0 z-10 flex h-[52px] justify-between border-b border-stroke bg-[#080804] px-8 font-normal max-md:px-5`}
+          className={`sticky top-0 z-50 flex h-[52px] justify-between border-b border-stroke bg-[#080804] px-8 font-normal max-md:px-5`}
         >
           <div className="flex items-center gap-4">
             <Icon

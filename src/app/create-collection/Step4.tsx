@@ -11,6 +11,7 @@ import {
   Phase,
   useCreateCollection,
 } from "@/services/providers/CreateCollectionProvider";
+import { toast } from "react-toastify";
 
 const PhaseItem = ({ phase }: { phase: Phase }) => {
   const { allState, setAllState } = useCreateCollection();
@@ -299,41 +300,40 @@ const PhaseItem = ({ phase }: { phase: Phase }) => {
 
 const Step4 = () => {
   const { allState, setAllState } = useCreateCollection();
-  const { onShowToast } = useToast();
 
   const isValidPhase = (phase: Phase) => {
     let isValid = true;
     if (!phase.phaseName.trim()) {
-      onShowToast("Please fill in phase name");
+      toast("Please fill in phase name");
       isValid = false;
     }
     // Kiểm tra startDate và endDate
     if (!phase.startDate || !phase.endDate) {
-      onShowToast("Please select both start date and end date");
+      toast("Please select both start date and end date");
       isValid = false;
     } else {
       // Kiểm tra tính hợp lệ của ngày
       if (!phase.startDate.isValid()) {
-        onShowToast("Start date is invalid");
+        toast("Start date is invalid");
         isValid = false;
       }
 
       if (!phase.endDate.isValid()) {
-        onShowToast("End date is invalid");
+        toast("End date is invalid");
         isValid = false;
       }
 
       // Nếu cả hai ngày đều hợp lệ, kiểm tra endDate không nhỏ hơn startDate
       if (phase.startDate.isValid() && phase.endDate.isValid()) {
         if (!phase.endDate.isAfter(phase.startDate, "day")) {
-          onShowToast("End date must be at least 1 day after start date");
+          toast("End date must be at least 1 day after start date");
           isValid = false;
         }
       }
     }
 
     if (!phase.isFreeEarnings && !phase.maxMintPerWallet) {
-      onShowToast("Please fill in earnings percentage");
+      toast("Please fill in earnings percentage");
       isValid = false;
     }
 
@@ -341,7 +341,7 @@ const Step4 = () => {
       !phase.isFreeMint &&
       (isNaN(Number(phase.mintPrice)) || Number(phase.mintPrice) < 0)
     ) {
-      onShowToast("Enter your mint price");
+      toast("Enter your mint price");
       isValid = false;
     }
 
@@ -351,22 +351,22 @@ const Step4 = () => {
       Number(phase.maxMintPerWallet) < 0
     ) {
       isValid = false;
-      onShowToast("Max mint per wallet must be grater than 0");
+      toast("Max mint per wallet must be grater than 0");
       return;
     }
 
     if (!phase.isFreeMint && !phase.mintPrice) {
-      onShowToast("Please fill in mint price");
+      toast("Please fill in mint price");
       isValid = false;
     }
 
     if (isNaN(Number(phase.mintPrice))) {
-      onShowToast("Mint price must be a number");
+      toast("Mint price must be a number");
       isValid = false;
     }
 
     if (Number(phase.mintPrice) < 0) {
-      onShowToast("Mint price must be greater than 0");
+      toast("Mint price must be greater than 0");
       isValid = false;
     }
 

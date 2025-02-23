@@ -15,11 +15,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useAtemuContext } from "./AtemuMintProvider";
+import { toast } from "react-toastify";
 
 const About = () => {
   const { supply } = useAtemuContext();
   const [maxSupply, setMaxSupply] = useState(999);
-  const { onShowToast } = useToast();
 
   return (
     <div>
@@ -34,7 +34,7 @@ const About = () => {
           <IoMdShare
             onClick={() => {
               copyToClipboard(window.location.href);
-              onShowToast("Link copied to clipboard");
+              toast("Link copied to clipboard");
             }}
             className={`aspect-square h-5 cursor-pointer`}
           />

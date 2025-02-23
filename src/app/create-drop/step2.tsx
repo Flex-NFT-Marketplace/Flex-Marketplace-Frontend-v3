@@ -20,6 +20,7 @@ import { CallData, RpcProvider, uint256 } from "starknet";
 import useModal from "@/hooks/useModal";
 import SuccessCreated from "./SuccessCreated";
 import { formatTimestamp } from "@/utils/string";
+import { toast } from "react-toastify";
 
 export const backgroundColors: { [key: string]: string } = {
   common: "#d3d3d3",
@@ -45,7 +46,6 @@ const Step2 = () => {
   const [groupShowing, setGroupShowing] = useState<IDropGroup | undefined>(
     undefined
   );
-  const { onShowToast } = useToast();
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const { account } = useAccount();
 
@@ -62,7 +62,7 @@ const Step2 = () => {
   const handleCreate = async () => {
     const missingFields: string[] = [];
     if (!account) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
 
@@ -100,12 +100,12 @@ const Step2 = () => {
 
     if (missingFields.length > 0) {
       setInvalidFields(missingFields);
-      onShowToast("Please fill in all required fields");
+      toast("Please fill in all required fields");
       return;
     }
 
     if (allState.toTopSupporters > Number(allState.metadata3)) {
-      onShowToast("To Top Supporters cannot be greater than the drop amount");
+      toast("To Top Supporters cannot be greater than the drop amount");
       return;
     }
     let setCreated: ISet | undefined;
@@ -168,19 +168,11 @@ const Step2 = () => {
         throw new Error("Contract execution failed");
       }
     } catch (error) {
-      console.log(error);
-      if (error instanceof Error) {
-        if (error.message === "Contract execution failed") {
-          await handleRemoveCollectibleFromGroup(
-            setCreated!._id,
-            allState.contractAddress
-          );
-          onShowToast("Contract execution failed");
-          return;
-        }
-      } else {
-        onShowToast("Failed to create drop");
-      }
+      await handleRemoveCollectibleFromGroup(
+        setCreated!._id,
+        allState.contractAddress
+      );
+      toast("Contract execution failed");
     } finally {
       setIsLoadingCreate(false);
     }

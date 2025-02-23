@@ -5,14 +5,13 @@ import { useState } from "react";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { SPLIT_SYMBOL } from "@/constants/symbol";
 import { useCreateCollection } from "@/services/providers/CreateCollectionProvider";
-
+import { toast } from "react-toastify";
 interface AddTypeProps {
   hide: () => void;
 }
 
 const AddType: React.FC<AddTypeProps> = ({ hide }) => {
   const { allState, setAllState } = useCreateCollection();
-  const { onShowToast } = useToast();
   const [type, setType] = useState("");
   const [subType, setSubType] = useState("");
 
@@ -23,11 +22,11 @@ const AddType: React.FC<AddTypeProps> = ({ hide }) => {
     subTypeFormatted = subTypeFormatted.filter((subType) => subType != "");
 
     if (!typeFormatted) {
-      onShowToast("Please fill the type");
+      toast("Please fill the type");
       return;
     }
     if (subTypeFormatted.length == 0) {
-      onShowToast("Please fill the sub type");
+      toast("Please fill the sub type");
       return;
     }
 

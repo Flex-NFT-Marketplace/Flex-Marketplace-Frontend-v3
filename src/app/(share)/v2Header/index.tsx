@@ -78,7 +78,7 @@ const Header = () => {
         <Button
           variant="icon"
           icon={<IoMdCart />}
-          onClick={() => onShowToast("Hello")}
+          onClick={() => toast("Hello")}
         ></Button> */}
 
         <ConnectWallet />

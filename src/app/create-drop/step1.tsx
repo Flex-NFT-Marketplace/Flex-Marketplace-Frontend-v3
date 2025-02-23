@@ -14,12 +14,12 @@ import { useAccount } from "@starknet-react/core";
 import usePostMetadata from "@/services/api/usePostMetadata";
 import { getShortTraits, isDigit } from "@/utils/string";
 import { useCreateDrop } from "@/services/providers/CreateDropProvider";
+import { toast } from "react-toastify";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateDrop();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { isShow: isShowSuccess, toggle: toggleSuccess } = useModal();
-  const { onShowToast } = useToast();
   const { account } = useAccount();
   const [loadingDeploy, setLoadingDeploy] = useState(false);
 
@@ -120,7 +120,7 @@ const Step1 = () => {
 
   const handleDeploy = async () => {
     if (!account) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
 
@@ -136,17 +136,17 @@ const Step1 = () => {
 
     if (missingFields.length > 0) {
       setInvalidFields(missingFields);
-      onShowToast("Please fill in all required fields");
+      toast("Please fill in all required fields");
       return;
     }
 
     if (allState.fileNftImage && allState.fileNftImage.size > 1024 * 1024) {
-      onShowToast("File size is too large");
+      toast("File size is too large");
       return;
     }
 
     if (!isDigit(allState.metadata3)) {
-      onShowToast("Please enter a valid number");
+      toast("Please enter a valid number");
       return;
     }
 
@@ -216,7 +216,7 @@ const Step1 = () => {
         toggleSuccess();
       }
     } catch (error) {
-      onShowToast("Failed to deploy Collection");
+      toast("Failed to deploy Collection");
     } finally {
       setLoadingDeploy(false);
     }

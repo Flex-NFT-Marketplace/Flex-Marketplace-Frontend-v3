@@ -20,6 +20,7 @@ import { formattedContractAddress, strShortAddress } from "@/utils/string";
 import UnpackPopup from "@/app/pack-collection/UnpackPopup";
 import { usePackCollectionContext } from "@/services/providers/PackCollectionProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { toast } from "react-toastify";
 
 enum PackCardStatus {
   COMMON = "COMMON",
@@ -39,7 +40,6 @@ const PackCard: React.FC<PackCardProps> = (props) => {
   const { isOpen, toggleModal } = useModal();
   const [isHover, setIsHover] = useState(false);
   const [status, setStatus] = useState(PackCardStatus.COMMON);
-  const { onShowToast } = useToast();
   const baseClasses =
     " border border-stroke hover:border-white select-none rounded relative flex flex-col transition-all duration-100 ease-in-out group";
   const classes = clsx(baseClasses);
@@ -49,7 +49,7 @@ const PackCard: React.FC<PackCardProps> = (props) => {
     //   setPackOpening(packOfOwner[0].nftData);
     //   toggleModal();
     // } else {
-    //   onShowToast("You don't have any packs");
+    //   toast("You don't have any packs");
     // }
 
     // setPackOpening(packOfOwner[0].nftData);

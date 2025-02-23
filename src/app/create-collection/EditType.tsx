@@ -8,6 +8,7 @@ import {
   TraitManager,
   useCreateCollection,
 } from "@/services/providers/CreateCollectionProvider";
+import { toast } from "react-toastify";
 
 interface EditTypeProps {
   hide: () => void;
@@ -18,7 +19,6 @@ const EditType: React.FC<EditTypeProps> = ({ hide, trait }) => {
   if (!trait) return;
 
   const { allState, setAllState } = useCreateCollection();
-  const { onShowToast } = useToast();
   const [type, setType] = useState(trait.type);
   const [subType, setSubType] = useState(trait.subType.join(SPLIT_SYMBOL));
 
@@ -29,11 +29,11 @@ const EditType: React.FC<EditTypeProps> = ({ hide, trait }) => {
     subTypeFormatted = subTypeFormatted.filter((subType) => subType != "");
 
     if (!typeFormatted) {
-      onShowToast("Please fill the type");
+      toast("Please fill the type");
       return;
     }
     if (subTypeFormatted.length == 0) {
-      onShowToast("Please fill the sub type");
+      toast("Please fill the sub type");
       return;
     }
 

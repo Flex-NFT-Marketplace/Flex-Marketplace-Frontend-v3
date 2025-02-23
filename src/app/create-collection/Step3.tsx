@@ -17,10 +17,10 @@ import {
   TraitManager,
   useCreateCollection,
 } from "@/services/providers/CreateCollectionProvider";
+import { toast } from "react-toastify";
 
 const Step3 = () => {
   const { allState, setAllState } = useCreateCollection();
-  const { onShowToast } = useToast();
   const { isOpen: isOpenAddType, toggleModal: toggleAddType } = useModal();
   const { isOpen: isOpenEditType, toggleModal: toggleEditType } = useModal();
   const { isOpen: isOpenViewNFT, toggleModal: toggleViewNFT } = useModal();
@@ -38,7 +38,7 @@ const Step3 = () => {
       const maxSizeInBytes = 1 * 1024 * 1024;
 
       if (file.size > maxSizeInBytes) {
-        onShowToast("File is larger than 1MB");
+        toast("File is larger than 1MB");
         return;
       }
 
@@ -63,7 +63,7 @@ const Step3 = () => {
 
   const handleDeploy = () => {
     if (!allState.listStraits.length) {
-      onShowToast("Please upload straits");
+      toast("Please upload straits");
       return;
     }
 

@@ -1,14 +1,9 @@
 "use client";
 import ImageKit from "@/packages/@ui-kit/Image";
-import { TbWorld } from "react-icons/tb";
-import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import { IoLogoDiscord, IoShareSocialOutline } from "react-icons/io5";
-import { SiFarcaster } from "react-icons/si";
-import { FaSquareXTwitter } from "react-icons/fa6";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { MdOutlineContentCopy } from "react-icons/md";
 import Button from "@/packages/@ui-kit/Button";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
 import { useDropDetail } from "@/services/providers/DropDetailProvider";
 import { getBackgroundColor } from "@/app/create-drop/step2";
@@ -17,14 +12,11 @@ import {
   strShortAddress,
   timeElapsedFromTimestamp,
 } from "@/utils/string";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { DropTypeEnum } from "@/services/providers/CreateDropProvider";
-import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
-import HausDonate from "@/app/drophaus/HausDonate";
-import { useModal } from "@/packages/@ui-kit/Modal/useModal";
-import { useAccount } from "@starknet-react/core";
 import Link from "next/link";
 import avtDefault from "@/assets/avtDefault.webp";
+import { toast } from "react-toastify";
+import { useAccountContext } from "@/services/providers/AccountProvider";
 
 const Drop = () => {
   const srcList = [
@@ -39,7 +31,6 @@ const Drop = () => {
   const [mainColor, setMainColor] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { onShowToast } = useToast();
   const {
     isLiked,
     toggleLike,
@@ -54,13 +45,15 @@ const Drop = () => {
   const [isLoadingSecure, setIsLoadingSecure] = useState(false);
   const [isLoadingLike, setIsLoadingLike] = useState(false);
   const [isLoadingClaim, setIsLoadingClaim] = useState(false);
+  const { reloadInfoOwner } = useAccountContext();
 
   const handleSecure = async (collectible: string) => {
     try {
       setIsLoadingSecure(true);
       await secure(collectible);
+      await reloadInfoOwner();
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     } finally {
       setIsLoadingSecure(false);
     }
@@ -71,7 +64,7 @@ const Drop = () => {
       setIsLoadingLike(true);
       await toggleLike(collectible);
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     } finally {
       setIsLoadingLike(false);
     }
@@ -80,9 +73,9 @@ const Drop = () => {
   const handleCopyAddress = () => {
     try {
       copyToClipboard(dropDetail?.creator?.address as string);
-      onShowToast("Copy address successfully");
+      toast("Copy address successfully");
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 
@@ -168,7 +161,7 @@ const Drop = () => {
       setIsLoadingClaim(true);
       await claim(dropDetail!.collectible.nftContract);
     } catch (error: any) {
-      onShowToast(error.response.data.message);
+      toast(error.response.data.message);
     } finally {
       setIsLoadingClaim(false);
     }
@@ -340,9 +333,7 @@ const Drop = () => {
               </div>
             </div>
             <p className="text-gray text-base leading-5">
-              Zoolana.io is a groundbreaking mobile strategy game being built on
-              Solana. Players will trade assets, raise armies, and play with
-              friends in a game with strategic...
+              {collectionDetail?.description}
             </p>
           </div>
         </div>

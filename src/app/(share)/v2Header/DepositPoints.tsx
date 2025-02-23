@@ -13,6 +13,7 @@ import { useGetTokenPerPoints } from "@/services/api/flexhaus/social/useGetToken
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { CallData, RpcProvider, uint256 } from "starknet";
 import Button from "@/packages/@ui-kit/Button";
+import { toast } from "react-toastify";
 
 interface DepositPointsProps {
   hide: () => void;
@@ -25,9 +26,8 @@ export type IPaymentAddress = {
 };
 
 const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
-  const [amount, setAmount] = useState<number>(500);
-  const { profileOwner } = useAccountContext();
-  const { onShowToast } = useToast();
+  const [amount, setAmount] = useState<number>(1000);
+  const { profileOwner, reloadInfoOwner } = useAccountContext();
   const { address, account } = useAccount();
   const [paymentAddress, setPaymentAddress] = useState<string>("");
   const [tokenPerPoints, setTokenPerPoints] = useState<{
@@ -75,20 +75,20 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
   const handleCopyAddress = (address: string) => {
     try {
       copyToClipboard(address);
-      onShowToast("Copy address successfully");
+      toast("Copy address successfully");
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 
   const quickSentEth = async (points: number) => {
     if (!account) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
 
     if (!paymentAddress) {
-      onShowToast("Error while getting payment address");
+      toast("Error while getting payment address");
       return;
     }
 
@@ -112,9 +112,11 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
       const tx = await provider.waitForTransaction(execute.transaction_hash);
 
       if (tx.isSuccess()) {
-        onShowToast("Successfully sent");
+        await reloadInfoOwner();
+        toast("Successfully sent");
+        hide();
       } else {
-        onShowToast("Error while sending");
+        toast("Error while sending");
       }
     } catch (error) {
       console.log(error);
@@ -125,11 +127,11 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
 
   const quickSentStrk = async (points: number) => {
     if (!account) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
     if (!paymentAddress) {
-      onShowToast("Error while getting payment address");
+      toast("Error while getting payment address");
       return;
     }
     const strkByPoint = convertByteToStrk(points);
@@ -148,10 +150,10 @@ const DepositPoints: React.FC<DepositPointsProps> = ({ hide }) => {
       ]);
       const tx = await provider.waitForTransaction(execute.transaction_hash);
       if (tx.isSuccess()) {
-        onShowToast("Successfully sent");
+        toast("Successfully sent");
         hide();
       } else {
-        onShowToast("Error while sending");
+        toast("Error while sending");
       }
     } catch (error) {
       console.log(error);

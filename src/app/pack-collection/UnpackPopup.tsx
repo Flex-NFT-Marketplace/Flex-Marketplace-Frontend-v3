@@ -11,6 +11,7 @@ import { IStagingNftResponse } from "@/types/IStagingNft";
 import { metadataUnpack } from "@/constants/nftMetadataUnpack";
 import UnpackAnimation from "./UnpackAnimation";
 import launchpadBg from "@/assets/launchpad-bg.png";
+import { toast } from "react-toastify";
 
 // import 50 images
 import image1 from "@/assets/Atemu_Collection_Images/1.png";
@@ -94,7 +95,6 @@ export interface DataObject {
 
 const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
   const { account } = useAccount();
-  const { onShowToast } = useToast();
 
   const { isOpen, toggleModal, packOpening } = props;
   const [count, setCount] = useState(1);
@@ -214,12 +214,12 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
   const open = async () => {
     toggleModal();
     if (!account) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
 
     if (!packOpening) {
-      onShowToast("Please select a pack");
+      toast("Please select a pack");
       return;
     }
 
@@ -288,7 +288,7 @@ const UnpackPopup: React.FC<IBuyPackPopupProps> = (props) => {
     } catch (error: any) {
       console.log(error);
 
-      onShowToast(error.message);
+      toast(error.message);
       return;
     } finally {
       setLoadingOpenPack(false);

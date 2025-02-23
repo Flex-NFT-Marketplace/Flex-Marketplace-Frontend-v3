@@ -22,6 +22,7 @@ import { useAccountContext } from "./AccountProvider";
 import { IStagingCollection } from "@/types/IStagingCollection";
 import { useGetCollectionDetail } from "../api/collection/useGetCollectionDetail";
 import { useClaim } from "../api/flexhaus/dropDetail/useClaim";
+import { toast } from "react-toastify";
 
 interface DropDetailContextProps {
   dropDetail: IdropDetail | null;
@@ -53,7 +54,6 @@ export const useDropDetail = () => {
 const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   const { dropAddress } = useParams();
   const [dropDetail, setDropDetail] = useState<IdropDetail | null>(null);
-  const { onShowToast } = useToast();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [totalLike, setTotalLike] = useState<number>(0);
   const [isSecured, setIsSecured] = useState<boolean>(false);
@@ -84,14 +84,14 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
       const dropDetail = await _getDropDetail.mutateAsync(dropAddress);
       setDropDetail(dropDetail);
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 
   const _postLike = usePostLike();
   const postLike = async (collectible: string): Promise<void> => {
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
     try {
@@ -99,14 +99,14 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
       checkLiked(dropAddress as string);
       getTotalLike(dropAddress as string);
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 
   const _deleteLike = useDeleteLike();
   const deleteLike = async (collectible: string): Promise<void> => {
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
     try {
@@ -114,7 +114,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
       checkLiked(dropAddress as string);
       getTotalLike(dropAddress as string);
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 
@@ -125,7 +125,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
         const isLiked = await _checkLiked.mutateAsync(collectible);
         setIsLiked(isLiked);
       } catch (error) {
-        onShowToast("Something went wrong");
+        toast("Something went wrong");
       }
     } else {
       setIsLiked(false);
@@ -156,7 +156,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   const secure = async (collectionAddress: string): Promise<void> => {
     if (!dropDetail) return;
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
 
@@ -164,29 +164,29 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
       formattedContractAddress(dropDetail?.creator.address) ==
       formattedContractAddress(address)
     ) {
-      onShowToast("You can't secure your own drop");
+      toast("You can't secure your own drop");
       return;
     }
 
     if (new Date().getTime() > dropDetail.set?.expiryTime) {
-      onShowToast("This drop has ended");
+      toast("This drop has ended");
       return;
     }
 
     if (new Date().getTime() < dropDetail.set?.startTime) {
-      onShowToast("This drop hasn't started yet");
+      toast("This drop hasn't started yet");
       return;
     }
 
     const isSubscribed = await handleCheckSubcribed(dropDetail.creator.address);
     if (!isSubscribed) {
-      onShowToast("You need to subscribe to secure this drop");
+      toast("You need to subscribe to secure this drop");
       return;
     }
 
     if (profileOwner) {
       if (profileOwner.points < dropDetail.secureAmount) {
-        onShowToast("You don't have enough points to secure this drop");
+        toast("You don't have enough points to secure this drop");
         return;
       }
     }
@@ -197,7 +197,7 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
     } catch (error: any) {
       console.log(error);
 
-      onShowToast(error.response.data.message);
+      toast(error.response.data.message);
     }
   };
 

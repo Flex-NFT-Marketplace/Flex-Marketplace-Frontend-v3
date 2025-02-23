@@ -14,12 +14,12 @@ import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import launchpadBg1 from "@/assets/launchpad-bg1.png";
 import poster from "@/assets/posterAtemuDetail.png";
 import LiveData from "./Livedata";
+import { toast } from "react-toastify";
 
 const PackDetail = () => {
   const { collection, nfts, isMarket, setIsMarket, packOfOwner } =
     usePackCollectionContext();
   const { address } = useAccount();
-  const { onShowToast } = useToast();
 
   return (
     <>
@@ -105,11 +105,11 @@ const PackDetail = () => {
                         <input
                           onChange={() => {
                             if (!address) {
-                              onShowToast("Please connect your wallet");
+                              toast("Please connect your wallet");
                               return;
+                            } else {
+                              setIsMarket(!isMarket);
                             }
-
-                            setIsMarket(!isMarket);
                           }}
                           type="checkbox"
                           value=""

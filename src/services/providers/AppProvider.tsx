@@ -13,6 +13,7 @@ import { CollectionDetailProvider } from "./CollectionDetailProvider";
 import { PackCollectionProvider } from "./PackCollectionProvider";
 import DropDetailProvider from "./DropDetailProvider";
 import CreateDropProvider from "./CreateDropProvider";
+import { ToastContainer } from "react-toastify";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -32,6 +33,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
                               <DropDetailProvider>
                                 <LoadingHeaderProvider>
                                   {children}
+                                  <ToastContainer position="bottom-left" />
                                 </LoadingHeaderProvider>
                               </DropDetailProvider>
                             </CollectionDetailProvider>

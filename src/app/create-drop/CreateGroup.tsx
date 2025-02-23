@@ -4,22 +4,22 @@ import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useCreateDrop } from "@/services/providers/CreateDropProvider";
+import { toast } from "react-toastify";
 
 const CreateGroup = ({ hide }: { hide: () => void }) => {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [expiryDate, setExpiryDate] = useState<Dayjs | null>(null);
-  const { onShowToast } = useToast();
 
   const { setAllState } = useCreateDrop();
 
   const createNewGroup = async () => {
     if (!startDate || !expiryDate) {
-      onShowToast("Please select both start date and expiry date");
+      toast("Please select both start date and expiry date");
       return;
     }
 
     if (expiryDate.toDate().getTime() < startDate.toDate().getTime()) {
-      onShowToast("Expiry date must be after start date");
+      toast("Expiry date must be after start date");
       return;
     }
 
@@ -53,7 +53,6 @@ const CreateGroup = ({ hide }: { hide: () => void }) => {
           ) => {
             setStartDate(date);
           }}
-          showTime={false}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -69,7 +68,6 @@ const CreateGroup = ({ hide }: { hide: () => void }) => {
           ) => {
             setExpiryDate(date);
           }}
-          showTime={false}
         />
       </div>
       <div className="flex justify-end">

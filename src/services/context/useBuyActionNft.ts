@@ -8,6 +8,7 @@ import { addresses } from "./address";
 import { useActionBuyNft } from "../api/nft/useActionBuyNft";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { IStagingNft } from "@/types/IStagingNft";
+import { toast } from "react-toastify";
 
 type BuyActionNftProps = {
   onBuy: (signature: ISignature) => void;
@@ -15,7 +16,6 @@ type BuyActionNftProps = {
 
 export const useBuyActionNft = () => {
   const _putSignature = useActionBuyNft();
-  const { onShowToast } = useToast();
   const { address, status, account } = useAccount();
 
   const handleSignature = (signature: any) => {
@@ -99,14 +99,14 @@ export const useBuyActionNft = () => {
           };
 
           await _putSignature.mutateAsync(bodyData);
-          onShowToast("Buy NFT successfully");
+          toast("Buy NFT successfully");
         } else {
-          onShowToast("Buy NFT failed");
+          toast("Buy NFT failed");
         }
       } catch (error) {
         console.log(error);
         
-        onShowToast("Buy NFT failed");
+        toast("Buy NFT failed");
       }
     } else {
     }

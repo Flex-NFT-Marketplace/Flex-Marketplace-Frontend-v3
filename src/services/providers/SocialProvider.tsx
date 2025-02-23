@@ -20,9 +20,9 @@ import useGetLeaderboardByEvent from "../api/flexhaus/social/useGetLeaderboardBy
 import { IProfileStaging } from "@/types/IStagingNft";
 import { useGetProfile } from "../api/useGetProfile";
 import useGetCreatorsSuggestion from "../api/flexhaus/social/useGetCreatorsSuggestion";
-import { useAuth } from "./AuthProvider";
 import { useDonate } from "../api/flexhaus/social/useDonate";
 import { useAccountContext } from "./AccountProvider";
+import { toast } from "react-toastify";
 
 interface SocialContextProps {
   handleCreateNewEvent: (
@@ -56,7 +56,6 @@ export const useSocial = () => {
 };
 
 const SocialProvider = ({ children }: { children: ReactNode }) => {
-  const { onShowToast } = useToast();
   const { address } = useAccount();
   const { userAddress } = useParams();
   const [perks, setPerks] = useState<IPerks | null>(null);
@@ -102,7 +101,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
       await reloadPerks();
       return peaksCreated;
     } catch (error) {
-      onShowToast("Failed to create event");
+      toast("Failed to create event");
       return null;
     }
   };
@@ -124,7 +123,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
       reloadPerks();
       return perksUpdated;
     } catch (error) {
-      onShowToast("Failed to update event");
+      toast("Failed to update event");
       return null;
     }
   };
@@ -158,39 +157,39 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     amount: number
   ): Promise<void> => {
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
 
     if (!perks) {
-      onShowToast("There is no event yet");
+      toast("There is no event yet");
       return;
     }
 
     if (new Date().getTime() < perks.startTime) {
-      onShowToast("Perks is not started");
+      toast("Perks is not started");
       return;
     }
 
     if (new Date().getTime() > perks.snapshotTime) {
-      onShowToast("Perks is not finished");
+      toast("Perks is not finished");
       return;
     }
 
     if (!profileOwner) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
       return;
     }
 
     if (
       formattedContractAddress(address) == formattedContractAddress(creator)
     ) {
-      onShowToast("You can't donate to yourself");
+      toast("You can't donate to yourself");
       return;
     }
 
     if (profileOwner.points < amount) {
-      onShowToast("You don't have enough points");
+      toast("You don't have enough points");
       return;
     }
 
@@ -200,7 +199,7 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
         amount: amount,
       });
 
-      onShowToast("Successfully donated");
+      toast("Successfully donated");
     } catch (error) {
       throw error;
     }

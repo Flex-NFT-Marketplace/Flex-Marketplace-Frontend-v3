@@ -13,7 +13,7 @@ import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { VscArrowSwap } from "react-icons/vsc";
 import { useSocial } from "@/services/providers/SocialProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
-
+import { toast } from "react-toastify";
 interface HausDonateProps {
   hide: () => void;
   creator: IProfileStaging;
@@ -24,10 +24,9 @@ const HausDonate: React.FC<HausDonateProps> = ({ hide, creator }) => {
   const [suggestedAmount, setSuggestedAmount] = useState<number[]>([
     500, 1000, 2000, 5000,
   ]);
-  const { profileOwner } = useAccountContext();
+  const { profileOwner, reloadInfoOwner } = useAccountContext();
   const [isLoadingDonate, setIsLoadingDonate] = useState<boolean>(false);
   const { handleDonate } = useSocial();
-  const { onShowToast } = useToast();
 
   const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
@@ -45,9 +44,10 @@ const HausDonate: React.FC<HausDonateProps> = ({ hide, creator }) => {
       setIsLoadingDonate(true);
 
       await handleDonate(creator.address as string, amount);
+      await reloadInfoOwner();
       hide();
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     } finally {
       setIsLoadingDonate(false);
     }
@@ -56,9 +56,9 @@ const HausDonate: React.FC<HausDonateProps> = ({ hide, creator }) => {
   const handleCopyAddress = () => {
     try {
       copyToClipboard(creator.address as string);
-      onShowToast("Copy address successfully");
+      toast("Copy address successfully");
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 

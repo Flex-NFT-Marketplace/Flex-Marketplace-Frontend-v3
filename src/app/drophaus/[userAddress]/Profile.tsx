@@ -31,6 +31,7 @@ import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
 import HausDonate from "../HausDonate";
 import avtDefault from "@/assets/avtDefault.webp";
 import { Divider } from "antd";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const { isShow: isShowCreateEditPerks, toggle: toggleCreateEditPerks } =
@@ -39,7 +40,6 @@ const Profile = () => {
   const [perksEditing, setPerksEditing] = useState<IPerks | null>(null);
   const { userAddress } = useParams();
   const { address } = useAccount();
-  const { onShowToast } = useToast();
   const [timeLeft, setTimeLeft] = useState<string>("-");
   const [processTime, setProcessTime] = useState<string>("0%");
   const [canUnSub, setCanUnSub] = useState(false);
@@ -59,7 +59,7 @@ const Profile = () => {
       setCanUnSub(canUnSub);
       await getTotalSub();
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     } finally {
       setLoadingSubcribe(false);
     }
@@ -68,9 +68,9 @@ const Profile = () => {
   const handleCopyAddress = () => {
     try {
       copyToClipboard(userAddress as string);
-      onShowToast("Copy address successfully");
+      toast("Copy address successfully");
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 
@@ -79,7 +79,7 @@ const Profile = () => {
     const miniSecOneDay = 1000 * 60 * 60 * 24;
     // cannot edit peaks before 24 hours
     if (perks.startTime < new Date().getTime() + miniSecOneDay) {
-      onShowToast("Edit is not available");
+      toast("Edit is not available");
       return;
     }
 
@@ -112,7 +112,7 @@ const Profile = () => {
 
   const handleCreatePerks = () => {
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
     toggleCreateEditPerks();
@@ -120,7 +120,7 @@ const Profile = () => {
 
   const handleOpenDonate = () => {
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
     toggleDonate();

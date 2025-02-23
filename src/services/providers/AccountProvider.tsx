@@ -1,5 +1,5 @@
 "use client";
-import { createContext, use, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useGetProfile } from "../api/useGetProfile";
 import { ISignature, SignStatusEnum } from "@/types/ISignature";
 import useGetNftsByOwner from "../api/account/useGetNftsByOwner";
@@ -17,9 +17,9 @@ import { useSubcribe } from "../api/flexhaus/social/useSubcribe";
 import { useUnSubcribe } from "../api/flexhaus/social/useUnSubcribe";
 import { useCheckSubcribed } from "../api/flexhaus/social/useCheckSubcribed";
 import { formattedContractAddress } from "@/utils/string";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
-import { ICollectibleState, IdropDetail } from "@/types/Idrop";
+import { ICollectibleState } from "@/types/Idrop";
 import useGetDistributed from "../api/flexhaus/dropDetail/useGetDistributed";
+import { toast } from "react-toastify";
 
 interface AccountContextType {
   nfts: IStagingNftResponse[];
@@ -38,6 +38,7 @@ interface AccountContextType {
   handleCheckSubcribed: (creator: string) => Promise<boolean>;
   handleGetTotalSub: (creator: string) => Promise<number>;
   dropsDistributed: ICollectibleState[];
+  reloadInfoOwner: () => Promise<void>;
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
@@ -62,8 +63,6 @@ export const AccountProvider = ({
   const [dropsDistributed, setDropsDistributed] = useState<ICollectibleState[]>(
     []
   );
-
-  const { onShowToast } = useToast();
 
   const _getProfile = useGetProfile();
   // const _getNfts = useGetNftsByOwner(address);
@@ -120,6 +119,10 @@ export const AccountProvider = ({
     }
   };
 
+  const reloadInfoOwner = async (): Promise<void> => {
+    await getProfileByAddressOwner();
+  };
+
   const getBid = async () => {
     if (!address) return;
     try {
@@ -154,7 +157,7 @@ export const AccountProvider = ({
 
   const toggleSubcribe = async (creator: string): Promise<boolean> => {
     if (!accountAddress) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return false;
     }
     let canUnSubcribe = false; // if user is following -> true, if user is not following -> false
@@ -283,6 +286,7 @@ export const AccountProvider = ({
     handleCheckSubcribed,
     handleGetTotalSub,
     dropsDistributed,
+    reloadInfoOwner,
   };
 
   return (

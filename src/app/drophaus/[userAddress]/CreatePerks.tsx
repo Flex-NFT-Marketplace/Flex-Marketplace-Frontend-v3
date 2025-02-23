@@ -6,6 +6,7 @@ import { useSocial } from "@/services/providers/SocialProvider";
 import { IPerks } from "@/types/Iperks";
 import DatePickup from "@/packages/@ui-kit/DatePickup";
 import Button from "@/packages/@ui-kit/Button";
+import { toast } from "react-toastify";
 
 interface CreateEditPerksProps {
   hide: () => void;
@@ -23,21 +24,19 @@ const CreateEditPerks: React.FC<CreateEditPerksProps> = ({ hide, perks }) => {
   const [isLoadingCreateEdit, setIsLoadingCreateEdit] = useState(false);
   const { handleCreateNewEvent, handleUpdateEvent } = useSocial();
 
-  const { onShowToast } = useToast();
-
   const createNewPerks = async () => {
     if (!startDate || !expiryDate) {
-      onShowToast("Please select both start date and expiry date");
+      toast("Please select both start date and expiry date");
       return;
     }
 
     if (expiryDate.toDate().getTime() < startDate.toDate().getTime()) {
-      onShowToast("Expiry date must be after start date");
+      toast("Expiry date must be after start date");
       return;
     }
 
     if (!perksDescription.trim()) {
-      onShowToast("Perks description is required");
+      toast("Perks description is required");
       return;
     }
 
@@ -69,21 +68,21 @@ const CreateEditPerks: React.FC<CreateEditPerksProps> = ({ hide, perks }) => {
 
     // check if the snapshot time minus the current time is less than a day
     if (perks.snapshotTime - new Date().getTime() < 24 * 60 * 60 * 1000) {
-      onShowToast("Perks out of update time");
+      toast("Perks out of update time");
     }
 
     if (!startDate || !expiryDate) {
-      onShowToast("Please select both start date and expiry date");
+      toast("Please select both start date and expiry date");
       return;
     }
 
     if (expiryDate.toDate().getTime() < startDate.toDate().getTime()) {
-      onShowToast("Expiry date must be after start date");
+      toast("Expiry date must be after start date");
       return;
     }
 
     if (!perksDescription.trim()) {
-      onShowToast("Perks description is required");
+      toast("Perks description is required");
       return;
     }
 

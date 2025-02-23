@@ -9,6 +9,7 @@ import { useAccount } from "@starknet-react/core";
 import { ACCESS_TOKEN, USER_ADDRESS } from "@/constants/cookies";
 import { deleteCookie, getCookie, setCookie } from "@/helpers/cookie";
 import useGetAccessToken from "../api/auth/useGetAccessToken";
+import { toast } from "react-toastify";
 
 interface AuthContextType {
   token: string | null;
@@ -22,8 +23,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { status, address, account } = useAccount();
   const [token, setToken] = useState<string | any>(null);
-  const { onShowToast } = useToast();
-
   useEffect(() => {
     const storedToken = getCookie(ACCESS_TOKEN);
 
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const nonceResponse = await _getNonce.mutateAsync(address);
 
         if (nonceResponse === "error") {
-          onShowToast("Error while getting nonce", MessageTypeEnum.ERROR);
+          toast("Error while getting nonce");
         }
 
         let sign = await account?.signMessage(nonceResponse.signMessage);
@@ -72,10 +71,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         saveToken(accessToken);
         setCookie({ key: USER_ADDRESS, value: address! });
-        onShowToast("Sign message success", MessageTypeEnum.SUCCESS);
+        toast("Sign message success");
         return true;
       } catch (error) {
-        onShowToast("Error while getting nonce", MessageTypeEnum.ERROR);
+        toast("Error while getting nonce");
         return false;
       }
     }

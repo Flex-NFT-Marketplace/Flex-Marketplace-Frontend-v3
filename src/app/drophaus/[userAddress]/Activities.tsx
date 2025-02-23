@@ -10,16 +10,15 @@ import { copyToClipboard, strShortAddress } from "@/utils/string";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import Link from "next/link";
 import { IProfileStaging } from "@/types/IStagingNft";
+import { toast } from "react-toastify";
 
 const CreatorSuggestCard = ({ creator }: { creator: IProfileStaging }) => {
-  const { onShowToast } = useToast();
-
   const handleCopyAddress = (address: string) => {
     try {
       copyToClipboard(address);
-      onShowToast("Copy address successfully");
+      toast("Copy address successfully");
     } catch (error) {
-      onShowToast("Something went wrong");
+      toast("Something went wrong");
     }
   };
 

@@ -4,11 +4,10 @@ import Button from "@/packages/@ui-kit/Button";
 import { useCreateCollection } from "@/services/providers/CreateCollectionProvider";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { isValidURL } from "@/utils/string";
-
+import { toast } from "react-toastify";
 const Step2 = () => {
   const { allState, setAllState } = useCreateCollection();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
-  const { onShowToast } = useToast();
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -60,22 +59,22 @@ const Step2 = () => {
     const missingFields: string[] = [];
 
     if (allState.website?.trim() && !isValidURL(allState.website?.trim())) {
-      onShowToast("Website link is invalid");
+      toast("Website link is invalid");
       return;
     }
     if (allState.xAccount?.trim() && !isValidURL(allState.xAccount?.trim())) {
-      onShowToast("X account is invalid");
+      toast("X account is invalid");
       return;
     }
     if (allState.discord?.trim() && !isValidURL(allState.discord?.trim())) {
-      onShowToast("Discord is invalid");
+      toast("Discord is invalid");
       return;
     }
     if (
       allState.warpcastProfile?.trim() &&
       !isValidURL(allState.warpcastProfile?.trim())
     ) {
-      onShowToast("Warpcast profile is invalid");
+      toast("Warpcast profile is invalid");
       return;
     }
 
@@ -84,7 +83,7 @@ const Step2 = () => {
 
     if (missingFields.length > 0) {
       setInvalidFields(missingFields);
-      onShowToast("Please fill in all required fields");
+      toast("Please fill in all required fields");
       return;
     }
     setAllState((prev) => ({

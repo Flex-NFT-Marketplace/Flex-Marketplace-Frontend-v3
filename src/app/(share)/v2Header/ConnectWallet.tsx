@@ -25,12 +25,12 @@ import { Divider } from "antd";
 import ModelV2 from "@/packages/@ui-kit/Modal/ModelV2";
 import DepositPoints from "./DepositPoints";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
+import { toast } from "react-toastify";
 
 const ConnectWallet = () => {
   const { address, status, account } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
-  const { onShowToast } = useToast();
   const { profileOwner } = useAccountContext();
   const { isShow: isShowDepositPoints, toggle: toggleDepositPoints } =
     useModal();
@@ -49,12 +49,12 @@ const ConnectWallet = () => {
     disconnect();
     deleteCookie(USER_ADDRESS);
     deleteCookie(ACCESS_TOKEN);
-    onShowToast("Disconnected successfully ", MessageTypeEnum.INFO);
+    toast("Disconnected successfully");
   };
 
   const handleOpenDepositPoints = () => {
     if (!address) {
-      onShowToast("Please connect your wallet");
+      toast("Please connect your wallet");
       return;
     }
     toggleDepositPoints();

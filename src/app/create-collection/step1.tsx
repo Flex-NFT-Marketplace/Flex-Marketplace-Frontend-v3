@@ -10,12 +10,12 @@ import { PiWarningCircle } from "react-icons/pi";
 import { FaCheck } from "react-icons/fa";
 import { useAccount } from "@starknet-react/core";
 import { useCreateCollection } from "@/services/providers/CreateCollectionProvider";
+import { toast } from "react-toastify";
 
 const Step1 = () => {
   const { allState, setAllState } = useCreateCollection();
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { address } = useAccount();
-  const { onShowToast } = useToast();
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -126,7 +126,7 @@ const Step1 = () => {
 
     if (missingFields.length > 0) {
       setInvalidFields(missingFields);
-      onShowToast("Please fill in all required fields");
+      toast("Please fill in all required fields");
       return;
     }
     setAllState((prev) => ({
