@@ -14,6 +14,7 @@ import { PackCollectionProvider } from "./PackCollectionProvider";
 import DropDetailProvider from "./DropDetailProvider";
 import CreateDropProvider from "./CreateDropProvider";
 import { ToastContainer } from "react-toastify";
+import SocialProvider from "./SocialProvider";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -30,12 +31,17 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
                         <PackCollectionProvider>
                           <ActivityProvider>
                             <CollectionDetailProvider>
-                              <DropDetailProvider>
-                                <LoadingHeaderProvider>
-                                  {children}
-                                  <ToastContainer position="bottom-left" />
-                                </LoadingHeaderProvider>
-                              </DropDetailProvider>
+                              <SocialProvider>
+                                <DropDetailProvider>
+                                  <LoadingHeaderProvider>
+                                    {children}
+                                    <ToastContainer
+                                      stacked
+                                      position="bottom-left"
+                                    />
+                                  </LoadingHeaderProvider>
+                                </DropDetailProvider>
+                              </SocialProvider>
                             </CollectionDetailProvider>
                           </ActivityProvider>
                         </PackCollectionProvider>

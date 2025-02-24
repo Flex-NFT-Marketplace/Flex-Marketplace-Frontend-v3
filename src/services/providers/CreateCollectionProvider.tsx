@@ -49,7 +49,7 @@ export interface TraitManager {
 
 const initialState: AllStateProps = {
   // Common
-  activeStep: 4,
+  activeStep: 1,
 
   // Step 1
   tokenName: "",
@@ -91,13 +91,14 @@ const initialState: AllStateProps = {
   ],
 };
 
-const CreateCollectionContext = createContext<{
+interface CreateCollectionContextType {
   allState: AllStateProps;
   setAllState: React.Dispatch<React.SetStateAction<AllStateProps>>;
-}>({
-  allState: initialState,
-  setAllState: () => {},
-});
+}
+
+const CreateCollectionContext = createContext<
+  CreateCollectionContextType | undefined
+>(undefined);
 
 export const CreateCollectionProvider = ({
   children,
@@ -113,4 +114,12 @@ export const CreateCollectionProvider = ({
   );
 };
 
-export const useCreateCollection = () => useContext(CreateCollectionContext);
+export const useCreateCollection = () => {
+  const context = useContext(CreateCollectionContext);
+  if (!context) {
+    throw new Error(
+      "useCreateCollection must be used within a CreateCollectionProvider"
+    );
+  }
+  return context;
+};

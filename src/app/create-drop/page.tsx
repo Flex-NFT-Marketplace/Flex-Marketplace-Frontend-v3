@@ -7,15 +7,27 @@ import CreateDropProvider, {
   useCreateDrop,
 } from "@/services/providers/CreateDropProvider";
 import { Suspense } from "react";
+import Link from "next/link";
+import { IoIosArrowBack } from "react-icons/io";
 
 const CreateDropContent = () => {
   const { allState } = useCreateDrop();
   return (
     <div className="fixed-height-under-header relative">
       <div className="border-b border-line py-4">
-        <p className="mx-auto max-w-[1200px] px-2 font-bold uppercase text-grays">
+        <div className="mx-auto max-w-[1200px] px-2 font-bold uppercase text-grays flex items-center gap-2">
+          {allState.perksId && allState.activeStep == 1 ? (
+            <Link href={"/drophaus"}>
+              <IoIosArrowBack className="cursor-pointer hover:text-white transition-all" />
+            </Link>
+          ) : (
+            <Link href={"/flex-create"}>
+              <IoIosArrowBack className="cursor-pointer hover:text-white transition-all" />
+            </Link>
+          )}
+
           {allState.perksId ? "Create Reward" : "Create DROP"}
-        </p>
+        </div>
       </div>
 
       <div className="mt-10 pb-9">

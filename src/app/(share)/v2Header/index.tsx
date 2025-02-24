@@ -13,12 +13,13 @@ import { IoMenu } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
 const pages = {
-  "/flex-create": "Crate",
-  "/drophaus": "Drops",
-  // "/launchpad": "Launchpad",
   "/activity": "Activity",
   "/staking": "Staking",
-  "/mint": "Mint",
+  "/flex-create": "Create",
+  "/drophaus": "Drops",
+  // "/launchpad": "Launchpad",
+
+  // "/mint": "Mint",
   // "/open-editions": "Open-Edition",
 };
 
@@ -56,21 +57,16 @@ const Header = () => {
         </Link>
 
         {/* <Input icon={<IoSearch />} placeholder="Search" /> */}
-        <Search />
-      </div>
+        <div className="flex items-center">
+          <div className="flex items-center gap-4 max-lg:hidden">
+            {Object.entries(pages).map(([path, title]) => (
+              <Link key={path} href={path}>
+                <Button variant="ghost">{title}</Button>
+              </Link>
+            ))}
+          </div>
 
-      <div className="flex items-center">
-        <div className="flex items-center gap-4 max-lg:hidden">
-          {Object.entries(pages).map(([path, title]) => (
-            <Link key={path} href={path}>
-              <Button variant="ghost">{title}</Button>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mx-4 h-6 w-[2px] bg-line"></div>
-
-        {/* <Button
+          {/* <Button
           variant="icon"
           icon={<IoMdNotifications />}
           onClick={toggle}
@@ -80,7 +76,11 @@ const Header = () => {
           icon={<IoMdCart />}
           onClick={() => toast("Hello")}
         ></Button> */}
-
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <Search />
+        {/* <div className="mx-4 h-6 w-[2px] bg-line"></div> */}
         <ConnectWallet />
 
         <div onClick={toggleDropDown} className="lg:hidden">
