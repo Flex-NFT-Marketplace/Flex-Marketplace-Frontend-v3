@@ -13,7 +13,7 @@ import { IoMenu } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
 const pages = {
-  "/create-drop": "Create",
+  "/flex-create": "Crate",
   "/drophaus": "Drops",
   // "/launchpad": "Launchpad",
   "/activity": "Activity",
