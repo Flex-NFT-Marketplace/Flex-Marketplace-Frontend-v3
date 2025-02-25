@@ -115,9 +115,11 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
       </div>
       <div className="flex items-center justify-between">
         {dropDetail?.dropType == "protected" && (
-          <div className="relative bg-gradient-to-tr from-white/20 to-white/50 p-[1px]">
+          <div className="relative grid place-items-center h-6 rounded-md border border-border">
             <div className="bg-dark-black/70 px-4">
-              <p>Protect - {dropDetail.secureAmount}</p>
+              <p className="text-[14px] font-bold">
+                Protect - {dropDetail.secureAmount}
+              </p>
             </div>
           </div>
         )}
