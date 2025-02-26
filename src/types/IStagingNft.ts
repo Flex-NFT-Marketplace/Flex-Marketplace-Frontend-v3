@@ -19,6 +19,14 @@ import { ISignature } from "./ISignature";
     username: string;
     _id: boolean;
     points: number;
+    avatar?: string;
+    socials: {
+      twitter?: string;
+      telegram?: string;
+      discord?: string;
+      website?: string;
+      warpcast?: string;
+    }
   }
   
   // Define the main NFT item type.

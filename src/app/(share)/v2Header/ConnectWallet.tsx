@@ -139,8 +139,7 @@ const ConnectWallet = () => {
                 </p>
                 {/* <FormatAddress address={address} /> */}
                 <ImageKit
-                  // src={profileOwner?.avatar || profileOwner?.image }
-                  src={avtDefault.src}
+                  src={profileOwner?.avatar || avtDefault.src}
                   width={40}
                   height={40}
                   alt="Flex"

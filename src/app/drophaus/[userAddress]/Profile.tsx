@@ -47,8 +47,12 @@ const Profile = () => {
   const [loadingSubcribe, setLoadingSubcribe] = useState(false);
   const [totalSub, setTotalSub] = useState<number>(0);
 
-  const { toggleSubcribe, handleCheckSubcribed, handleGetTotalSub } =
-    useAccountContext();
+  const {
+    toggleSubcribe,
+    handleCheckSubcribed,
+    handleGetTotalSub,
+    toggleEditProfile,
+  } = useAccountContext();
 
   const { perks, isOwner, showProfile } = useSocial();
 
@@ -223,6 +227,15 @@ const Profile = () => {
                   className="flex-1"
                 />
               </div>
+            )}
+
+            {isOwner && (
+              <Button
+                onClick={toggleEditProfile}
+                title="Edit Profile"
+                variant="outline"
+                className=" w-full"
+              />
             )}
           </div>
         )}

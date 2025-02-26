@@ -131,7 +131,7 @@ const PackDetail = () => {
               </div>
             </div>
           </div>
-          {/* <div className="w-full flex justify-center items-center py-[14px] gap-6 font-bold text-base leading-5 text-gray uppercase border-b border-border">
+          <div className="w-full flex justify-center items-center py-[14px] gap-6 font-bold text-base leading-5 text-gray uppercase border-b border-border">
             <div className="cursor-pointer drop-shadow-active-text py-1 px-3 text-shadow text-white filter  transition-all inline-block">
               Common
             </div>
@@ -147,7 +147,7 @@ const PackDetail = () => {
             <p className="cursor-pointer hover:text-white transition-all">
               Supreme
             </p>
-          </div> */}
+          </div>
           <div className="mx-auto w-full max-w-[1440px] pb-20 px-20 max-xl:px-5 font-bold mt-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col max-w-[537px] w-full">

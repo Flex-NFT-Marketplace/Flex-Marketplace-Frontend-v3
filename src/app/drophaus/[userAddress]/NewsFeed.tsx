@@ -33,7 +33,7 @@ const NewsFeed = () => {
 
   return (
     <div className="flex-1">
-      <div className="sticky top-16 z-[1] flex gap-6 border-b border-line bg-black px-5 py-4 max-md:hidden">
+      <div className="sticky top-16 z-[1] flex gap-6 border-b border-line bg-background px-5 py-4 max-md:hidden">
         <p
           onClick={() => setActiveTab(TabsEnum.PROFILE)}
           className={`cursor-pointer font-bold uppercase xl:hidden ${activeTab == TabsEnum.PROFILE ? "text-shadow text-white" : "text-grays"} `}

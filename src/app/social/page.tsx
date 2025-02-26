@@ -66,7 +66,7 @@ const Social = () => {
                 className="flex rounded-lg overflow-hidden border-border bg-dark-black"
               >
                 <ImageKit src={""} alt="" className="h-[72px] w-[72px] " />
-                <div className="bg-border flex w-full justify-between items-center p-3">
+                <div className="flex w-full justify-between items-center p-3">
                   <div className="flex flex-col  justify-center gap-1">
                     <div className="flex gap-1 items-center">
                       <p className="text-base font-bold ">BEANZ Official</p>

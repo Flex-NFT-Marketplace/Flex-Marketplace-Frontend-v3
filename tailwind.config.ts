@@ -18,7 +18,7 @@ const config: Config = {
         "thin-grays": "#D1D5DB",
         "dark-black": "#171921",
         danger: "#FF648A",
-        background: "#09090b",
+        background: "#0D0E13",
         text: "#fafafa",
         line: "#27272a",
         primary: "#FFE720",

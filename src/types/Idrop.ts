@@ -29,6 +29,7 @@ export type ICollectible = {
     symbol: string;
     verified: boolean;
     _id: string;
+    avatar: string;
 }
 
 export type IdropDetail = {

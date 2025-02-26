@@ -14,8 +14,8 @@ interface DropCardProps {
 }
 
 const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
-  const [collectionDetail, setCollectionDetail] =
-    useState<IStagingCollection | null>(null);
+  // const [collectionDetail, setCollectionDetail] =
+  //   useState<IStagingCollection | null>(null);
   const [dropDetail, setDropDetail] = useState<IdropDetail | null>(null);
   const [timeLeft, setTimeLeft] = useState<string>("-");
 
@@ -27,12 +27,12 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
     setDropDetail(dropDetail);
   };
 
-  const _getCollectionDetail = useGetCollectionDetail();
-  const getCollectionDetail = async (contractAddress: string) => {
-    const collectionDetail =
-      await _getCollectionDetail.mutateAsync(contractAddress);
-    setCollectionDetail(collectionDetail);
-  };
+  // const _getCollectionDetail = useGetCollectionDetail();
+  // const getCollectionDetail = async (contractAddress: string) => {
+  //   const collectionDetail =
+  //     await _getCollectionDetail.mutateAsync(contractAddress);
+  //   setCollectionDetail(collectionDetail);
+  // };
 
   const _getTotalLike = useGetTotalLike();
   const getTotalLike = async (collectionAddress: string) => {
@@ -57,9 +57,9 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
   useEffect(() => {
     if (dropDetail) {
       getTotalLike(dropDetail.collectible.nftContract);
-      if (dropDetail.collectible.nftContract) {
-        getCollectionDetail(dropDetail?.collectible?.nftContract);
-      }
+      // if (dropDetail.collectible.nftContract) {
+      //   getCollectionDetail(dropDetail?.collectible?.nftContract);
+      // }
 
       const intervalId = setInterval(() => {
         if (new Date().getTime() < dropDetail.set?.startTime) {
@@ -84,7 +84,7 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
   useEffect(() => {
     if (contractAddress) {
       getDropDetail(contractAddress);
-      getCollectionDetail(contractAddress);
+      // getCollectionDetail(contractAddress);
     }
   }, [contractAddress]);
 
@@ -95,7 +95,7 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
     >
       <div className="relative">
         <ImageKit
-          src={collectionDetail?.avatar}
+          src={dropDetail?.collectible?.avatar}
           alt=""
           className="rounded-lg"
         />

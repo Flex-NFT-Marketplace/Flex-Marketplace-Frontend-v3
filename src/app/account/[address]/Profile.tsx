@@ -1,13 +1,11 @@
 "use client";
 import FormatAddress from "@/components/FormatAddress";
-import { IoSettings } from "react-icons/io5";
 import { useAccountContext } from "@/services/providers/AccountProvider";
-import { strShortAddress } from "@/utils/string";
+import { formattedContractAddress, strShortAddress } from "@/utils/string";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MdContentCopy } from "react-icons/md";
+import { MdContentCopy, MdOutlineModeEditOutline } from "react-icons/md";
 import UserImg from "@/assets/user.png";
-import Button from "@/packages/@ui-kit/Button";
 import EditProfilePopup from "@/components/Popup/EditProfilePopup";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 import { useAuth } from "@/services/providers/AuthProvider";
@@ -17,14 +15,21 @@ import { ACCESS_TOKEN } from "@/constants/cookies";
 
 const Profile = () => {
   const { address } = useParams();
-  const { profile, setAddress, profileOwner } = useAccountContext();
+  const { profile, setAddress, profileOwner, toggleEditProfile } =
+    useAccountContext();
   const { signMessageValidate } = useAuth();
+  const [isOwner, setIsOwner] = useState(false);
 
   const { isShow: isShowEditProfile, toggle: toggleShowEditProfile } =
     useModal();
 
   useEffect(() => {
     setAddress(address as string);
+
+    setIsOwner(
+      formattedContractAddress(address as string) ==
+        formattedContractAddress(profileOwner?.address)
+    );
   }, [address]);
   const [copied, setCopied] = useState(false);
 
@@ -73,19 +78,19 @@ const Profile = () => {
         /> */}
 
         <ImageKit
-          // src={profile?.avatar || profile?.image || UserImg.src}
-          src={UserImg.src}
+          src={profile?.avatar || UserImg.src}
           alt=""
           className="h-[52px] w-[52px] rounded-sm"
         />
 
         <div className="flex flex-col justify-center">
           <p className="text-2xl font-bold">
-            {
-              // profile?.username ||
-              //   profile?.nick_name ||
-              strShortAddress(address as string)
-            }
+            {strShortAddress(address as string)}
+            {isOwner && (
+              <span onClick={toggleEditProfile}>
+                <MdOutlineModeEditOutline className="inline-block text-base ml-2 cursor-pointer text-grays hover:text-white" />
+              </span>
+            )}
           </p>
 
           <div className="flex items-center max-sm:flex-col max-sm:items-start">

@@ -20,6 +20,9 @@ import { formattedContractAddress } from "@/utils/string";
 import { ICollectibleState } from "@/types/Idrop";
 import useGetDistributed from "../api/flexhaus/dropDetail/useGetDistributed";
 import { toast } from "react-toastify";
+import ModalV2 from "@/packages/@ui-kit/Modal/ModelV2";
+import EditProfileModel from "@/app/account/[address]/EditProfileModel";
+import { useModal } from "@/packages/@ui-kit/Modal/useModal";
 
 interface AccountContextType {
   nfts: IStagingNftResponse[];
@@ -39,6 +42,7 @@ interface AccountContextType {
   handleGetTotalSub: (creator: string) => Promise<number>;
   dropsDistributed: ICollectibleState[];
   reloadInfoOwner: () => Promise<void>;
+  toggleEditProfile: () => void;
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
@@ -74,6 +78,7 @@ export const AccountProvider = ({
     isLoading: isLoadingDistributed,
     fetchNextPage: fetchNextPageDistributed,
   } = useGetDistributed();
+  const { isShow: isShowEditProfile, toggle: toggleEditProfile } = useModal();
 
   useEffect(() => {
     let distributedDrops: ICollectibleState[] = [];
@@ -287,10 +292,16 @@ export const AccountProvider = ({
     handleGetTotalSub,
     dropsDistributed,
     reloadInfoOwner,
+    toggleEditProfile,
   };
 
   return (
-    <AccountContext.Provider value={value}>{children}</AccountContext.Provider>
+    <AccountContext.Provider value={value}>
+      <ModalV2 isShow={isShowEditProfile} hide={toggleEditProfile}>
+        <EditProfileModel hide={toggleEditProfile} />
+      </ModalV2>
+      {children}
+    </AccountContext.Provider>
   );
 };
 

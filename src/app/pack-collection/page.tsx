@@ -181,6 +181,7 @@ const OnChain = () => {
                     alt=""
                   />
                 </div> */}
+
                 <div className="flex flex-col gap-1">
                   <div className="flex gap-2 items-center">
                     <div className="flex gap-2 text-[24px] items-center">
