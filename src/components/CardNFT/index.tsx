@@ -52,7 +52,6 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   const { isOpen: isOpenBidModal, toggleModal: toggleBidModal } = useModal();
   const { address } = useAccount();
 
-  const [isHover, setIsHover] = useState(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
 
   const [cardMode, setCardMode] = useState(CardNFTModeAction.NOT_LISTED);
@@ -89,7 +88,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   }, [bestAsk, address]);
 
   const baseClasses =
-    "border border-stroke hover:border-white select-none  rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem] group";
+    "group border border-stroke hover:border-white select-none  rounded scale-[0.92] relative flex flex-col transition-all duration-100 ease-in-out mb-[-0.75rem] group";
 
   // Define width classes with improved granularity and consistency
   const widthClasses =
@@ -111,16 +110,11 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
   );
 
   return (
-    <div
-      className={classes}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
-    >
+    <div className={classes}>
       <SellPopup
         isOpen={isOpenSellModal}
         toggleModal={() => {
           toggleSellModal();
-          setIsHover(false);
         }}
         nftData={nft}
         onReload={onReload}
@@ -131,7 +125,6 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
         isOpen={isOpenBidModal}
         toggleModal={() => {
           toggleBidModal();
-          setIsHover(false);
         }}
         nftData={nft}
         onReload={onReload}
@@ -142,7 +135,6 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
         isOpen={isOpenBuyModal}
         toggleModal={() => {
           toggleBuyModal();
-          setIsHover(false);
         }}
         nft={nft}
         signature={bestAsk as ISignature}
@@ -153,7 +145,6 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
         isOpen={isOpenUnListModal}
         toggleModal={() => {
           toggleUnListModal();
-          setIsHover(false);
         }}
         nft={nft}
         signature={bestAsk as ISignature}
@@ -176,7 +167,7 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
         <ImageKit
           src={nft?.image || "https://via.placeholder.com/272"}
           alt=""
-          className={`aspect-square w-full min-w-[150px] rounded-t ${isHover == true ? "scale-110 rounded" : "scale-[1.01]"} transition-all`}
+          className={`aspect-square w-full min-w-[150px] rounded-t group-hover:scale-110 group-hover:rounded scale-[1.01] transition-all`}
         />
       </div>
 
@@ -219,73 +210,71 @@ const CardNFT: React.FC<CardNFTProps> = (props) => {
           </div>
         </div>
 
-        {isHover && (
-          <div className="absolute bottom-0 left-0 right-0 grid place-items-center">
-            <div className="grid w-full grid-cols-2 gap-2">
-              {address &&
-                bestAsk?.signer ==
-                  formattedContractAddress(formattedContractAddress(address)) &&
-                CardNFTModeAction.LISTING == cardMode && (
-                  <div
-                    className="col-span-2 px-3 pb-2 gap-2"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Button
-                      className="w-full !h-7 !border-cancel !text-cancel"
-                      title="Cancel Order"
-                      variant="outline"
-                      onClick={toggleUnListModal}
-                    />
-                  </div>
-                )}
-
-              {isOwner && CardNFTModeAction.NOT_LISTED == cardMode && (
+        <div className="absolute bottom-0 left-0 right-0 group-hover:grid place-items-center hidden">
+          <div className="grid w-full grid-cols-2 gap-2">
+            {address &&
+              bestAsk?.signer ==
+                formattedContractAddress(formattedContractAddress(address)) &&
+              CardNFTModeAction.LISTING == cardMode && (
                 <div
                   className="col-span-2 px-3 pb-2 gap-2"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Button
-                    className="w-full !h-7"
-                    title="Listing"
-                    onClick={toggleSellModal}
-                  />
-                </div>
-              )}
-              {!isOwner && (
-                <div
-                  className="col-span-2 flex px-3 pb-2 gap-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {bestAsk && (
-                    <>
-                      <Button
-                        title="Buy"
-                        className="w-full !h-7"
-                        onClick={() => {
-                          toggleBuyModal();
-                        }}
-                      />
-                    </>
-                  )}
-                  <Button
-                    title="Bid"
-                    className="w-full !h-7"
-                    variant="secondary"
-                    onClick={() => {
-                      toggleBidModal();
-                    }}
+                    className="w-full !h-7 !border-cancel !text-cancel"
+                    title="Cancel Order"
+                    variant="outline"
+                    onClick={toggleUnListModal}
                   />
                 </div>
               )}
 
-              {CardNFTModeAction.PENDING == cardMode && (
-                <>
-                  <Button title="Pending" className="col-span-2 !h-7" />
-                </>
-              )}
-            </div>
+            {isOwner && CardNFTModeAction.NOT_LISTED == cardMode && (
+              <div
+                className="col-span-2 px-3 pb-2 gap-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Button
+                  className="w-full !h-7"
+                  title="Listing"
+                  onClick={toggleSellModal}
+                />
+              </div>
+            )}
+            {!isOwner && (
+              <div
+                className="col-span-2 flex px-3 pb-2 gap-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {bestAsk && (
+                  <>
+                    <Button
+                      title="Buy"
+                      className="w-full !h-7"
+                      onClick={() => {
+                        toggleBuyModal();
+                      }}
+                    />
+                  </>
+                )}
+                <Button
+                  title="Bid"
+                  className="w-full !h-7"
+                  variant="secondary"
+                  onClick={() => {
+                    toggleBidModal();
+                  }}
+                />
+              </div>
+            )}
+
+            {CardNFTModeAction.PENDING == cardMode && (
+              <>
+                <Button title="Pending" className="col-span-2 !h-7" />
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

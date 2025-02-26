@@ -40,11 +40,10 @@ export const useGetNFTCollection = (
       const { data } = await axiosWithoutAccessToken.post("nft/get-nfts", {
             ...params
       })
-      console.log(params);
       
       return data.data;
     },
-
+    enabled: !!contract_address,
     initialPageParam: 1,
     getNextPageParam: (lastPage, page) => {  
       return lastPage.hasNext ? lastPage.page + 1 : undefined;

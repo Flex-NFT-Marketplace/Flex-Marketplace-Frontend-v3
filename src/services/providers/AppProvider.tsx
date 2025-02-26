@@ -11,6 +11,10 @@ import TanstackProvider from "./TanstackProvider";
 import LoadingHeaderProvider from "./market/LoadingHeaderProvider";
 import { CollectionDetailProvider } from "./CollectionDetailProvider";
 import { PackCollectionProvider } from "./PackCollectionProvider";
+import DropDetailProvider from "./DropDetailProvider";
+import CreateDropProvider from "./CreateDropProvider";
+import { ToastContainer } from "react-toastify";
+import SocialProvider from "./SocialProvider";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -19,25 +23,33 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         <TanstackProvider>
           <StarknetProvider>
             <UIKitProvider>
-              <AccountProvider>
-                <AuthProvider>
+              <AuthProvider>
+                <AccountProvider>
                   <CartProvider>
                     <NftProvider>
                       <CollectionProvider>
                         <PackCollectionProvider>
                           <ActivityProvider>
                             <CollectionDetailProvider>
-                              <LoadingHeaderProvider>
-                                {children}
-                              </LoadingHeaderProvider>
+                              <SocialProvider>
+                                <DropDetailProvider>
+                                  <LoadingHeaderProvider>
+                                    {children}
+                                    <ToastContainer
+                                      stacked
+                                      position="bottom-left"
+                                    />
+                                  </LoadingHeaderProvider>
+                                </DropDetailProvider>
+                              </SocialProvider>
                             </CollectionDetailProvider>
                           </ActivityProvider>
                         </PackCollectionProvider>
                       </CollectionProvider>
                     </NftProvider>
                   </CartProvider>
-                </AuthProvider>
-              </AccountProvider>
+                </AccountProvider>
+              </AuthProvider>
             </UIKitProvider>
           </StarknetProvider>
         </TanstackProvider>

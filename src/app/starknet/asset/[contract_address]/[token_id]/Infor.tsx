@@ -1,12 +1,10 @@
-import { FaEthereum } from "react-icons/fa";
 import { useNftContext } from "@/services/providers/NFTProvider";
 import FormatAddress from "@/components/FormatAddress";
 import clsx from "clsx";
 import FormatPrice from "@/components/FormatPrice";
-import { useEffect } from "react";
 
 const Infor = () => {
-  const { collection, bestAsk, nftStaging } = useNftContext();
+  const { collection, nftStaging } = useNftContext();
 
   const classes = clsx(
     "flex flex-col gap-1 w-1/2 md:w-auto min-w-[100px] md:min-w-0 max-md:text-center"

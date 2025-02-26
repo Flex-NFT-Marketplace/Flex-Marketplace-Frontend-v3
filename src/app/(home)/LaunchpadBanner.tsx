@@ -25,7 +25,7 @@ const LaunchpadBanner = () => {
           relics that hold legendary power. Own a piece of history, rule the
           realms, and stake your claim in the future of on-chain TCG.
         </p>
-        <div className="flex gap-4 flex-wrap">
+        {/* <div className="flex gap-4 flex-wrap">
           <p className="uppercase whitespace-nowrap font-bold">
             <span className="text-grays">Start date:</span> 5/11/2024 - 18:00
             GMT+0
@@ -37,9 +37,12 @@ const LaunchpadBanner = () => {
           <p className="uppercase whitespace-nowrap font-bold">
             <span className="text-grays">Supply:</span> 999
           </p>
-        </div>
-        <Link href={"/launchpad"} className="w-fit min-w-[200px]">
-          <Button className="mt-10 w-full">Mint now</Button>
+        </div> */}
+        <Link
+          href={`/pack-collection/${"0x4d6ccb91e90da63ab5c74841bc68cbbc0da6d221770aecf4d70d02b6bf41549"}`}
+          className="w-fit min-w-[200px]"
+        >
+          <Button className="mt-10 w-full">Open now</Button>
         </Link>
       </div>
     </div>

@@ -109,7 +109,7 @@ export function timeElapsed(pastDate: string): string {
   }
   const now: Date = new Date();
   const past: Date = new Date(pastDate);
-
+  
   // Kiểm tra xem 'past' có phải là một ngày hợp lệ không
   if (isNaN(past.getTime())) {
     return "-";
@@ -135,7 +135,7 @@ export function timeElapsedFromTimestamp(timestamp: number): string {
 
   const now: Date = new Date();
   const past: Date = new Date(timestamp * 1000); // Convert seconds to milliseconds
-
+  
   // Check if 'past' is a valid date
   if (isNaN(past.getTime())) {
     throw new Error("Invalid timestamp");
@@ -233,6 +233,14 @@ export const convertIpfsUrl = (imageUrl: string): string => {
   return imageUrl;
 };
 
+export const isValidURL = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 export const isDigit = (str: string): boolean => {
   str = str.trim();
   const regex = /^-?\d+(\.\d+)?$/;

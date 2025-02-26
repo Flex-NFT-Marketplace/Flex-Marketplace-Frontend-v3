@@ -9,6 +9,7 @@ import Lottie from "lottie-react";
 import { isDigit } from "@/utils/string";
 import { RiArrowUpSFill } from "react-icons/ri";
 import question_mark from "@/assets/question_mark.svg";
+import { toast } from "react-toastify";
 
 interface SpinerItemProps {
   reward: number;
@@ -16,7 +17,6 @@ interface SpinerItemProps {
 }
 
 const HorizontalSpinner = () => {
-  const { onShowToast } = useToast();
   const [showReward, setShowReward] = React.useState(false);
   const wheelRef = useRef<HTMLDivElement>(null);
   const order = [0, 0.014, 0.02, 0.00001, 10, 3, 8, 1, 6, 11, 4, 9, 2];
@@ -27,11 +27,11 @@ const HorizontalSpinner = () => {
 
   const spinWheel = (targetGift: number | undefined | string) => {
     if (!targetGift) {
-      onShowToast("Please enter a number");
+      toast("Please enter a number");
       return;
     }
     if (typeof targetGift === "string" && !isDigit(targetGift)) {
-      onShowToast("Please enter a valid number");
+      toast("Please enter a valid number");
       return;
     }
 
@@ -39,7 +39,7 @@ const HorizontalSpinner = () => {
 
     const position = order.indexOf(targetGift);
     if (position === -1) {
-      onShowToast("Error");
+      toast("Error");
       return;
     }
     const rows = 12; // don't change this

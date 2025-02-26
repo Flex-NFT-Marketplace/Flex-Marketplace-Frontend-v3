@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fetchBalanceERC1155 from "../api/nft/useGetBalanceERC1155";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
+import { toast } from "react-toastify";
 
 dayjs.extend(utc);
 
@@ -100,7 +100,6 @@ const useListActionNft = (): BuyActionNftType => {
     nodeUrl: process.env.NEXT_PUBLIC_STARKNET_NODE_URL,
   });
 
-  const { onShowToast } = useToast();
 
   const _postSignature = usePostSignature();
   const _cancelOrder = useCancelOrder();
@@ -190,7 +189,7 @@ const useListActionNft = (): BuyActionNftType => {
           setStatus(ActionStatus.NOT_APPROVED);
         }
       } else {
-        onShowToast("Please connect wallet.");
+        toast("Please connect wallet.");
       }
     } catch (error) {
       console.log(error);
@@ -217,12 +216,12 @@ const useListActionNft = (): BuyActionNftType => {
   ) => {
     try {
       if (priceInEther <= 0) {
-        onShowToast("Price must be greater than 0");
+        toast("Price must be greater than 0");
         return;
       }
 
       if (amount <= 0) {
-        onShowToast("Amount must be greater than 0");
+        toast("Amount must be greater than 0");
         return;
       }
       setStatus(ActionStatus.PENDING_SIGNATURE);
@@ -265,7 +264,7 @@ const useListActionNft = (): BuyActionNftType => {
 
       await _postSignature.mutateAsync(sign);
       onNavigateDetail(contract_address, token_id);
-      onShowToast("Listing successfully");
+      toast("Listing successfully");
       return;
     } catch (error) {}
   };
@@ -273,7 +272,7 @@ const useListActionNft = (): BuyActionNftType => {
   const onCancelOrder = async (singId: string): Promise<void> => {
     try {      
       await _cancelOrder.mutateAsync(singId);
-      onShowToast("Cancel order successfully");
+      toast("Cancel order successfully");
     } catch (error) {}
   };
 

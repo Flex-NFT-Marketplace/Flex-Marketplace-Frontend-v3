@@ -18,7 +18,7 @@ const LoadingProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <LoadingContext.Provider value={{ setLoading }}>
-      <LoadingHeader isShow={isShow}></LoadingHeader>
+      {/* <LoadingHeader isShow={isShow}></LoadingHeader> */}
       {children}
     </LoadingContext.Provider>
   );

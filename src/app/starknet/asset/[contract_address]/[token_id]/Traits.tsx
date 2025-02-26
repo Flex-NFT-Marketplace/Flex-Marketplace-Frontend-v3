@@ -1,7 +1,6 @@
 import { useNftContext } from "@/services/providers/NFTProvider";
 import { IAttributesCollection } from "@/types/INft";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 interface TraitsItemProps {
   data: IAttributesCollection;
