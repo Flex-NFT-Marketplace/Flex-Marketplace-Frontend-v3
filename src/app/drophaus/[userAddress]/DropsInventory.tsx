@@ -1,4 +1,5 @@
 import DropCard from "@/components/DropCard";
+import SetCard from "@/components/SetCard";
 import { useSocial } from "@/services/providers/SocialProvider";
 import { useState } from "react";
 
@@ -53,6 +54,11 @@ const DropsInventory = () => {
             />
           );
         })}
+        <SetCard
+          contractAddress={
+            "0x04f6304c4833c634a446783f210aebfb0728a8cfeb1b05177e713c5dd535d462"
+          }
+        />
       </div>
     </div>
   );

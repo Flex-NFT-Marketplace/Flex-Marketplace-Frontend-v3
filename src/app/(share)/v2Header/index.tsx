@@ -16,7 +16,8 @@ const pages = {
   "/activity": "Activity",
   "/staking": "Staking",
   "/flex-create": "Create",
-  "/drophaus": "Drops",
+  // "/drophaus": "Drops",
+  "/social": "Social",
   // "/launchpad": "Launchpad",
 
   // "/mint": "Mint",
