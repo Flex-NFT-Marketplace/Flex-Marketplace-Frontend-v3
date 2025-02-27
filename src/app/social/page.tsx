@@ -9,10 +9,14 @@ import { IoIosAddCircle } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
 import badge_check from "@/assets/badge-check.svg";
 import Button from "@/packages/@ui-kit/Button";
+import { useSocial } from "@/services/providers/SocialProvider";
+import RecentDrops from "./RecentDrops";
 
 const Social = () => {
   const router = useRouter();
   const [copied, setCopied] = useState(false); // State for copy status
+
+  const {} = useSocial();
 
   const copyAddress = async () => {
     try {
@@ -32,12 +36,13 @@ const Social = () => {
   const onNavigateDetail = () => {
     onNavigate("/activity");
   };
+
   return (
     <div className="fixed-height-under-header flex w-full flex-col gap-[72px] py-8 overflow-auto">
       <div className="w-full font-bold mx-auto  max-w-[1440px] flex flex-col gap-8">
         <div className="flex gap-4 items-center">
           <p className="text-2xl uppercase text-shadow-white">
-            Recent distributed
+            Highlight drops
           </p>
           <p
             onClick={onNavigateDetail}
@@ -148,22 +153,7 @@ const Social = () => {
           })}
         </div>
       </div>
-      <div className="w-full font-bold mx-auto  max-w-[1440px] flex flex-col gap-8">
-        <p className="text-2xl uppercase text-shadow-white">Recent drops</p>
-        <div className="grid grid-cols-3 gap-x-3 gap-y-8">
-          {Array.from({ length: 10 }).map((_, index) => {
-            return (
-              <ImageKit
-                src=""
-                alt=""
-                className="h-full w-full"
-                width={445}
-                height={445}
-              />
-            );
-          })}
-        </div>
-      </div>
+      <RecentDrops />
     </div>
   );
 };

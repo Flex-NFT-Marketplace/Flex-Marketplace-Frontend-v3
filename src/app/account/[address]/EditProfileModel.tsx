@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosWithAccessToken } from "@/axiosConfig/axiosConfig";
 import usePostMetadata from "@/services/api/usePostMetadata";
 import { toast } from "react-toastify";
+import { useAccountContext } from "@/services/providers/AccountProvider";
 
 interface EditProfileModelProps {
   hide: () => void;
@@ -46,18 +47,19 @@ const updateProfile = () => {
 };
 
 const EditProfileModel: React.FC<EditProfileModelProps> = ({ hide }) => {
+  const { profileOwner } = useAccountContext();
   const [imagePreview, setImagePreview] = useState<string | undefined>(
-    undefined
+    profileOwner?.avatar || undefined
   );
   const [fileAvt, setFileAvt] = useState<File | null>(null);
   const [socialLinks, setSocialLinks] = useState({
-    website: "",
-    telegram: "",
-    twitter: "",
-    warpcast: "",
-    discord: "",
+    website: profileOwner?.socials?.website || "",
+    telegram: profileOwner?.socials?.telegram || "",
+    twitter: profileOwner?.socials?.twitter || "",
+    warpcast: profileOwner?.socials?.warpcast || "",
+    discord: profileOwner?.socials?.discord || "",
   });
-  const [about, setAbout] = useState<string>("");
+  const [about, setAbout] = useState<string>(profileOwner?.about || "");
   const _postMetadata = usePostMetadata();
 
   const { mutate, isPending } = updateProfile();
@@ -167,7 +169,6 @@ const EditProfileModel: React.FC<EditProfileModelProps> = ({ hide }) => {
 
     return metadata.image;
   };
-
   return (
     <div className="p-4 border border-border rounded-md flex flex-col gap-4 w-[600px] max-w-full">
       <p className="text-2xl text-primary uppercase text-center font-bold">

@@ -23,6 +23,7 @@ import useGetCreatorsSuggestion from "../api/flexhaus/social/useGetCreatorsSugge
 import { useDonate } from "../api/flexhaus/social/useDonate";
 import { useAccountContext } from "./AccountProvider";
 import { toast } from "react-toastify";
+import useGetRecentDrops from "../api/flexhaus/social/useGetRecentDrops";
 
 interface SocialContextProps {
   handleCreateNewEvent: (

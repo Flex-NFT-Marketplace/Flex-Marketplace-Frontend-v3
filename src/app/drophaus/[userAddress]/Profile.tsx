@@ -21,6 +21,7 @@ import { useParams } from "next/navigation";
 import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import {
   copyToClipboard,
+  formatLink,
   strShortAddress,
   timeElapsedFromTimestamp,
 } from "@/utils/string";
@@ -172,11 +173,11 @@ const Profile = () => {
       </ModalV2>
       <div className="fixed-height-under-header top-16 mt-0 flex flex-col border-r border-[#3A3A3C] xl:sticky xl:w-[447px] xl:overflow-auto">
         {(userAddress || address) && (
-          <div className="flex w-full flex-col gap-6 pb-8 pl-8 pr-4 pt-4">
-            <div className="flex w-full items-center gap-4">
+          <div className="flex w-full flex-col gap-6 pb-8  pr-4 pt-4">
+            <div className="flex flex-col w-full gap-4">
               <ImageKit
-                src={avtDefault.src}
-                className="aspect-square w-[96px]"
+                src={showProfile?.avatar ? showProfile?.avatar : avtDefault.src}
+                className="aspect-square w-[96px] rounded-lg"
               />
               <Link
                 href={`/drophaus/${showProfile?.address}`}
@@ -189,7 +190,7 @@ const Profile = () => {
                   <TbRosetteDiscountCheckFilled className="text-[#63B1FF]" />
                   {/* <VscArrowSwap className="text-white" /> */}
                 </div>
-                <div className="divide-gray flex gap-4 divide-x">
+                <div className="divide-gray flex flex-col gap-4">
                   <div className="flex gap-2">
                     <p>{strShortAddress(showProfile?.address as string)}</p>
                     <MdOutlineContentCopy
@@ -197,15 +198,19 @@ const Profile = () => {
                       className="text-gray text-base hover:text-white cursor-pointer"
                     />
                   </div>
-                  <div className="flex gap-5 pl-4 font-bold">
+                  <div className="flex gap-5 font-bold">
                     <div className="flex gap-2">
-                      <p className="text-gray">Subs</p>
+                      <p className="text-gray">Subscriber</p>
                       <p>{totalSub}</p>
                     </div>
-                    {/* <div className="flex gap-2">
-                    <p className="text-gray">Support</p>
-                    <p>140K</p>
-                  </div> */}
+                    <div className="flex gap-2">
+                      <p className="text-gray">Subscribing</p>
+                      <p>140K</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <p className="text-gray">Total Support</p>
+                      <p>140K</p>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -241,30 +246,73 @@ const Profile = () => {
         )}
 
         {/* About */}
-        {/* <div className="flex w-full flex-col gap-4 border-b border-t border-[#3A3A3C] pb-8 pl-8 pr-4 pt-4">
+        <div className="flex w-full flex-col gap-4 border-b border-t border-[#3A3A3C] pb-8 pr-4 pt-4">
           <div className="flex w-full justify-between">
             <h3 className="text-[20px] font-bold uppercase leading-6">about</h3>
             <div className="flex gap-4 text-[20px]">
-              <IoShareSocialOutline />
-              <TbWorld />
-              <FaTelegram />
-              <FaSquareXTwitter />
-              <SiFarcaster />
-              <IoLogoDiscord />
+              {showProfile?.socials?.website ? (
+                <Link
+                  href={formatLink(showProfile?.socials?.website)}
+                  target="_blank"
+                >
+                  <TbWorld />
+                </Link>
+              ) : (
+                <TbWorld className="text-grays" />
+              )}
+              {showProfile?.socials?.telegram ? (
+                <Link
+                  href={formatLink(showProfile?.socials?.telegram)}
+                  target="_blank"
+                >
+                  <FaTelegram />
+                </Link>
+              ) : (
+                <FaTelegram className="text-grays" />
+              )}
+
+              {showProfile?.socials?.twitter ? (
+                <Link
+                  href={formatLink(showProfile?.socials?.twitter)}
+                  target="_blank"
+                >
+                  <SiFarcaster className="text-grays" />
+                </Link>
+              ) : (
+                <TbWorld className="text-grays" />
+              )}
+              {showProfile?.socials?.warpcast ? (
+                <Link
+                  href={formatLink(showProfile?.socials?.warpcast)}
+                  target="_blank"
+                >
+                  <SiFarcaster />
+                </Link>
+              ) : (
+                <TbWorld className="text-grays" />
+              )}
+
+              {showProfile?.socials?.discord ? (
+                <Link
+                  href={formatLink(showProfile?.socials?.discord)}
+                  target="_blank"
+                >
+                  <IoLogoDiscord />
+                </Link>
+              ) : (
+                <IoLogoDiscord className="text-grays" />
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-gray text-base leading-5">
-              Photography drops every week from Andrew Mason. Andrew Mason is a
-              New York City and Los Angeles based photographer, videographer,
-              content creator, and editor. Andrew has had a camera in hand since
-              age 11 and his work is inspired by a love for art, design...
+              {showProfile?.about ?? "No description"}
             </p>
-            <p className="font-bold text-[#63B1FF] ">Read more</p>
+            {/* <p className="font-bold text-[#63B1FF] ">Read more</p> */}
           </div>
-        </div> */}
-        <Divider className="bg-border m-0" />
-        <div className="flex w-full flex-col gap-8 pb-8 pl-8 pr-4 pt-4">
+        </div>
+        <Divider className="bg-border m-0 " />
+        <div className="flex w-full flex-col gap-8 pb-8  pr-4 pt-4">
           <div className="flex w-full flex-col gap-4">
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-1">

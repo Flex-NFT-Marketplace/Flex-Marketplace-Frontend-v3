@@ -20,6 +20,7 @@ import { ISignature } from "./ISignature";
     _id: boolean;
     points: number;
     avatar?: string;
+    about?: string;
     socials: {
       twitter?: string;
       telegram?: string;
