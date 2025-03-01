@@ -167,6 +167,15 @@ export const AccountProvider = ({
       toast("Please connect your wallet");
       return false;
     }
+
+    if (
+      formattedContractAddress(creator) ==
+      formattedContractAddress(accountAddress)
+    ) {
+      toast("You can't subscribe to yourself");
+      return false;
+    }
+
     let canUnSubcribe = false; // if user is following -> true, if user is not following -> false
     if (await handleCheckSubcribed(creator)) {
       const res = await handleUnSubcribe(creator);

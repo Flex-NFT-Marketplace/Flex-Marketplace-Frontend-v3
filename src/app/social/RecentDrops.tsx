@@ -48,7 +48,7 @@ const RecentDrops = () => {
       <p className="text-2xl uppercase text-shadow-white">Recent drops</p>
       <div className="grid grid-cols-3 gap-x-3 gap-y-8">
         {recentDrops.map((_, index) => {
-          return <RecentDropsImage src={_?.collectible?.avatar} />;
+          return <RecentDropsImage key={index} src={_?.collectible?.avatar} />;
         })}
 
         {recentDrops.length > 0 &&
@@ -57,6 +57,7 @@ const RecentDrops = () => {
               return (
                 <div ref={lastProductElementRef} key={index}>
                   <ImageKit
+                    key={index}
                     src={drop?.collectible?.avatar}
                     alt=""
                     className="h-full w-full"
@@ -68,6 +69,7 @@ const RecentDrops = () => {
             } else {
               return (
                 <ImageKit
+                  key={index}
                   src={drop?.collectible?.avatar}
                   alt=""
                   className="h-full w-full"
@@ -82,6 +84,7 @@ const RecentDrops = () => {
           recentDrops.length == 0 &&
           Array.from({ length: 15 }).map((_, index) => (
             <ImageKit
+              key={index}
               src={""}
               alt=""
               className="h-full w-full"

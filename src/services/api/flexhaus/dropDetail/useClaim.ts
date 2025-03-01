@@ -10,7 +10,7 @@ export const useClaim = () => {
             collectible: collectible,
           }
           );
-          
+          console.log(data);
           return data.data;
        } catch (error) {
             throw error;

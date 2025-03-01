@@ -33,6 +33,9 @@ import useGetUnSecuredCollectible from "../api/flexhaus/social/useGetUnSecuredCo
 import useGetLastedLeaderBoard from "../api/flexhaus/social/useGetLastedLeaderBoard";
 import { RecentLeaderBoard } from "@/app/drophaus/[userAddress]/Leaderboard";
 import { useGetTotalPointByEvent } from "../api/flexhaus/social/useGetTotalPointByEvent";
+import { useGetHighlightCreator } from "../api/flexhaus/social/useGetHighlightCreator";
+import { useGetRandomCreator } from "../api/flexhaus/social/useGetRandomCreator";
+import { useGetMyRankByEvent } from "../api/flexhaus/social/useGetMyRankByEvent";
 
 interface SocialContextProps {
   // Event-related methods
@@ -69,6 +72,9 @@ interface SocialContextProps {
   unSecuredCollectiblesByCreator: IdropDetail[];
   lastedLeaderboardByEvent: RecentLeaderBoard[];
   totalPointByEvent: number;
+  highlightCreator: IProfileStaging[];
+  randomCreator: IProfileStaging[];
+  myRankByEvent: number;
 }
 
 const SocialContext = createContext<SocialContextProps | undefined>(undefined);
@@ -106,6 +112,11 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   const [lastedLeaderboardByEvent, setLastedLeaderboardByEvent] = useState<
     RecentLeaderBoard[]
   >([]);
+  const [highlightCreator, setHighlightCreator] = useState<IProfileStaging[]>(
+    []
+  );
+  const [myRankByEvent, setMyRankByEvent] = useState<number>(0);
+  const [randomCreator, setRandomCreator] = useState<IProfileStaging[]>([]);
   const [totalPointByEvent, setTotalPointByEvent] = useState<number>(0);
   const [showProfile, setShowProfile] = useState<IProfileStaging | null>(null);
   const [creatorsSuggestion, setCreatorsSuggestion] = useState<
@@ -160,6 +171,9 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   const _getProfile = useGetProfile();
   const _donate = useDonate();
   const _getPointByEvent = useGetTotalPointByEvent();
+  const _getHighlightCreator = useGetHighlightCreator();
+  const _getRandomCreator = useGetRandomCreator();
+  const _getMyRankByEvent = useGetMyRankByEvent();
 
   // Handlers
   const handleCreateNewEvent = async (
@@ -281,6 +295,33 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const handleGetHighlightCreator = async (): Promise<void> => {
+    try {
+      const creators = await _getHighlightCreator.mutateAsync();
+      setHighlightCreator(creators);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetRandomCreator = async (): Promise<void> => {
+    try {
+      const creators = await _getRandomCreator.mutateAsync();
+      setRandomCreator(creators);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetMyRankByEvent = async (eventId: string): Promise<void> => {
+    try {
+      const rank = await _getMyRankByEvent.mutateAsync(eventId);
+      setMyRankByEvent(rank);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const reloadPerks = async () => {
     if (address) handleGetPeakByCreator(address);
   };
@@ -371,7 +412,8 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     handleGetPointByEvent(perks?._id as string);
-  }, [perks]);
+    if (address) handleGetMyRankByEvent(perks?._id as string);
+  }, [perks, address]);
 
   useEffect(() => {
     const creatorsArr =
@@ -380,6 +422,11 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
       ) || [];
     setCreatorsSuggestion(creatorsArr);
   }, [creators]);
+
+  useEffect(() => {
+    handleGetHighlightCreator();
+    handleGetRandomCreator();
+  }, []);
 
   // Context Value
   const value: SocialContextProps = {
@@ -403,6 +450,9 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     unSecuredCollectiblesByCreator,
     lastedLeaderboardByEvent,
     totalPointByEvent,
+    highlightCreator,
+    randomCreator,
+    myRankByEvent,
   };
 
   return (

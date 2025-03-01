@@ -59,7 +59,7 @@ export type ISet = {
 
 export type ICollectibleState = {
     _id: string,
-    user: string,
+    user: IProfileStaging,
     collectible: ICollectible
     isSecured: boolean,
     isDistributed: boolean,
