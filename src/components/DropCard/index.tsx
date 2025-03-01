@@ -105,7 +105,10 @@ const DropCard: React.FC<DropCardProps> = ({ drop }) => {
                 Protect - {drop?.secureAmount}
               </p>
             </div>
-          </div>
+            <div className="bg-primary/15 group-hover:grid px-4 py-[2px] rounded-md text-primary w-fit h-fit hidden place-items-center border border-primary">
+              <p className="text-[14px] font-bold">Buy now</p>
+            </div>
+          </>
         )}
         <div className="flex items-center gap-1 text-grays">
           <MdOutlineLocalFireDepartment className="text-danger" />
