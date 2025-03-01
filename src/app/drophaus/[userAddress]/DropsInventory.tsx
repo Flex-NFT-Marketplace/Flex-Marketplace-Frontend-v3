@@ -1,7 +1,6 @@
-import DropCard from "@/components/DropCard";
-import SetCard from "@/components/SetCard";
 import { useSocial } from "@/services/providers/SocialProvider";
-import { useState } from "react";
+import DropList from "./DropList";
+import { FilterDrops } from "./NewsFeed";
 
 enum DropsInventoryEnum {
   UNPROTECTED = "Unprotected",
@@ -9,15 +8,21 @@ enum DropsInventoryEnum {
   ALL = "All",
 }
 
-const DropsInventory = () => {
-  const [activeTab, setActiveTab] = useState<string>(
-    DropsInventoryEnum.UNPROTECTED
-  );
+interface DropsInventoryProps {
+  filterDrops: FilterDrops;
+}
 
-  const { dropsByCreator } = useSocial();
+const DropsInventory: React.FC<DropsInventoryProps> = ({ filterDrops }) => {
+  const {
+    onGoingDropsByCreator,
+    upcomingDropsByCreator,
+    distributedDropsByCreator,
+    securedCollectiblesByCreator,
+    unSecuredCollectiblesByCreator,
+  } = useSocial();
 
   return (
-    <div>
+    <div className="flex flex-col gap-8 px-5 py-4">
       {/* <div className="flex items-center gap-2 font-bold uppercase">
         <p className="text-3xl font-normal text-grays">{`<`}</p>
         <p
@@ -42,10 +47,11 @@ const DropsInventory = () => {
         </p>
         <p className="text-3xl font-normal text-grays">{`>`}</p>
       </div> */}
-      {dropsByCreator.length <= 0 && (
+
+      {/* {dropsByCreator.length <= 0 && (
         <p className="text-grays">No drops found</p>
       )}
-      <div className="mt-6 gap-4 grid grid-cols-3 max-[1350px]:grid-cols-2 max-xl:grid-cols-3 max-[950px]:grid-cols-2 max-md:grid-cols-3 max-sm:grid-cols-2 [@media_(max-width:500px)]:grid-cols-1">
+      <div className="gap-4 grid grid-cols-3 max-[1350px]:grid-cols-2 max-xl:grid-cols-3 max-[950px]:grid-cols-2 max-md:grid-cols-3 max-sm:grid-cols-2 [@media_(max-width:500px)]:grid-cols-1">
         {dropsByCreator.map((drop, index) => {
           return (
             <DropCard
@@ -54,12 +60,23 @@ const DropsInventory = () => {
             />
           );
         })}
-        <SetCard
-          contractAddress={
-            "0x04f6304c4833c634a446783f210aebfb0728a8cfeb1b05177e713c5dd535d462"
-          }
-        />
-      </div>
+      </div> */}
+
+      {filterDrops.unprotected && (
+        <DropList title="Unprotected" drops={unSecuredCollectiblesByCreator} />
+      )}
+      {filterDrops.protected && (
+        <DropList title="Protected" drops={securedCollectiblesByCreator} />
+      )}
+      {filterDrops.upcoming && (
+        <DropList title="Upcoming" drops={upcomingDropsByCreator} />
+      )}
+      {filterDrops.ongoing && (
+        <DropList title="On-going" drops={onGoingDropsByCreator} />
+      )}
+      {filterDrops.distributed && (
+        <DropList title="Distributed" drops={distributedDropsByCreator} />
+      )}
     </div>
   );
 };

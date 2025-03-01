@@ -19,14 +19,6 @@ import { toast } from "react-toastify";
 import { useAccountContext } from "@/services/providers/AccountProvider";
 
 const Drop = () => {
-  const srcList = [
-    "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSC4DtHTGprsp7K8u0ZlfSDmIDplvQYH5vniT0I3rpcl6wqBh8b",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Golden_tabby_and_white_kitten_n01.jpg/1200px-Golden_tabby_and_white_kitten_n01.jpg",
-    "https://cdnphoto.dantri.com.vn/COm1qksauO2sqAC-gVVI2DdH_1I=/thumb_w/1020/2023/01/24/khoa-hocdocx-1674520013659.png",
-    "https://image.baophapluat.vn/1200x630/Uploaded/2024/aeg-azonlde/2023_01_24/anh-nen-dien-thoai-cute-con-meo-de-thuong-mien-phi-tai-3-8131.jpg",
-    "https://mekoong.com/wp-content/uploads/2022/10/in-cat_in_glasses.jpg",
-  ];
-
   const [activeSrc, setActiveSrc] = useState<number>(0);
   const [mainColor, setMainColor] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -140,22 +132,6 @@ const Drop = () => {
     };
   };
 
-  // Hàm bắt đầu interval
-  const startInterval = () => {
-    if (intervalRef.current === null) {
-      intervalRef.current = setInterval(() => {
-        setActiveSrc((prev) => (prev === srcList.length - 1 ? 0 : prev + 1));
-      }, 2500);
-    }
-  };
-
-  const stopInterval = () => {
-    if (intervalRef.current !== null) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
   const handleClaimCollectible = async () => {
     try {
       setIsLoadingClaim(true);
@@ -168,30 +144,8 @@ const Drop = () => {
   };
 
   useEffect(() => {
-    startInterval();
-
-    return () => {
-      stopInterval();
-    };
-  }, []);
-
-  useEffect(() => {
     handleScroll(scrollRef);
   }, []);
-
-  useEffect(() => {
-    if (activeSrc !== undefined) {
-      const fac = new FastAverageColor();
-      fac
-        .getColorAsync(srcList[activeSrc])
-        .then((color) => {
-          setMainColor(color.hex);
-        })
-        .catch((error) => {
-          console.error("Error getting average color:", error);
-        });
-    }
-  }, [activeSrc]);
 
   useEffect(() => {
     if (dropDetail) {
@@ -219,11 +173,7 @@ const Drop = () => {
 
   return (
     <div className="fixed-height-under-header mx-auto flex w-full max-w-[1440px] gap-9 bg-opacity-85 pt-8">
-      <div
-        className="flex h-fit w-full max-w-[465px] flex-col gap-4"
-        onMouseEnter={stopInterval}
-        onMouseLeave={startInterval}
-      >
+      <div className="flex h-fit w-full max-w-[465px] flex-col gap-4">
         <div className="relative overflow-visible rounded-lg">
           <div
             className="absolute left-0 top-0 -z-[1] h-[100%] w-[100%] blur-2xl brightness-75"
@@ -340,7 +290,7 @@ const Drop = () => {
 
         {dropDetail.dropType.toLowerCase() ==
           DropTypeEnum.PROTECTED.toLowerCase() && (
-          <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
+          <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] rounded-lg p-6">
             <div className="flex w-full items-center justify-between py-1 text-base font-bold uppercase leading-5">
               <p className="text-gray">Protect this collectible</p>
               <p className="text-white">{timeLeft}</p>
@@ -356,7 +306,7 @@ const Drop = () => {
               }
               title={`${isSecured ? "Protected" : "Protect"} - ${dropDetail.secureAmount}`}
               variant="primary"
-              className="w-full rounded-none py-3 capitalize"
+              className="w-full py-3 capitalize"
             />
             {/* <div className="bg-conic-gradient w-full cursor-pointer p-[1px] duration-700 active:scale-95 disabled:pointer-events-none disabled:opacity-50">
             <div className="w-full rounded-none !bg-[#232733] py-1.5 text-center text-base font-bold capitalize leading-5 text-white">
@@ -366,7 +316,7 @@ const Drop = () => {
           </div>
         )}
 
-        {dropDetail.dropType.toLowerCase() == DropTypeEnum.FREE.toLowerCase() &&
+        {/* {dropDetail.dropType.toLowerCase() == DropTypeEnum.FREE.toLowerCase() &&
           // drop is expiryTime
           (new Date().getTime() > dropDetail.set?.expiryTime ? (
             <div className="flex w-full flex-col gap-4 border border-[#3A3A3C] p-6">
@@ -390,7 +340,7 @@ const Drop = () => {
                 <p className="text-white">{timeLeft}</p>
               </div>
             </div>
-          ))}
+          ))} */}
 
         <div className="flex flex-col gap-4">
           <div className="flex gap-1 border-b border-[#3A3A3C] pb-3 text-[20px] font-bold uppercase leading-6">
@@ -398,15 +348,15 @@ const Drop = () => {
             <p>(3)</p>
           </div>
           <div className="grid w-full grid-cols-3 gap-2">
-            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
+            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] rounded-lg px-4 py-2 text-base font-bold uppercase leading-5">
               <p className="text-gray">Name</p>
               <p className="text-white">{dropDetail.collectible.name}</p>
             </div>
-            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
+            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] rounded-lg px-4 py-2 text-base font-bold uppercase leading-5">
               <p className="text-gray">Rarity</p>
               <p className="text-white">{dropDetail.collectible.rarity}</p>
             </div>
-            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] px-4 py-2 text-base font-bold uppercase leading-5">
+            <div className="flex w-full flex-col gap-1 border border-[#3A3A3C] rounded-lg px-4 py-2 text-base font-bold uppercase leading-5">
               <p className="text-gray">Drop amount</p>
               <p className="text-white">{dropDetail.collectible.dropAmount}</p>
             </div>

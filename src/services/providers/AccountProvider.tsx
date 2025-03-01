@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import ModalV2 from "@/packages/@ui-kit/Modal/ModelV2";
 import EditProfileModel from "@/app/account/[address]/EditProfileModel";
 import { useModal } from "@/packages/@ui-kit/Modal/useModal";
+import { useGetTotalSubscribing } from "../api/flexhaus/social/useGetTotalSubscribing";
 
 interface AccountContextType {
   nfts: IStagingNftResponse[];
@@ -43,6 +44,7 @@ interface AccountContextType {
   dropsDistributed: ICollectibleState[];
   reloadInfoOwner: () => Promise<void>;
   toggleEditProfile: () => void;
+  handleGetTotalSubscribing: (creator: string) => Promise<number>;
 }
 
 export const AccountContext = createContext<AccountContextType | undefined>(
@@ -93,7 +95,7 @@ export const AccountProvider = ({
     data: nftsOwnerRepsonse,
     isLoading,
     fetchNextPage: fetchNextPageInventory,
-  } = useGetNftsByOwner(accountAddress as string);
+  } = useGetNftsByOwner(address as string);
 
   const getListingByOwner = async () => {
     if (!address) return;
@@ -260,6 +262,14 @@ export const AccountProvider = ({
     return await _getTotalSub.mutateAsync(creator);
   };
 
+  const _getTotalSubscribing = useGetTotalSubscribing();
+  const handleGetTotalSubscribing = async (
+    creator: string
+  ): Promise<number> => {
+    if (!creator) return 0;
+    return await _getTotalSubscribing.mutateAsync(creator);
+  };
+
   useEffect(() => {
     getNftsOfOwner();
   }, [nftsOwnerRepsonse]);
@@ -293,6 +303,7 @@ export const AccountProvider = ({
     dropsDistributed,
     reloadInfoOwner,
     toggleEditProfile,
+    handleGetTotalSubscribing,
   };
 
   return (

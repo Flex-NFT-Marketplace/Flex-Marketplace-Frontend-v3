@@ -1,12 +1,53 @@
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useSocial } from "@/services/providers/SocialProvider";
 import { ILeaderboardItem } from "@/types/Iperks";
-import { strShortAddress } from "@/utils/string";
+import { formatTimestamp, strShortAddress } from "@/utils/string";
 import { useState } from "react";
 import avtDefault from "@/assets/avtDefault.webp";
+import { IProfileStaging } from "@/types/IStagingNft";
+import { MdCardGiftcard } from "react-icons/md";
 
+// {
+//   "_id": "67c2cce2a5479a6000347420",
+//   "user": {
+//     "_id": "66a545470d71decd48a449ad",
+//     "username": "0x00ed159a749f4de53f63da3ee86e8fc307e4b0d177e4ffafa837a6c9b5eaf3b0",
+//     "address": "0x00ed159a749f4de53f63da3ee86e8fc307e4b0d177e4ffafa837a6c9b5eaf3b0",
+//     "isVerified": false
+//   },
+//   "creator": {
+//     "_id": "666edb0712a8649931418e79",
+//     "username": "0x05c32277f853fd1e7219975889bc6088e823922676a344907af0d8b1e5e533ee",
+//     "address": "0x05c32277f853fd1e7219975889bc6088e823922676a344907af0d8b1e5e533ee",
+//     "isVerified": false,
+//     "about": "ehehe",
+//     "avatar": "https://flex-marketplace.s3.us-east-1.amazonaws.com/warpcast/ipfs/67bf027006395880672d6b39.webp",
+//     "socials": {
+//       "website": "website.com"
+//     }
+//   },
+//   "event": "67c2ccc7a5479a60003473fa",
+//   "amount": 1,
+//   "donatedAt": 1740819682543,
+//   "createdAt": "2025-03-01T09:01:22.549Z",
+//   "updatedAt": "2025-03-01T09:01:22.549Z",
+//   "__v": 0
+// },
+export interface RecentLeaderBoard {
+  _id: string;
+  creator: IProfileStaging;
+  event: string;
+  amount: number;
+  donatedAt: number;
+  createdAt: string;
+  updatedAt: string;
+}
 interface RankCardProps {
   leaderboardItem: ILeaderboardItem;
+}
+
+interface RecentLeaderBoardProps {
+  leaderboardItem: RecentLeaderBoard;
 }
 
 const RankCard: React.FC<RankCardProps> = ({ leaderboardItem }) => {
@@ -41,16 +82,46 @@ const RankCard: React.FC<RankCardProps> = ({ leaderboardItem }) => {
   };
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center gap-20">
       <div className="flex items-center gap-4">
         {getRank(leaderboardItem.rank)}
         <div className="flex items-center gap-3">
-          <ImageKit src={avtDefault.src} className="w-12 h-12" />
+          <ImageKit
+            src={leaderboardItem.creator.avatar || avtDefault.src}
+            className="w-12 h-12"
+          />
           <div className="flex flex-col">
             <p className="font-bold">
               {strShortAddress(leaderboardItem.user.address)}
             </p>
             <p className="">{strShortAddress(leaderboardItem.user.address)}</p>
+          </div>
+        </div>
+      </div>
+      <p>{leaderboardItem.amount} BYTE</p>
+    </div>
+  );
+};
+
+const RecentCard: React.FC<RecentLeaderBoardProps> = ({ leaderboardItem }) => {
+  return (
+    <div className="flex justify-between items-center gap-20">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <ImageKit
+            src={leaderboardItem.creator.avatar || avtDefault.src}
+            className="w-12 h-12"
+          />
+          <div className="flex flex-col h-full justify-between">
+            <p className="font-bold">
+              {strShortAddress(leaderboardItem?.creator?.address)}
+            </p>
+            <p className="">
+              {formatTimestamp(
+                new Date(leaderboardItem.createdAt).getTime() / 1000,
+                false
+              )}
+            </p>
           </div>
         </div>
       </div>
@@ -66,34 +137,57 @@ const TabsEnum = {
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState(TabsEnum.TOP_SUPPORTERS);
-  const { leaderboardByEvent } = useSocial();
+  const { leaderboardByEvent, lastedLeaderboardByEvent, totalPointByEvent } =
+    useSocial();
 
   return (
-    <div className="px-5 py-4">
-      {/* <div className="flex gap-5">
-        <div className="flex flex-col gap-3">
-          <p className="uppercase font-bold">36k BYTE</p>
+    <div className="flex flex-col px-5 py-4 ">
+      <div className="flex gap-5 mb-8">
+        <div className="flex flex-col flex-1 gap-3 border border-border bg-hover p-4 rounded-lg">
+          <p className="uppercase font-bold">{totalPointByEvent} BYTE</p>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green rounded shadow-[0_0_8px_#00FF00]"></div>
+            <p>On-going</p>
+          </div>
         </div>
-      </div> */}
+        <div className="flex flex-[3] flex-col gap-3 border border-border bg-hover p-4 rounded-lg">
+          <p className="uppercase font-bold">my supports</p>
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green rounded shadow-[0_0_8px_#00FF00]"></div>
+              <p>Current rank {"N/A"}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <MdCardGiftcard />
+              <p>BYTES {"N/A"}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {/* <div className="uppercase flex gap-6 py-4 border-b border-border">
-        {Object.values(TabsEnum).map((tab, index) => (
-          <p
-            onClick={() => setActiveTab(tab)}
-            key={index}
-            className={`${activeTab !== tab && "text-grays"} cursor-pointer`}
-          >
-            {tab}
-          </p>
-        ))}
-      </div> */}
-      {leaderboardByEvent.length <= 0 && (
-        <p className="text-grays">No leaderboard found</p>
-      )}
-      <div className="py-4 flex flex-col gap-3">
-        {leaderboardByEvent.map((item, index) => {
-          return <RankCard leaderboardItem={item} key={index} />;
-        })}
+      <div className="flex md:justify-between gap-20 max-md:flex-col">
+        <div className="flex-1">
+          <p className="uppercase font-bold mb-4">Ranking</p>
+          {leaderboardByEvent.length <= 0 && (
+            <p className="text-grays">No leaderboard found</p>
+          )}
+          <div className="py-4 flex flex-col gap-3">
+            {leaderboardByEvent.map((item, index) => {
+              return <RankCard leaderboardItem={item} key={index} />;
+            })}
+          </div>
+        </div>
+        <div>
+          <p className="uppercase font-bold mb-4">Latest supporters</p>
+          {lastedLeaderboardByEvent.length <= 0 && (
+            <p className="text-grays">No recent leaderboard found</p>
+          )}
+          <div className="py-4 flex flex-col gap-3">
+            {lastedLeaderboardByEvent.map((item, index) => {
+              return <RecentCard leaderboardItem={item} key={index} />;
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

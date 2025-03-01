@@ -25,8 +25,8 @@ import { toast } from "react-toastify";
 export const backgroundColors: { [key: string]: string } = {
   common: "#d3d3d3",
   rare: "#add8e6",
-  legendary: "#ffd700",
-  ultimate: "#ff4500",
+  legendary: "#FF9F0A",
+  ultimate: "#FF2D55",
 };
 
 export function getBackgroundColor(value: string) {

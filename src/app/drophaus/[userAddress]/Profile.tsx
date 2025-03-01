@@ -47,12 +47,14 @@ const Profile = () => {
   const { token } = useAuth();
   const [loadingSubcribe, setLoadingSubcribe] = useState(false);
   const [totalSub, setTotalSub] = useState<number>(0);
+  const [totalSubscribing, setTotalSubscribing] = useState<number>(0);
 
   const {
     toggleSubcribe,
     handleCheckSubcribed,
     handleGetTotalSub,
     toggleEditProfile,
+    handleGetTotalSubscribing,
   } = useAccountContext();
 
   const { perks, isOwner, showProfile } = useSocial();
@@ -153,12 +155,21 @@ const Profile = () => {
     setTotalSub(totalSub);
   };
 
+  const getTotalSubscribing = async () => {
+    if (!showProfile) return;
+    const totalSubscribing = await handleGetTotalSubscribing(
+      showProfile.address as string
+    );
+    setTotalSubscribing(totalSubscribing);
+  };
+
   useEffect(() => {
     checkSubscription();
   }, [address, token, userAddress]);
 
   useEffect(() => {
     getTotalSub();
+    getTotalSubscribing();
   }, [showProfile]);
 
   return (
@@ -179,16 +190,18 @@ const Profile = () => {
                 src={showProfile?.avatar ? showProfile?.avatar : avtDefault.src}
                 className="aspect-square w-[96px] rounded-lg"
               />
-              <Link
-                href={`/drophaus/${showProfile?.address}`}
-                className="flex w-full flex-col gap-1"
-              >
+              <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <h4 className="text-[24px] font-bold uppercase leading-7">
+                  <Link
+                    href={`/drophaus/${showProfile?.address}`}
+                    className="text-[24px] font-bold uppercase leading-7"
+                  >
                     {strShortAddress(showProfile?.address as string)}
-                  </h4>
+                  </Link>
                   <TbRosetteDiscountCheckFilled className="text-[#63B1FF]" />
-                  {/* <VscArrowSwap className="text-white" /> */}
+                  <Link href={`/account/${showProfile?.address}`}>
+                    <VscArrowSwap className="text-white cursor-pointer" />
+                  </Link>
                 </div>
                 <div className="divide-gray flex flex-col gap-4">
                   <div className="flex gap-2">
@@ -205,7 +218,7 @@ const Profile = () => {
                     </div>
                     <div className="flex gap-2">
                       <p className="text-gray">Subscribing</p>
-                      <p>140K</p>
+                      <p>{totalSubscribing}</p>
                     </div>
                     <div className="flex gap-2">
                       <p className="text-gray">Total Support</p>
@@ -213,7 +226,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             </div>
             {!isOwner && (
               <div className="flex gap-2">

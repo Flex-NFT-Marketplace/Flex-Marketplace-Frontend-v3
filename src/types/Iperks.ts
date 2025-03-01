@@ -1,4 +1,5 @@
 import { ICreator } from "./Idrop"
+import { IProfileStaging } from "./IStagingNft"
 
 export type IPerks = {
     _id: string,
@@ -34,7 +35,7 @@ export type INonce = {
 export type ILeaderboardItem = {
    amount: number,
    event: string,
-   creator: string,
+   creator: IProfileStaging,
    rank: number,
    user: ICreator
 }

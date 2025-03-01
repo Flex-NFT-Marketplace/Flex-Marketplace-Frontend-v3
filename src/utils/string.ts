@@ -58,17 +58,23 @@ export const convertEtherToWei = (ether: string | number) => {
   return ethers.utils.parseEther(ether.toString()).toString();
 };
 
-export function formatTimestamp(timestamp: number | undefined): string {
+export function formatTimestamp(timestamp: number | undefined, showTime: boolean = true): string {
   if (timestamp === undefined) {
     return "N/A";
   }
+
   const date = new Date(timestamp * 1000);
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // +1 because getMonth() returns 0-11
   const year = date.getFullYear();
-  return `${hours}:${minutes} ${day}/${month}/${year}`;
+
+  if (showTime) {
+    return `${hours}:${minutes} ${day}/${month}/${year}`;
+  } else {
+    return `${day}/${month}/${year}`;
+  }
 }
 
 export function calculateTimeDifferenceShort(targetTime: string): string {

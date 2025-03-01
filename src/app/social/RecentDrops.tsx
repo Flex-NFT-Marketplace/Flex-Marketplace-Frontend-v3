@@ -1,5 +1,5 @@
 import ImageKit from "@/packages/@ui-kit/Image";
-import useGetRecentDrops from "@/services/api/flexhaus/social/useGetRecentDrops";
+import useGetDrops from "@/services/api/flexhaus/social/useGetDrops";
 import { IdropDetail } from "@/types/Idrop";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -11,7 +11,10 @@ const RecentDrops = () => {
     hasNextPage: hasNextRecentDrops,
     fetchNextPage: fetchNextRecentDrops,
     isFetching: isFetchingRecentDrops,
-  } = useGetRecentDrops();
+  } = useGetDrops({
+    size: 10,
+    filterBy: "ongoing",
+  });
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -43,24 +46,13 @@ const RecentDrops = () => {
     <div className="w-full font-bold mx-auto  max-w-[1440px] flex flex-col gap-8">
       <p className="text-2xl uppercase text-shadow-white">Recent drops</p>
       <div className="grid grid-cols-3 gap-x-3 gap-y-8">
-        {recentDrops.map((_, index) => {
-          return (
-            <ImageKit
-              src={_?.collectible?.avatar}
-              alt=""
-              className="h-full w-full"
-              width={445}
-              height={445}
-            />
-          );
-        })}
-
         {recentDrops.length > 0 &&
           recentDrops.map((drop, index) => {
             if (recentDrops.length === index + 1) {
               return (
                 <div ref={lastProductElementRef} key={index}>
                   <ImageKit
+                    key={index}
                     src={drop?.collectible?.avatar}
                     alt=""
                     className="h-full w-full"
@@ -72,6 +64,7 @@ const RecentDrops = () => {
             } else {
               return (
                 <ImageKit
+                  key={index}
                   src={drop?.collectible?.avatar}
                   alt=""
                   className="h-full w-full"
@@ -81,18 +74,6 @@ const RecentDrops = () => {
               );
             }
           })}
-
-        {isFetchingRecentDrops &&
-          recentDrops.length == 0 &&
-          Array.from({ length: 15 }).map((_, index) => (
-            <ImageKit
-              src={""}
-              alt=""
-              className="h-full w-full"
-              width={445}
-              height={445}
-            />
-          ))}
 
         {!isFetchingRecentDrops && recentDrops.length == 0 && (
           <p className="text-sm text-gray-500">No recent drops</p>

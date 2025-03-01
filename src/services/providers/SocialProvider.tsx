@@ -6,26 +6,36 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useCreateNewEvent } from "../api/flexhaus/social/useCreateNewEvent";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { useAccount } from "@starknet-react/core";
-import { ILeaderboardItem, IPerks } from "@/types/Iperks";
-import { useGetPeakByCreator } from "../api/flexhaus/social/useGetPeakByCreator";
-import { useUpdateEvent } from "../api/flexhaus/social/useUpdateEvent";
-import { ICreator, IdropDetail } from "@/types/Idrop";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 import { formattedContractAddress } from "@/utils/string";
+import { useAccountContext } from "./AccountProvider";
+
+// API Hooks
+import { useCreateNewEvent } from "../api/flexhaus/social/useCreateNewEvent";
+import { useUpdateEvent } from "../api/flexhaus/social/useUpdateEvent";
 import useGetCollectibles from "../api/flexhaus/social/useGetCollectibleByOwner";
 import useGetLeaderboardByEvent from "../api/flexhaus/social/useGetLeaderboardByEvent";
-import { IProfileStaging } from "@/types/IStagingNft";
+import { useGetPeakByCreator } from "../api/flexhaus/social/useGetPeakByCreator";
 import { useGetProfile } from "../api/useGetProfile";
 import useGetCreatorsSuggestion from "../api/flexhaus/social/useGetCreatorsSuggestion";
 import { useDonate } from "../api/flexhaus/social/useDonate";
-import { useAccountContext } from "./AccountProvider";
-import { toast } from "react-toastify";
-import useGetRecentDrops from "../api/flexhaus/social/useGetRecentDrops";
+import useGetSets from "../api/flexhaus/social/useGetSets";
+
+// Types
+import { ILeaderboardItem, IPerks } from "@/types/Iperks";
+import { IdropDetail, ISet } from "@/types/Idrop";
+import { IProfileStaging } from "@/types/IStagingNft";
+import useGetDrops from "../api/flexhaus/social/useGetDrops";
+import useGetSecuredCollectible from "../api/flexhaus/social/useGetSecuredCollectible";
+import useGetUnSecuredCollectible from "../api/flexhaus/social/useGetUnSecuredCollectible";
+import useGetLastedLeaderBoard from "../api/flexhaus/social/useGetLastedLeaderBoard";
+import { RecentLeaderBoard } from "@/app/drophaus/[userAddress]/Leaderboard";
+import { useGetTotalPointByEvent } from "../api/flexhaus/social/useGetTotalPointByEvent";
 
 interface SocialContextProps {
+  // Event-related methods
   handleCreateNewEvent: (
     startTime: number,
     snapshotTime: number,
@@ -37,13 +47,28 @@ interface SocialContextProps {
     snapshotTime: number,
     perks: string
   ) => Promise<IPerks | null>;
+  handleDonate: (creator: string, amount: number) => Promise<void>;
+
+  // Data
   perks: IPerks | null;
   isOwner: boolean;
   dropsByCreator: IdropDetail[];
   leaderboardByEvent: ILeaderboardItem[];
   showProfile: IProfileStaging | null;
   creatorsSuggestion: IProfileStaging[];
-  handleDonate: (creator: string, amount: number) => Promise<void>;
+  setsByCreator: ISet[];
+
+  // Sets pagination & fetching
+  setsHasNextPage: boolean | undefined;
+  fetchNextPageSets: () => void;
+  isFetchingSets: boolean;
+  onGoingDropsByCreator: IdropDetail[];
+  upcomingDropsByCreator: IdropDetail[];
+  distributedDropsByCreator: IdropDetail[];
+  securedCollectiblesByCreator: IdropDetail[];
+  unSecuredCollectiblesByCreator: IdropDetail[];
+  lastedLeaderboardByEvent: RecentLeaderBoard[];
+  totalPointByEvent: number;
 }
 
 const SocialContext = createContext<SocialContextProps | undefined>(undefined);
@@ -57,37 +82,86 @@ export const useSocial = () => {
 };
 
 const SocialProvider = ({ children }: { children: ReactNode }) => {
-  const { address } = useAccount();
-  const { userAddress } = useParams();
+  // State
   const [perks, setPerks] = useState<IPerks | null>(null);
   const [dropsByCreator, setDropsByCreator] = useState<IdropDetail[]>([]);
+  const [onGoingDropsByCreator, setOnGoingDropsByCreator] = useState<
+    IdropDetail[]
+  >([]);
+  const [upcomingDropsByCreator, setUpcomingDropsByCreator] = useState<
+    IdropDetail[]
+  >([]);
+  const [distributedDropsByCreator, setDistributedDropsByCreator] = useState<
+    IdropDetail[]
+  >([]);
+  const [securedCollectiblesByCreator, setSecuredCollectiblesByCreator] =
+    useState<IdropDetail[]>([]);
+  const [unSecuredCollectiblesByCreator, setUnSecuredCollectiblesByCreator] =
+    useState<IdropDetail[]>([]);
+  const [setsByCreator, setSetsByCreator] = useState<ISet[]>([]);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [leaderboardByEvent, setLeaderboardByEvent] = useState<
     ILeaderboardItem[]
   >([]);
+  const [lastedLeaderboardByEvent, setLastedLeaderboardByEvent] = useState<
+    RecentLeaderBoard[]
+  >([]);
+  const [totalPointByEvent, setTotalPointByEvent] = useState<number>(0);
   const [showProfile, setShowProfile] = useState<IProfileStaging | null>(null);
   const [creatorsSuggestion, setCreatorsSuggestion] = useState<
     IProfileStaging[]
   >([]);
+
+  // Hooks
+  const { address } = useAccount();
+  const { userAddress } = useParams();
   const { profileOwner } = useAccountContext();
 
+  // API Queries
   const {
     data: drops,
-    hasNextPage,
-    fetchNextPage,
-    isLoading,
-    isFetching,
+    hasNextPage: dropsHasNextPage,
+    fetchNextPage: fetchNextPageDrops,
   } = useGetCollectibles(userAddress as string);
-
+  const { data: leaderboard } = useGetLeaderboardByEvent(perks?._id as string);
   const {
-    data: leaderboard,
-    hasNextPage: leaderboardHasNextPage,
-    fetchNextPage: fetchNextPageLeaderboard,
-    isLoading: isLoadingLeaderboard,
-    isFetching: isFetchingLeaderboard,
-  } = useGetLeaderboardByEvent(perks?._id as string);
+    data: sets,
+    hasNextPage: setsHasNextPage,
+    fetchNextPage: fetchNextPageSets,
+    isFetching: isFetchingSets,
+  } = useGetSets(userAddress as string);
+  const { data: creators } = useGetCreatorsSuggestion();
+  const { data: onGoingDrop } = useGetDrops({
+    filterBy: "ongoing",
+    creator: userAddress as string,
+  });
+  const { data: upcomingDrop } = useGetDrops({
+    filterBy: "upcoming",
+    creator: userAddress as string,
+  });
+  const { data: distributedDrop } = useGetDrops({
+    filterBy: "distributed",
+    creator: userAddress as string,
+  });
+  const { data: lastedLeaderboard } = useGetLastedLeaderBoard(
+    perks?._id as string
+  );
+  const { data: securedCollectibles } = useGetSecuredCollectible(
+    userAddress as string
+  );
+  const { data: unSecuredCollectibles } = useGetUnSecuredCollectible(
+    userAddress as string
+  );
 
+  // Mutations
   const _createEvent = useCreateNewEvent();
+  const _updateEvent = useUpdateEvent();
+  const _getPeakByCreator = useGetPeakByCreator();
+  const _getProfile = useGetProfile();
+  const _donate = useDonate();
+  const _getPointByEvent = useGetTotalPointByEvent();
+
+  // Handlers
   const handleCreateNewEvent = async (
     startTime: number,
     snapshotTime: number,
@@ -95,9 +169,9 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<IPerks | null> => {
     try {
       const peaksCreated = await _createEvent.mutateAsync({
-        startTime: startTime,
-        snapshotTime: snapshotTime,
-        perks: perks,
+        startTime,
+        snapshotTime,
+        perks,
       });
       await reloadPerks();
       return peaksCreated;
@@ -107,7 +181,6 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const _updateEvent = useUpdateEvent();
   const handleUpdateEvent = async (
     eventId: string,
     startTime: number,
@@ -116,10 +189,10 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<IPerks | null> => {
     try {
       const perksUpdated = await _updateEvent.mutateAsync({
-        eventId: eventId,
-        startTime: startTime,
-        snapshotTime: snapshotTime,
-        perks: perks,
+        eventId,
+        startTime,
+        snapshotTime,
+        perks,
       });
       reloadPerks();
       return perksUpdated;
@@ -129,30 +202,6 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const _getPeakByCreator = useGetPeakByCreator();
-  const handleGetPeakByCreator = async (creator: string) => {
-    try {
-      const peak = await _getPeakByCreator.mutateAsync(creator);
-      setPerks(peak.data);
-    } catch (error) {}
-  };
-
-  const reloadPerks = async () => {
-    if (!address) return;
-    handleGetPeakByCreator(address);
-  };
-
-  const _getProfile = useGetProfile();
-  const handleGetProfile = async (address: string) => {
-    try {
-      const profile = await _getProfile.mutateAsync(address);
-      setShowProfile(profile);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const _donate = useDonate();
   const handleDonate = async (
     creator: string,
     amount: number
@@ -206,26 +255,48 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const { data: creators } = useGetCreatorsSuggestion();
+  const handleGetPeakByCreator = async (creator: string) => {
+    try {
+      const peak = await _getPeakByCreator.mutateAsync(creator);
+      setPerks(peak.data);
+    } catch (error) {}
+  };
 
-  useEffect(() => {
-    let dropsArr: IdropDetail[] = [];
-    drops?.pages.map((page) => {
-      dropsArr = [...dropsArr, ...page.data.items];
+  const handleGetProfile = async (address: string) => {
+    try {
+      const profile = await _getProfile.mutateAsync(address);
+      setShowProfile(profile);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetPointByEvent = async (eventId: string): Promise<void> => {
+    if (!eventId) return;
+    try {
+      const point = await _getPointByEvent.mutateAsync(eventId);
+      setTotalPointByEvent(point);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const reloadPerks = async () => {
+    if (address) handleGetPeakByCreator(address);
+  };
+
+  // Utility
+  const _getCreatorFromCollectibles = (collectibles: IdropDetail[]) => {
+    const creatorMap: Map<string, IProfileStaging> = new Map();
+    collectibles.forEach((collectible) => {
+      if (!creatorMap.has(collectible.creator.address)) {
+        creatorMap.set(collectible.creator.address, collectible.creator);
+      }
     });
+    return Array.from(creatorMap.values());
+  };
 
-    setDropsByCreator(dropsArr);
-  }, [drops]);
-
-  useEffect(() => {
-    let leaderboardArr: ILeaderboardItem[] = [];
-    leaderboard?.pages.map((page) => {
-      leaderboardArr = [...leaderboardArr, ...page.data.items];
-    });
-
-    setLeaderboardByEvent(leaderboardArr);
-  }, [leaderboard]);
-
+  // Effects
   useEffect(() => {
     setPerks(null);
     if (address && userAddress) {
@@ -240,45 +311,98 @@ const SocialProvider = ({ children }: { children: ReactNode }) => {
       handleGetPeakByCreator(address);
       setIsOwner(true);
     } else if (userAddress) {
-      try {
-        handleGetProfile(userAddress as string);
-        handleGetPeakByCreator(userAddress as string);
-        setIsOwner(false);
-      } catch (error) {}
+      handleGetProfile(userAddress as string);
+      handleGetPeakByCreator(userAddress as string);
+      setIsOwner(false);
     }
   }, [userAddress, address]);
 
-  const _getCreatorFromCollectibles = (collectibles: IdropDetail[]) => {
-    const creatorMap: Map<string, IProfileStaging> = new Map();
-    collectibles.map((collectible) => {
-      if (!creatorMap.has(collectible.creator.address)) {
-        creatorMap.set(collectible.creator.address, collectible.creator);
-      }
-    });
-    return Array.from(creatorMap.values());
-  };
+  useEffect(() => {
+    const dropsArr = drops?.pages.flatMap((page) => page.data.items) || [];
+    setDropsByCreator(dropsArr);
+  }, [drops]);
 
   useEffect(() => {
-    let creatorsArr: IProfileStaging[] = [];
-    creators?.pages.map((page) => {
-      creatorsArr = creatorsArr.concat(
-        _getCreatorFromCollectibles(page.data.items)
-      );
-    });
+    const dropsArr =
+      onGoingDrop?.pages.flatMap((page) => page.data.items) || [];
+    setOnGoingDropsByCreator(dropsArr);
+  }, [onGoingDrop]);
 
+  useEffect(() => {
+    const dropsArr =
+      upcomingDrop?.pages.flatMap((page) => page.data.items) || [];
+    setUpcomingDropsByCreator(dropsArr);
+  }, [upcomingDrop]);
+
+  useEffect(() => {
+    const dropsArr =
+      distributedDrop?.pages.flatMap((page) => page.data.items) || [];
+    setDistributedDropsByCreator(dropsArr);
+  }, [distributedDrop]);
+
+  useEffect(() => {
+    const dropsArr =
+      securedCollectibles?.pages.flatMap((page) => page.data.items) || [];
+    setSecuredCollectiblesByCreator(dropsArr);
+  }, [securedCollectibles]);
+
+  useEffect(() => {
+    const dropsArr =
+      unSecuredCollectibles?.pages.flatMap((page) => page.data.items) || [];
+    setUnSecuredCollectiblesByCreator(dropsArr);
+  }, [unSecuredCollectibles]);
+
+  useEffect(() => {
+    const setsArr = sets?.pages.flatMap((page) => page.data.items) || [];
+    setSetsByCreator(setsArr);
+  }, [sets]);
+
+  useEffect(() => {
+    const leaderboardArr =
+      leaderboard?.pages.flatMap((page) => page.data.items) || [];
+    setLeaderboardByEvent(leaderboardArr);
+  }, [leaderboard]);
+
+  useEffect(() => {
+    const leaderboardArr =
+      lastedLeaderboard?.pages.flatMap((page) => page.data.items) || [];
+    setLastedLeaderboardByEvent(leaderboardArr);
+  }, [lastedLeaderboard]);
+
+  useEffect(() => {
+    handleGetPointByEvent(perks?._id as string);
+  }, [perks]);
+
+  useEffect(() => {
+    const creatorsArr =
+      creators?.pages.flatMap((page) =>
+        _getCreatorFromCollectibles(page.data.items)
+      ) || [];
     setCreatorsSuggestion(creatorsArr);
   }, [creators]);
 
-  const value = {
+  // Context Value
+  const value: SocialContextProps = {
     handleCreateNewEvent,
     handleUpdateEvent,
+    handleDonate,
     perks,
     isOwner,
     dropsByCreator,
     leaderboardByEvent,
     showProfile,
     creatorsSuggestion,
-    handleDonate,
+    setsByCreator,
+    setsHasNextPage,
+    fetchNextPageSets,
+    isFetchingSets,
+    onGoingDropsByCreator,
+    upcomingDropsByCreator,
+    distributedDropsByCreator,
+    securedCollectiblesByCreator,
+    unSecuredCollectiblesByCreator,
+    lastedLeaderboardByEvent,
+    totalPointByEvent,
   };
 
   return (

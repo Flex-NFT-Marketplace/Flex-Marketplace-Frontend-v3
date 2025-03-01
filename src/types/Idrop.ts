@@ -51,10 +51,10 @@ export type ISet = {
     _id: string;
     startTime: number;
     expiryTime: number;
-    creator: string;
+    creator: IProfileStaging;
     event: string | null;
     isDistributed: boolean;
-    collectibles: string[];
+    collectibles: ICollectible[];
 }
 
 export type ICollectibleState = {

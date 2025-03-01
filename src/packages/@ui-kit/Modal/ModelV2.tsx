@@ -28,7 +28,7 @@ const ModalV2: React.FC<IModalProps> = (props) => {
   };
 
   const defaultCSS =
-    "fixed left-[50%] top-[50%] z-50 bg-popup !translate-x-[-50%] !translate-y-[-50%] gap-4 shadow-lg duration-200 max-w-[90%]";
+    "fixed left-[50%] top-[50%] z-50 bg-popup !translate-x-[-50%] !translate-y-[-50%] gap-4 shadow-lg duration-200 max-w-[90%] rounded-md ";
   const animationClass = isShow ? "animate-fade-in" : "animate-fade-out";
 
   const classes = clsx(defaultCSS, animationClass, className);

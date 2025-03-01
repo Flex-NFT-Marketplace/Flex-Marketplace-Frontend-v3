@@ -1,6 +1,5 @@
 "use client";
 
-import DropCard from "@/components/DropCard";
 import FormatAddress from "@/components/FormatAddress";
 import ImageKit from "@/packages/@ui-kit/Image";
 import { useRouter } from "next/navigation";
@@ -11,6 +10,7 @@ import badge_check from "@/assets/badge-check.svg";
 import Button from "@/packages/@ui-kit/Button";
 import { useSocial } from "@/services/providers/SocialProvider";
 import RecentDrops from "./RecentDrops";
+import HighlightDrops from "./HighlightDrops";
 
 const Social = () => {
   const router = useRouter();
@@ -29,40 +29,12 @@ const Social = () => {
       setTimeout(() => setCopied(false), 2000); // Reset copied state after delay
     }
   };
-  const onNavigate = (path: string) => {
-    router.push(path);
-  };
-
-  const onNavigateDetail = () => {
-    onNavigate("/activity");
-  };
 
   return (
     <div className="fixed-height-under-header flex w-full flex-col gap-[72px] py-8 overflow-auto">
+      <HighlightDrops />
       <div className="w-full font-bold mx-auto  max-w-[1440px] flex flex-col gap-8">
-        <div className="flex gap-4 items-center">
-          <p className="text-2xl uppercase text-shadow-white">
-            Highlight drops
-          </p>
-          <p
-            onClick={onNavigateDetail}
-            className="font-normal text-grays underline cursor-pointer hover:text-white"
-          >
-            (View all)
-          </p>
-        </div>
-        <div className="flex gap-4 items-center">
-          <DropCard key={null} contractAddress="" />
-          <DropCard key={null} contractAddress="" />
-          <DropCard key={null} contractAddress="" />
-          <DropCard key={null} contractAddress="" />
-          <DropCard key={null} contractAddress="" />
-        </div>
-      </div>
-      <div className="w-full font-bold mx-auto  max-w-[1440px] flex flex-col gap-8">
-        <p className="text-2xl uppercase text-shadow-white">
-          Recent distributed
-        </p>
+        <p className="text-2xl uppercase text-shadow-white">Who to subscribe</p>
         <div className="grid grid-cols-3 gap-5 items-center">
           {Array.from({ length: 6 }).map((_, index) => {
             return (

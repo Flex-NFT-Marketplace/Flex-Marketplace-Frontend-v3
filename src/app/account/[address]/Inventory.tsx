@@ -2,13 +2,9 @@ import CardNFTSkeleton from "@/app/(skeletonLoading)/share/CardNftSkeleton";
 import CardNFT from "@/components/CardNFT";
 import { useAccountContext } from "@/services/providers/AccountProvider";
 import { IStagingNftResponse } from "@/types/IStagingNft";
-import { useAccount } from "@starknet-react/core";
-import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 const Inventory = () => {
-  const { address } = useParams();
-  const { address: accountAddress } = useAccount();
   const { loading, nftsOwner, fetchNextPageInventory } = useAccountContext();
 
   const handleScroll = useCallback(
@@ -32,10 +28,6 @@ const Inventory = () => {
       scrollContainer?.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
-
-  useEffect(() => {
-    console.log(nftsOwner);
-  }, [nftsOwner]);
 
   return (
     <div id="scroll-container" className="p-4  overflow-auto">

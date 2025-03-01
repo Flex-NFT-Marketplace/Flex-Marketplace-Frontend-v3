@@ -9,7 +9,6 @@ import {
 } from "react";
 import { useGetDropDetail } from "../api/flexhaus/dropDetail/useGetDropDetail";
 import { IdropDetail } from "@/types/Idrop";
-import { useToast } from "@/packages/@ui-kit/Toast/ToastProvider";
 import { usePostLike } from "../api/flexhaus/dropDetail/usePostLike";
 import { useDeleteLike } from "../api/flexhaus/dropDetail/useDeleteLike";
 import { useCheckLiked } from "../api/flexhaus/dropDetail/useCheckLiked";
@@ -33,6 +32,8 @@ interface DropDetailContextProps {
   isSecured: boolean;
   secure: (collectible: string) => Promise<void>;
   claim: (collectible: string) => Promise<any>;
+  getTotalLike: (collectionAddress: string) => Promise<number>;
+  checkLiked: (collectible: string) => Promise<boolean>;
 }
 
 const DropDetailContext = createContext<DropDetailContextProps | undefined>(
@@ -119,16 +120,19 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const _checkLiked = useCheckLiked();
-  const checkLiked = async (collectible: string) => {
+  const checkLiked = async (collectible: string): Promise<boolean> => {
     if (address) {
       try {
         const isLiked = await _checkLiked.mutateAsync(collectible);
         setIsLiked(isLiked);
+        return isLiked;
       } catch (error) {
         toast("Something went wrong");
+        return false;
       }
     } else {
       setIsLiked(false);
+      return false;
     }
   };
 
@@ -141,9 +145,10 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const _getTotalLike = useGetTotalLike();
-  const getTotalLike = async (collectionAddress: string) => {
+  const getTotalLike = async (collectionAddress: string): Promise<number> => {
     const totalLike = await _getTotalLike.mutateAsync(collectionAddress);
     setTotalLike(totalLike);
+    return totalLike;
   };
 
   const _checkSecured = useCheckSecured();
@@ -223,6 +228,8 @@ const DropDetailProvider = ({ children }: { children: ReactNode }) => {
     isSecured,
     secure,
     claim,
+    getTotalLike,
+    checkLiked,
   };
 
   return (

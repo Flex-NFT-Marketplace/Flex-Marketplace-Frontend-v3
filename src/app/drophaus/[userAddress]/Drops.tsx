@@ -23,8 +23,7 @@ const DropsTab = () => {
           </p>
         ))}
       </div> */}
-      {activeTab === DropsTabEnum.INVENTORY && <DropsInventory />}
-      {activeTab === DropsTabEnum.CREATE && <div>Create</div>}
+      {/* {activeTab === DropsTabEnum.INVENTORY && <DropsInventory />} */}
     </div>
   );
 };
