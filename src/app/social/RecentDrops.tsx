@@ -2,8 +2,6 @@ import ImageKit from "@/packages/@ui-kit/Image";
 import useGetDrops from "@/services/api/flexhaus/social/useGetDrops";
 import { IdropDetail } from "@/types/Idrop";
 import { useCallback, useEffect, useRef, useState } from "react";
-import badge_check from "@/assets/badge-check.svg";
-import { IoIosAddCircle } from "react-icons/io";
 import RecentDropsImage from "./RecentDropsImage";
 
 const RecentDrops = () => {
