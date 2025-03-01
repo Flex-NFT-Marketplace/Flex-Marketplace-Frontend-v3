@@ -91,7 +91,7 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
   return (
     <Link
       href={`/drop-detail/${dropDetail?.collectible?.nftContract}`}
-      className="flex flex-col gap-5 border border-dashed border-line bg-hover/50 hover:bg-hover p-4 transition-all rounded-lg"
+      className="flex group flex-col gap-5 border border-dashed border-line bg-hover/50 hover:bg-hover p-4 transition-all rounded-lg"
     >
       <div className="relative">
         <ImageKit
@@ -106,22 +106,30 @@ const DropCard: React.FC<DropCardProps> = ({ contractAddress }) => {
           ></div>
           <p className="font-bold">{timeLeft}</p>
         </div>
+        <div className="absolute right-2 font-bold -bottom-2 flex items-center gap-2 border border-dark-black rounded bg-secondary text-black uppercase py-1 px-3">
+          Legendary
+        </div>
       </div>
       <div>
-        <p className="font-bold uppercase">{dropDetail?.collectible?.name}</p>
+        <p className="font-bold uppercase">
+          {dropDetail?.collectible?.name || "Drop's name"}
+        </p>
         <p className="mt-1">
-          {strShortAddress(dropDetail?.creator?.address || "0x0000.000")}
+          {strShortAddress(dropDetail?.creator?.username || "Creator name")}
         </p>
       </div>
       <div className="flex items-center justify-between">
         {dropDetail?.dropType == "protected" && (
-          <div className="relative grid place-items-center h-6 rounded-md border border-border">
-            <div className="bg-dark-black/70 px-4">
+          <>
+            <div className="bg-[#232733] px-6 py-1.5 rounded-full w-fit h-fit grid place-items-center border border-border">
               <p className="text-[14px] font-bold">
                 Protect - {dropDetail.secureAmount}
               </p>
             </div>
-          </div>
+            <div className="bg-primary/15 group-hover:grid px-4 py-[2px] rounded-md text-primary w-fit h-fit hidden place-items-center border border-primary">
+              <p className="text-[14px] font-bold">Buy now</p>
+            </div>
+          </>
         )}
         <div className="flex items-center gap-1 text-grays">
           <MdOutlineLocalFireDepartment />
